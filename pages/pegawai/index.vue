@@ -7,12 +7,17 @@
                 <th>nama</th>
                 <th>peran</th>
                 <th>status</th>
+                <th>Menu</th>
             </template>
             <template v-slot:body>
                 <tr v-for="employee in employes" :key="employee.idPegawai">
                     <td>{{employee.nama}}</td>
                     <td>{{employee.peran}}</td>
                     <td>{{employee.status}}</td>
+                    <td>
+                        <NuxtLink :to="{path:'/pegawai/detail',query:{id:employee.idPegawai}}">detail</NuxtLink>
+                        <NuxtLink :to="{path:'/pegawai/update',query:{id:employee.idPegawai}}">update</NuxtLink>
+                    </td>
                 </tr>
             </template>
         </Table>

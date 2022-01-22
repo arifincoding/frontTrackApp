@@ -1,35 +1,40 @@
 <template>
+    <div>
+        <TitleHeading text="tambah data pegawai"/>
     <form>
         <Input title="nama depan">
-            <input type="text" id="namaDepan" v-model="namaDepan" class="form-control form-control-sm">
+            <input id="namaDepan" v-model="namaDepan" type="text" class="form-control form-control-sm">
         </Input>
         <Input title="nama belakang">
-            <input type="text" id="namaBelakang" v-model="namaBelakang" class="form-control form-control-sm">
+            <input id="namaBelakang" v-model="namaBelakang" type="text" class="form-control form-control-sm">
         </Input>
         <Input title="nama pendek">
-            <input type="text" id="namaPendek" v-model="namaPendek" class="form-control form-control-sm">
+            <input id="namaPendek" v-model="namaPendek" type="text" class="form-control form-control-sm">
         </Input>
 
         <Input title="jenis kelamin">
-            <input type="text" id="jenisKelamin" v-model="jenisKelamin" class="form-control form-control-sm">
+            <input id="jenisKelamin" v-model="jenisKelamin" type="text" class="form-control form-control-sm">
         </Input>
         <Input title="no hp">
-            <input type="text" id="noHp" v-model="noHp" class="form-control form-control-sm">
+            <input id="noHp" v-model="noHp" type="text" class="form-control form-control-sm">
+        </Input>
+        <Input title="tanggal bergabung">
+            <input id="tanggalBergabung" v-model="tanggalBergabung" type="text" class="form-control form-control-sm">
         </Input>
         <Input title="alamat">
-            <input type="text" id="alamat" v-model="alamat" class="form-control form-control-sm">
+            <input id="alamat" v-model="alamat" type="text" class="form-control form-control-sm">
         </Input>
         <Input title="peran">
-            <input type="text" id="peran" v-model="peran" class="form-control form-control-sm">
+            <input id="peran" v-model="peran" type="text" class="form-control form-control-sm">
         </Input>
         <Input title="email">
-            <input type="text" id="email" v-model="email" class="form-control form-control-sm">
+            <input id="email" v-model="email" type="text" class="form-control form-control-sm">
         </Input>
 
         <!-- <Input title=""></Input> -->
-        <button type="button" v-on:click="addEmployee()" class="btn btn-primary">Tambah</button>
+        <button type="button" v-on:click="addEmployee()" class="btn btn-success">Tambah</button>
     </form>
-    
+    </div>
 </template>
 
 <script>
@@ -46,7 +51,7 @@ export default {
             alamat:'',
             peran:'',
             email:'',
-
+            tanggalBergabung:'',
         }
     },
     methods:{
@@ -58,12 +63,13 @@ export default {
                 namaPendek:this.namaPendek,
                 jenisKelamin:this.jenisKelamin,
                 noHp:this.noHp,
+                tanggalBergabung: this.tanggalBergabung,
                 alamat:this.alamat,
                 peran:this.peran,
                 email:this.email
             })
             console.log(data)
-            // this.$router.push({ path:'/pegawai' })
+            this.$router.push({ path:'/pegawai' })
         },
     }
 }
