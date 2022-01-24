@@ -32,7 +32,7 @@
         </Input>
 
         <!-- <Input title=""></Input> -->
-        <button type="button" v-on:click="addEmployee()" class="btn btn-success">Tambah</button>
+        <button type="button" v-on:click="addEmployee()" class="btn btn-success">Simpan</button>
     </form>
     </div>
 </template>

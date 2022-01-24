@@ -15,8 +15,9 @@
                     <td>{{employee.peran}}</td>
                     <td>{{employee.status}}</td>
                     <td>
-                        <NuxtLink :to="{path:'/pegawai/detail',query:{id:employee.idPegawai}}">detail</NuxtLink>
-                        <NuxtLink :to="{path:'/pegawai/update',query:{id:employee.idPegawai}}">update</NuxtLink>
+                        <NuxtLink class="btn btn-sm btn-outline-success" :to="{path:'/pegawai/detail',query:{id:employee.idPegawai}}">detail</NuxtLink>
+                        <NuxtLink class="btn btn-sm btn-primary" :to="{path:'/pegawai/update',query:{id:employee.idPegawai}}">update</NuxtLink>
+                        <div class="btn btn-sm btn-danger" @click="deleteData(employee.idPegawai)">Delete</div>
                     </td>
                 </tr>
             </template>
@@ -28,10 +29,27 @@
 import axios from 'axios';
 export default {
     layout:'admin',
+    data(){
+        return {
+            employes:''
+        }
+    },
     async asyncData(){
         const api = 'http://localhost:8000/employes?limit=100';
         const {data} = await axios.get(api);
         return {employes:data.data};
+    },
+    methods:{
+        async deleteData(id){
+            const api = 'http://localhost:8000/employes/'+id;
+            await axios.delete(api);
+            this.refreshData();
+        },
+        async refreshData(){
+            const api = 'http://localhost:8000/employes?limit=100';
+            const {data} = await axios.get(api);
+            this.employes = data.data;
+        }
     }
 }
 </script>

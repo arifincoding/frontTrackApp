@@ -23,11 +23,14 @@
                         <p>{{item.customer.nama}}</p>
                         <p>{{item.customer.noHp}}</p>
                     </td>
-                    <td>{{item.product.nama}} ({{ item.product.idKategori }})</td>
+                    <td>{{item.product.nama}} ({{ item.product.kategori }})</td>
                     <td>{{item.product.keluhan}}</td>
                     <td>{{item.product.status}}</td>
                     <td>{{item.product.totalHarga}}</td>
-                    <td>Detail</td>
+                    <td>
+                        <NuxtLink class="btn btn-primary" :to="{path:'/perbaikan/update',query:{id:item.product.id}}">Update</NuxtLink>
+                        <div class="btn btn-danger" @click="deleteData(item.product.id)">Delete</div>
+                    </td>
                 </tr>
             </template>
         </Table>
@@ -38,10 +41,27 @@
 import axios from 'axios'
 export default {
     layout:'admin',
+    data(){
+        return {
+            services:''
+        }
+    },
     async asyncData(){
         const api = 'http://localhost:8000/services'
         const {data} = await axios.get(api);
         return {services:data.data}
+    },
+    methods:{
+        async deleteData(id){
+            const api = 'http://localhost:8000/services/'+id
+            await axios.delete(api)
+            await this.refreshData()
+        },
+        async refreshData(){
+            const api = 'http://localhost:8000/services'
+            const {data} = await axios.get(api);
+            this.services = data.data
+        }
     }
 }
 </script>

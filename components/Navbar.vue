@@ -4,26 +4,16 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarText">
+        <div  id="navbarText" class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Dashboard <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Data Service</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Progress Service</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Data Pegawai</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Pengaturan</a>
-            </li>
+                <NavItem link="/dashboard" text="dashboard"/>
+                <NavItem link="/perbaikan" text="data service"/>
+                <NavItem link="/progress" text="progress service"/>
+                <NavItem link="/pegawai" text="data pegawai"/>
+                <NavItem link="/kategori" text="data kategori"/>
             </ul>
             <span class="navbar-text">
-            Navbar text with an inline element
+                login
             </span>
         </div>
     </nav>

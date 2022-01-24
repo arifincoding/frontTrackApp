@@ -31,7 +31,7 @@
             </Input>
 
             <!-- <Input title=""></Input> -->
-            <button type="button" v-on:click="saveEmployee()" class="btn btn-success">Tambah</button>
+            <button type="button" @click="saveEmployee()" class="btn btn-success">Simpan</button>
         </form>
     </div>
 </template>
