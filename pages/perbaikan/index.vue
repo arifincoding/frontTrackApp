@@ -28,8 +28,9 @@
                     <td>{{item.product.status}}</td>
                     <td>{{item.product.totalHarga}}</td>
                     <td>
-                        <NuxtLink class="btn btn-primary" :to="{path:'/perbaikan/update',query:{id:item.product.id}}">Update</NuxtLink>
-                        <div class="btn btn-danger" @click="deleteData(item.product.id)">Delete</div>
+                        <NuxtLink class="btn btn-sm btn-outline-success" :to="{path:'/perbaikan/detail',query:{id:item.product.id}}">Detail</NuxtLink>
+                        <NuxtLink class="btn btn-sm btn-primary" :to="{path:'/perbaikan/update',query:{id:item.product.id}}">Update</NuxtLink>
+                        <div class="btn btn-sm btn-danger" @click="deleteData(item.product.id)">Delete</div>
                     </td>
                 </tr>
             </template>
