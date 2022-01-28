@@ -12,7 +12,7 @@
                     <p>Nama : {{product.nama}} ({{product.kategori}}) </p>
                     <p>Kelengkapan : {{product.kelengkapan}}</p>
                     <p>Keluhan : {{product.keluhan}}</p>
-                    <p>Cacat Product : {{product.cacatProduct}}</p>
+                    <p>Cacat Product : {{product.cacatProduk}}</p>
                     <p>Uang Muka : {{product.uangMuka}}</p>
                     <p>Estimasi Harga : {{product.estimasiHarga}}</p>
                     <p>Total Harga : {{product.totalHarga}}</p>
@@ -22,6 +22,7 @@
                     <p>Tanggal Ambil : {{product.tanggalAmbil}} ({{product.jamAmbil}})</p>
                     <p>Customer Service : {{product.customerService}}</p>
                     <p>Teknisi : {{product.teknisi}}</p>
+                    <NuxtLink :to="{path:'/perbaikan/nota',query:{id:product.id}}">nota</NuxtLink>
                 </div>
             </div>
             <div class="col">
@@ -45,14 +46,22 @@
 import axios from 'axios'
 export default {
     layout:'admin',
-    async asyncData({route}){
+    async asyncData({route,store}){
         const serviceApi = 'http://localhost:8000/services/'+route.query.id;
-        const service = await axios.get(serviceApi);
+        const service = await axios.get(serviceApi,{
+            headers:{
+                'Authorization':`bearer ${store.state.token}`
+            }
+            });
 
         const diagnosaApi = `http://localhost:8000/services/${route.query.id}/diagnosas`
         let diagnosa = []
         try{
-            const {data} = await axios.get(diagnosaApi);
+            const {data} = await axios.get(diagnosaApi,{
+            headers:{
+                'Authorization':`bearer ${store.state.token}`
+            }
+            });
             diagnosa = await data.data
         }catch{
             diagnosa = []
@@ -71,14 +80,22 @@ export default {
     methods:{
         async deleteKerusakan(id){
             const api = `http://localhost:8000/services/diagnosas/${id}`;
-            await axios.delete(api)
+            await axios.delete(api,{
+            headers:{
+                'Authorization':`bearer ${this.$store.state.token}`
+            }
+            })
             this.refreshDiagnosa();
         },
         async refreshDiagnosa(){
             try{
                 const diagnosaApi = `http://localhost:8000/services/${this.$route.query.id}/diagnosas`
             
-                const {data} = await axios.get(diagnosaApi);
+                const {data} = await axios.get(diagnosaApi,{
+                headers:{
+                'Authorization':`bearer ${this.$store.state.token}`
+                }
+                });
                 this.diagnosas = await data.data
             }catch{
                 this.diagnosas = []

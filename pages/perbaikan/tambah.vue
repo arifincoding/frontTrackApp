@@ -1,6 +1,13 @@
 <template>
     <div>
         <TitleHeading text="tambah data service"/>
+        <div v-if="errorMessage !=='test' ">
+        <div  class="small bg-danger text-light rounded p-2">
+        <div  v-for="item in errorMessage" :key="item">
+            {{ item }}
+        </div>
+        </div>
+        </div>
         <form>
         <Input title="nama pelanggan">
             <input id="namaPelanggan" v-model="namaCustomer" type="text" class="form-control form-control-sm">
@@ -68,13 +75,15 @@ export default {
             catatan:'',
             uangMuka:'',
             estimasiHarga:'',
-            cacatProduk:''
+            cacatProduk:'',
+            errorMessage:'test'
         }
     },
     methods:{
         async saveInput(){
+            try{
             const api = 'http://localhost:8000/services'
-            await axios.post(api,{
+            const {data} = await axios.post(api,{
                 namaCustomer:this.namaCustomer,
                 jenisKelamin:this.jenisKelamin,
                 noHp:this.noHp,
@@ -89,9 +98,19 @@ export default {
                 uangMuka:this.uangMuka,
                 estimasiHarga:this.estimasiHarga,
                 cacatProduk:this.cacatProduk
+            },{
+            headers:{
+                'Authorization':`bearer ${this.$store.state.token}`
+            }
             })
-            this.$router.push({path:'/perbaikan'})
+            this.$router.push({path:'/perbaikan/nota?id='+data.data.idService})
             // await console.log(data)
+            }catch({response}){
+                this.errorMessage=[]
+                for (const key in response.data.error) {
+                        this.errorMessage.push(response.data.error[key][0]);
+                }
+            }
         }
     }
 }

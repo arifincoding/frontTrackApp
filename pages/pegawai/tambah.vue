@@ -1,6 +1,13 @@
 <template>
     <div>
         <TitleHeading text="tambah data pegawai"/>
+        <div v-if="errorMessage !=='test' ">
+        <div class="small bg-danger text-light rounded p-2">
+        <div v-for="item in errorMessage" :key="item">
+            {{ item }}
+        </div>
+        </div>
+        </div>
     <form>
         <Input title="nama depan">
             <input id="namaDepan" v-model="namaDepan" type="text" class="form-control form-control-sm">
@@ -52,10 +59,12 @@ export default {
             peran:'',
             email:'',
             tanggalBergabung:'',
+            errorMessage:'test'
         }
     },
     methods:{
         async addEmployee() {
+            try{
             const api = 'http://localhost:8000/employes'
             const {data} = await axios.post(api,{
                 namaDepan:this.namaDepan,
@@ -67,9 +76,19 @@ export default {
                 alamat:this.alamat,
                 peran:this.peran,
                 email:this.email
+            },{
+            headers:{
+                'Authorization':`bearer ${this.$store.state.token}`
+            }
             })
             console.log(data)
             this.$router.push({ path:'/pegawai' })
+            }catch({response}){
+                this.errorMessage=[]
+                for (const key in response.data.error) {
+                        this.errorMessage.push(response.data.error[key][0]);
+                }
+            }
         },
     }
 }

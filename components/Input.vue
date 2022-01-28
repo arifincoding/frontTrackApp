@@ -2,7 +2,7 @@
     <div class="form-group">
             <label class="text-capitalize" v-bind:for="label">{{title}}</label>
             <slot></slot>
-            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
     </div>
 </template>
 

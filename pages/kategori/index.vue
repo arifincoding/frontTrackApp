@@ -33,21 +33,33 @@ export default {
             categories:''
         }
     },
-    async asyncData(){
+    async asyncData({store}){
         const api = 'http://localhost:8000/categories'
-        const {data} = await axios.get(api)
+        const {data} = await axios.get(api,{
+            headers:{
+                'Authorization':`bearer ${store.state.token}`
+            }
+            })
         return {categories:data.data}
     },
     methods:{
         async deleteData(idKategori){
             const api = 'http://localhost:8000/categories/'+idKategori
-            const {data} = await axios.delete(api)
+            const {data} = await axios.delete(api,{
+            headers:{
+                'Authorization':`bearer ${this.$store.state.token}`
+            }
+            })
             console.log(await data)
             await this.refreshData()
         },
         async refreshData(){
             const api = 'http://localhost:8000/categories'
-            const {data} = await axios.get(api)
+            const {data} = await axios.get(api,{
+            headers:{
+                'Authorization':`bearer ${this.$store.state.token}`
+            }
+            })
             this.categories = data.data
         }
     }

@@ -14,9 +14,13 @@
 import axios from 'axios'
 export default {
     layout:'admin',
-    async asyncData({route}){
+    async asyncData({route,store}){
         const api = 'http://localhost:8000/employes/'+route.query.id
-        const {data} = await axios.get(api)
+        const {data} = await axios.get(api,{
+            headers:{
+                'Authorization':`bearer ${store.state.token}`
+            }
+            })
         return{employee:data.data} 
     }
 }

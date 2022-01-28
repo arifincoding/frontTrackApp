@@ -47,20 +47,32 @@ export default {
             services:''
         }
     },
-    async asyncData(){
+    async asyncData({store}){
         const api = 'http://localhost:8000/services'
-        const {data} = await axios.get(api);
+        const {data} = await axios.get(api,{
+            headers:{
+                'Authorization':`bearer ${store.state.token}`
+            }
+            });
         return {services:data.data}
     },
     methods:{
         async deleteData(id){
             const api = 'http://localhost:8000/services/'+id
-            await axios.delete(api)
+            await axios.delete(api,{
+            headers:{
+                'Authorization':`bearer ${this.$store.state.token}`
+            }
+            })
             await this.refreshData()
         },
         async refreshData(){
             const api = 'http://localhost:8000/services'
-            const {data} = await axios.get(api);
+            const {data} = await axios.get(api,{
+            headers:{
+                'Authorization':`bearer ${this.$store.state.token}`
+            }
+            });
             this.services = data.data
         }
     }

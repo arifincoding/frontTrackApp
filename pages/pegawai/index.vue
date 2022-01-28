@@ -34,20 +34,32 @@ export default {
             employes:''
         }
     },
-    async asyncData(){
+    async asyncData({store}){
         const api = 'http://localhost:8000/employes?limit=100';
-        const {data} = await axios.get(api);
+        const {data} = await axios.get(api,{
+            headers:{
+                'Authorization':`bearer ${store.state.token}`
+            }
+            });
         return {employes:data.data};
     },
     methods:{
         async deleteData(id){
             const api = 'http://localhost:8000/employes/'+id;
-            await axios.delete(api);
+            await axios.delete(api,{
+            headers:{
+                'Authorization':`bearer ${this.$store.state.token}`
+            }
+            });
             this.refreshData();
         },
         async refreshData(){
             const api = 'http://localhost:8000/employes?limit=100';
-            const {data} = await axios.get(api);
+            const {data} = await axios.get(api,{
+            headers:{
+                'Authorization':`bearer ${this.$store.state.token}`
+            }
+            });
             this.employes = data.data;
         }
     }

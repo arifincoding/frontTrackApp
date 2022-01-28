@@ -1,6 +1,13 @@
 <template>
     <div>
         <TitleHeading text="edit perbaikan"/>
+        <div v-if="errorMessage !=='test' ">
+        <div  class="small bg-danger text-light rounded p-2">
+        <div  v-for="item in errorMessage" :key="item">
+            {{ item }}
+        </div>
+        </div>
+        </div>
         <form>
             <Input title="nama pelanggan">
                 <input id="namaPelanggan" v-model="namaCustomer" type="text" class="form-control form-control-sm">
@@ -68,12 +75,17 @@ export default {
             catatan:'',
             uangMuka:'',
             estimasiHarga:'',
-            cacatProduk:''
+            cacatProduk:'',
+            errorMessage:'test'
         }
     },
-    async asyncData({route}){
+    async asyncData({route,store}){
         const api = 'http://localhost:8000/services/'+route.query.id
-        const {data} = await axios.get(api)
+        const {data} = await axios.get(api,{
+            headers:{
+                'Authorization':`bearer ${store.state.token}`
+            }
+            })
         return{
             namaCustomer:data.data.customer.nama,
             jenisKelamin:data.data.customer.jenisKelamin,
@@ -93,6 +105,7 @@ export default {
     },
     methods:{
         async saveInput(){
+            try{
             const api = 'http://localhost:8000/services/'+this.$route.query.id
             const {data} = await axios.put(api,{
                 namaCustomer:this.namaCustomer,
@@ -109,9 +122,19 @@ export default {
                 uangMuka:this.uangMuka,
                 estimasiHarga:this.estimasiHarga,
                 cacatProduk:this.cacatProduk
+            },{
+            headers:{
+                'Authorization':`bearer ${this.$store.state.token}`
+            }
             })
             console.log(await data)
             this.$router.push({path:'/perbaikan'})
+            }catch({response}){
+                this.errorMessage=[]
+                for (const key in response.data.error) {
+                        this.errorMessage.push(response.data.error[key][0]);
+                }
+            }
         }
     }
 }
