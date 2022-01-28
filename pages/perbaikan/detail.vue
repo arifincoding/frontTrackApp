@@ -79,6 +79,7 @@ export default {
     },
     methods:{
         async deleteKerusakan(id){
+            if(confirm("Yakin ingin menghapus data?") === true){
             const api = `http://localhost:8000/services/diagnosas/${id}`;
             await axios.delete(api,{
             headers:{
@@ -86,6 +87,7 @@ export default {
             }
             })
             this.refreshDiagnosa();
+            }
         },
         async refreshDiagnosa(){
             try{
@@ -104,5 +106,4 @@ export default {
     }
 }
 </script>
-
 <style lang="scss"></style>

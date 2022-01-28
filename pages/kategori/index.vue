@@ -8,7 +8,7 @@
             <template v-slot:header>
                 <th>No</th>
                 <th>Kategori</th>
-                <th>menu</th>
+                <th>Menu</th>
             </template>
             <template v-slot:body>
                 <tr v-for="(item, index) in categories" :key="index">
@@ -44,6 +44,7 @@ export default {
     },
     methods:{
         async deleteData(idKategori){
+            if(confirm("Yakin ingin menghapus data?") === true){
             const api = 'http://localhost:8000/categories/'+idKategori
             const {data} = await axios.delete(api,{
             headers:{
@@ -52,6 +53,7 @@ export default {
             })
             console.log(await data)
             await this.refreshData()
+            }
         },
         async refreshData(){
             const api = 'http://localhost:8000/categories'

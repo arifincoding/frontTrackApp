@@ -22,7 +22,11 @@
             <input id="tanggalBergabung" v-model="tanggalBergabung" type="text" class="form-control form-control-sm">
         </Input>
             <Input title="jenis kelamin">
-                <input id="jenisKelamin" v-model="jenisKelamin" type="text" class="form-control form-control-sm">
+                <select id="jenisKelamin" class="custom-select custom-select-sm" v-model="jenisKelamin">
+                <option :value="jenisKelamin" selected>{{jenisKelamin}}</option>
+                <option value="pria">Pria</option>
+                <option value="wanita">Wanita</option>
+            </select>
             </Input>
             <Input title="no hp">
                 <input id="noHp" v-model="noHp" type="text" class="form-control form-control-sm">
@@ -31,7 +35,12 @@
                 <input id="alamat" v-model="alamat" type="text" class="form-control form-control-sm">
             </Input>
             <Input title="peran">
-                <input id="peran" v-model="peran" type="text" class="form-control form-control-sm">
+                <select id="peran" class="custom-select custom-select-sm" v-model="peran">
+                <option :value="peran" selected>{{peran}}</option>
+                <option value="customer service">Customer Service</option>
+                <option value="teknisi">Teknisi</option>
+                <option value="pemilik">Pemilik</option>
+            </select>
             </Input>
             <Input title="email">
                 <input id="email" v-model="email" type="text" class="form-control form-control-sm">

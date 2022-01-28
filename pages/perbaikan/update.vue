@@ -1,9 +1,9 @@
 <template>
     <div>
         <TitleHeading text="edit perbaikan"/>
-        <div v-if="errorMessage !=='test' ">
-        <div  class="small bg-danger text-light rounded p-2">
-        <div  v-for="item in errorMessage" :key="item">
+        <div v-if="errorMessage !=='test'">
+        <div class="small bg-danger text-light rounded p-2">
+        <div v-for="item in errorMessage" :key="item">
             {{ item }}
         </div>
         </div>
@@ -18,9 +18,13 @@
             <Input title="no hp">
                 <input id="noHp" v-model="noHp" type="text" class="form-control form-control-sm">
             </Input>
-            <Input title="mendukung whatsapp">
-                <input id="mendukungWhatsapp" v-model="mendukungWhatsapp" type="text" class="form-control form-control-sm">
-            </Input>
+            <div class="form-check">
+                <input class="form-check-input" v-model="mendukungWhatsapp" type="checkbox" value="true" id="mendukungWhatsapp">
+                <label class="form-check-label" for="mendukungWhatsapp">
+                    Mendukung Whatsapp
+                </label>
+            </div>
+            <br/>
             <Input title="nama barang">
                 <input id="namaBarang" v-model="namaBarang" type="text" class="form-control form-control-sm">
             </Input>
@@ -30,12 +34,20 @@
             <Input title="keluhan">
                 <input id="keluhan" v-model="keluhan" type="text" class="form-control form-control-sm">
             </Input>
-            <Input title="membutuhkan spesialis">
-                <input id="membutuhkanSpesialis" v-model="membutuhkanSpesialis" type="text" class="form-control form-control-sm">
-            </Input>
-            <Input title="membutuhkan konfirmasi">
-                <input id="membutuhkanKonfirmasi" v-model="membutuhkanKonfirmasi" type="text" class="form-control form-control-sm">
-            </Input>
+            <div class="form-check">
+                <input class="form-check-input" v-model="membutuhkanSpesialis" type="checkbox" value="true" id="membutuhkanSpesialis">
+                <label class="form-check-label" for="membutuhkanSpesialis">
+                    Membutuhkan Spesialis
+                </label>
+            </div>
+            <br/>
+            <div class="form-check">
+                <input class="form-check-input" v-model="membutuhkanKonfirmasi" type="checkbox" value="true" id="membutuhkanKonfirmasi">
+                <label class="form-check-label" for="membutuhkanKonfirmasi">
+                    Membutuhkan Konfirmasi
+                </label>
+            </div>
+            <br/>
             <Input title="kelengkapan">
                 <input id="kelengkapan" v-model="kelengkapan" type="text" class="form-control form-control-sm">
             </Input>
@@ -51,7 +63,7 @@
             <Input title="cacat produk">
                 <input id="cacatProduk" v-model="cacatProduk" type="text" class="form-control form-control-sm">
             </Input>
-            <div class="btn btn-success" @click="saveInput()">simpan</div>
+            <div class="btn btn-success" @click="saveInput()">Simpan</div>
         </form>
     </div>
 </template>

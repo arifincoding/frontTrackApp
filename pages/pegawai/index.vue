@@ -45,6 +45,7 @@ export default {
     },
     methods:{
         async deleteData(id){
+            if(confirm("Yakin ingin menghapus data?") === true){
             const api = 'http://localhost:8000/employes/'+id;
             await axios.delete(api,{
             headers:{
@@ -52,6 +53,7 @@ export default {
             }
             });
             this.refreshData();
+            }
         },
         async refreshData(){
             const api = 'http://localhost:8000/employes?limit=100';

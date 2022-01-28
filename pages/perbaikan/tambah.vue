@@ -1,9 +1,9 @@
 <template>
     <div>
         <TitleHeading text="tambah data service"/>
-        <div v-if="errorMessage !=='test' ">
-        <div  class="small bg-danger text-light rounded p-2">
-        <div  v-for="item in errorMessage" :key="item">
+        <div v-if="errorMessage !=='test'">
+        <div class="small bg-danger text-light rounded p-2">
+        <div v-for="item in errorMessage" :key="item">
             {{ item }}
         </div>
         </div>
@@ -13,14 +13,22 @@
             <input id="namaPelanggan" v-model="namaCustomer" type="text" class="form-control form-control-sm">
         </Input>
         <Input title="jenis kelamin">
-            <input id="jenisKelamin" v-model="jenisKelamin" type="text" class="form-control form-control-sm">
+            <select id="jenisKelamin" class="custom-select custom-select-sm" v-model="jenisKelamin">
+                <option selected>-</option>
+                <option value="pria">Pria</option>
+                <option value="wanita">Wanita</option>
+            </select>
         </Input>
         <Input title="no hp">
             <input id="noHp" v-model="noHp" type="text" class="form-control form-control-sm">
         </Input>
-        <Input title="mendukung whatsapp">
-            <input id="mendukungWhatsapp" v-model="mendukungWhatsapp" type="text" class="form-control form-control-sm">
-        </Input>
+        <div class="form-check">
+            <input class="form-check-input" v-model="mendukungWhatsapp" type="checkbox" value="true" id="mendukungWhatsapp">
+            <label class="form-check-label" for="mendukungWhatsapp">
+                Mendukung Whatsapp
+            </label>
+        </div>
+        <br/>
         <Input title="nama barang">
             <input id="namaBarang" v-model="namaBarang" type="text" class="form-control form-control-sm">
         </Input>
@@ -30,12 +38,20 @@
         <Input title="keluhan">
             <input id="keluhan" v-model="keluhan" type="text" class="form-control form-control-sm">
         </Input>
-        <Input title="membutuhkan spesialis">
-            <input id="membutuhkanSpesialis" v-model="membutuhkanSpesialis" type="text" class="form-control form-control-sm">
-        </Input>
-        <Input title="membutuhkan konfirmasi">
-            <input id="membutuhkanKonfirmasi" v-model="membutuhkanKonfirmasi" type="text" class="form-control form-control-sm">
-        </Input>
+        <div class="form-check">
+            <input class="form-check-input" v-model="membutuhkanSpesialis" type="checkbox" value="true" id="membutuhkanSpesialis">
+            <label class="form-check-label" for="membutuhkanSpesialis">
+                Membutuhkan Spesialis
+            </label>
+        </div>
+        <br/>
+        <div class="form-check">
+            <input class="form-check-input" v-model="membutuhkanKonfirmasi" type="checkbox" value="true" id="membutuhkanKonfirmasi">
+            <label class="form-check-label" for="membutuhkanKonfirmasi">
+                Membutuhkan Konfirmasi
+            </label>
+        </div>
+        <br/>
         <Input title="kelengkapan">
             <input id="kelengkapan" v-model="kelengkapan" type="text" class="form-control form-control-sm">
         </Input>
@@ -87,12 +103,12 @@ export default {
                 namaCustomer:this.namaCustomer,
                 jenisKelamin:this.jenisKelamin,
                 noHp:this.noHp,
-                mendukungWhatsapp:this.mendukungWhatsapp,
+                mendukungWhatsapp:this.mendukungWhatsapp.toString(),
                 namaBarang:this.namaBarang,
                 kategori:this.kategori,
                 keluhan:this.keluhan,
-                membutuhkanSpesialis:this.membutuhkanSpesialis,
-                membutuhkanKonfirmasi:this.membutuhkanKonfirmasi,
+                membutuhkanSpesialis:this.membutuhkanSpesialis.toString(),
+                membutuhkanKonfirmasi:this.membutuhkanKonfirmasi.toString(),
                 kelengkapan:this.kelengkapan,
                 catatan:this.catatan,
                 uangMuka:this.uangMuka,
