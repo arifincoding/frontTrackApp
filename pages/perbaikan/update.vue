@@ -29,7 +29,9 @@
                 <input id="namaBarang" v-model="namaBarang" type="text" class="form-control form-control-sm">
             </Input>
             <Input title="kategori">
-                <input id="kategori" v-model="kategori" type="text" class="form-control form-control-sm">
+                <select id="kategori" class="custom-select custom-select-sm" v-model="kategori">
+                    <option v-for="item in listKategori" :key="item" :value="item.kategori">{{ item.kategori }}</option>
+                </select>
             </Input>
             <Input title="keluhan">
                 <input id="keluhan" v-model="keluhan" type="text" class="form-control form-control-sm">
@@ -88,7 +90,8 @@ export default {
             uangMuka:'',
             estimasiHarga:'',
             cacatProduk:'',
-            errorMessage:'test'
+            errorMessage:'test',
+            listKategori:''
         }
     },
     async mounted(){
@@ -98,22 +101,26 @@ export default {
                 'Authorization':`bearer ${this.$cookies.get('token')}`
             }
             })
-        return{
-            namaCustomer:data.data.customer.nama,
-            jenisKelamin:data.data.customer.jenisKelamin,
-            noHp:data.data.customer.noHp,
-            mendukungWhatsapp:data.data.customer.mendukungWhatsapp,
-            namaBarang:data.data.product.nama,
-            kategori:data.data.product.kategori,
-            keluhan:data.data.product.keluhan,
-            membutuhkanSpesialis:data.data.product.membutuhkanSpesialis,
-            membutuhkanKonfirmasi:data.data.product.membutuhkanKonfirmasi,
-            kelengkapan:data.data.product.kelengkapan,
-            catatan:data.data.product.catatan,
-            uangMuka:data.data.product.uangMuka,
-            estimasiHarga:data.data.product.estimasiHarga,
-            cacatProduk:data.data.product.cacatProduk
-        }
+        const apiKategori = 'http://localhost:8000/categories'
+        const dataKategori = await axios.get(apiKategori,{headers:{
+            'Authorization':`bearer ${this.$cookies.get('token')}`
+        }})
+        this.listKategori = dataKategori.data.data
+        
+        this.namaCustomer = data.data.customer.nama
+        this.jenisKelamin = data.data.customer.jenisKelamin
+        this.noHp = data.data.customer.noHp
+        this.mendukungWhatsapp = data.data.customer.mendukungWhatsapp
+        this.namaBarang = data.data.product.nama
+        this.kategori = data.data.product.kategori
+        this.keluhan = data.data.product.keluhan
+        this.membutuhkanSpesialis = data.data.product.membutuhkanSpesialis
+        this.membutuhkanKonfirmasi = data.data.product.membutuhkanKonfirmasi
+        this.kelengkapan = data.data.product.kelengkapan
+        this.catatan = data.data.product.catatan
+        this.uangMuka = data.data.product.uangMuka
+        this.estimasiHarga = data.data.product.estimasiHarga
+        this.cacatProduk = data.data.product.cacatProduk
     },
     methods:{
         async saveInput(){

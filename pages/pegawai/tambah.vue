@@ -46,7 +46,6 @@
         <Input title="email">
             <input id="email" v-model="email" type="text" class="form-control form-control-sm">
         </Input>
-
         <!-- <Input title=""></Input> -->
         <button type="button" v-on:click="addEmployee()" class="btn btn-success">Simpan</button>
     </form>

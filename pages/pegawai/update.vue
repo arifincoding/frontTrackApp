@@ -23,7 +23,6 @@
         </Input>
             <Input title="jenis kelamin">
                 <select id="jenisKelamin" class="custom-select custom-select-sm" v-model="jenisKelamin">
-                <option :value="jenisKelamin" selected>{{jenisKelamin}}</option>
                 <option value="pria">Pria</option>
                 <option value="wanita">Wanita</option>
             </select>
@@ -36,7 +35,6 @@
             </Input>
             <Input title="peran">
                 <select id="peran" class="custom-select custom-select-sm" v-model="peran">
-                <option :value="peran" selected>{{peran}}</option>
                 <option value="customer service">Customer Service</option>
                 <option value="teknisi">Teknisi</option>
                 <option value="pemilik">Pemilik</option>
@@ -77,17 +75,16 @@ export default {
                 'Authorization':`bearer ${this.$cookies.get('token')}`
             }
             });
-        return{
-            namaDepan:data.data.namaDepan,
-            namaBelakang:data.data.namaBelakang,
-            namaPendek: data.data.namaPendek,
-            tanggalBergabung:data.data.tanggalBergabung,
-            jenisKelamin: data.data.jenisKelamin,
-            noHp:data.data.noHp,
-            alamat:data.data.alamat,
-            peran:data.data.peran,
-            email:data.data.email
-        }
+            
+            this.namaDepan = data.data.namaDepan
+            this.namaBelakang=data.data.namaBelakang
+            this.namaPendek= data.data.namaPendek
+            this.tanggalBergabung=data.data.tanggalBergabung
+            this.jenisKelamin= data.data.jenisKelamin
+            this.noHp=data.data.noHp
+            this.alamat=data.data.alamat
+            this.peran=data.data.peran
+            this.email=data.data.email
     },
     methods:{
         async saveEmployee(){

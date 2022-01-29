@@ -9,8 +9,8 @@
                 <!-- <NavItem link="/dashboard" text="dashboard"/> -->
                 <NavItem link="/perbaikan" text="data service"/>
                 <!-- <NavItem link="/progress" text="progress service"/> -->
-                <NavItem link="/pegawai" text="data pegawai"/>
-                <NavItem link="/kategori" text="data kategori"/>
+                <NavItem v-if="role === 'pemilik'" link="/pegawai" text="data pegawai"/>
+                <NavItem v-if="role === 'pemilik'" link="/kategori" text="data kategori"/>
             </ul>
             <span @click="logout()" class="navbar-text">
                 logout
@@ -20,7 +20,17 @@
 </template>
 
 <script>
+import decode from 'jwt-decode'
 export default {
+    data(){
+        return {
+            role:''
+        }
+    },
+    async created(){
+        const payload = await decode(this.$cookies.get('token'))
+        this.role = payload.role
+    },
     methods:{
         logout(){
             this.$store.commit('setToken','')

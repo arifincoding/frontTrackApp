@@ -33,7 +33,9 @@
             <input id="namaBarang" v-model="namaBarang" type="text" class="form-control form-control-sm">
         </Input>
         <Input title="kategori">
-            <input id="kategori" v-model="kategori" type="text" class="form-control form-control-sm">
+            <select id="kategori" class="custom-select custom-select-sm" v-model="kategori">
+                <option v-for="item in listKategori" :key="item" :value="item.kategori">{{ item.kategori }}</option>
+            </select>
         </Input>
         <Input title="keluhan">
             <input id="keluhan" v-model="keluhan" type="text" class="form-control form-control-sm">
@@ -92,8 +94,16 @@ export default {
             uangMuka:'',
             estimasiHarga:'',
             cacatProduk:'',
-            errorMessage:'test'
+            errorMessage:'test',
+            listKategori:''
         }
+    },
+    async mounted(){
+        const api = 'http://localhost:8000/categories'
+        const {data} = await axios.get(api,{headers:{
+            'Authorization':`bearer ${this.$cookies.get('token')}`
+        }})
+        this.listKategori = data.data
     },
     methods:{
         async saveInput(){
