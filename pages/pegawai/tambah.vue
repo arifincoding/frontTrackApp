@@ -87,7 +87,7 @@ export default {
                 email:this.email
             },{
             headers:{
-                'Authorization':`bearer ${this.$store.state.token}`
+                'Authorization':`bearer ${this.$cookies.get('token')}`
             }
             })
             console.log(data)

@@ -46,44 +46,45 @@
 import axios from 'axios'
 export default {
     layout:'admin',
-    async asyncData({route,store}){
-        const serviceApi = 'http://localhost:8000/services/'+route.query.id;
+    data(){
+        return{
+            diagnosas:'',
+            customer:'',
+            product:'',
+        }
+    },
+    async mounted(){
+        const serviceApi = 'http://localhost:8000/services/'+this.$route.query.id;
         const service = await axios.get(serviceApi,{
             headers:{
-                'Authorization':`bearer ${store.state.token}`
+                'Authorization':`bearer ${this.$cookies.get('token')}`
             }
             });
 
-        const diagnosaApi = `http://localhost:8000/services/${route.query.id}/diagnosas`
+        const diagnosaApi = `http://localhost:8000/services/${this.$route.query.id}/diagnosas`
         let diagnosa = []
         try{
             const {data} = await axios.get(diagnosaApi,{
             headers:{
-                'Authorization':`bearer ${store.state.token}`
+                'Authorization':`bearer ${this.$cookies.get('token')}`
             }
             });
             diagnosa = await data.data
         }catch{
             diagnosa = []
         }
-        return {
-            customer: service.data.data.customer,
-            product: service.data.data.product,
-            diagnosas : diagnosa
-        }
+        this.customer = service.data.data.customer
+        this.product = service.data.data.product
+        this.diagnosas = diagnosa
     },
-    data(){
-        return{
-            diagnosas:''
-        }
-    },
+    
     methods:{
         async deleteKerusakan(id){
             if(confirm("Yakin ingin menghapus data?") === true){
             const api = `http://localhost:8000/services/diagnosas/${id}`;
             await axios.delete(api,{
             headers:{
-                'Authorization':`bearer ${this.$store.state.token}`
+                'Authorization':`bearer ${this.$cookies.get('token')}`
             }
             })
             this.refreshDiagnosa();
@@ -95,7 +96,7 @@ export default {
             
                 const {data} = await axios.get(diagnosaApi,{
                 headers:{
-                'Authorization':`bearer ${this.$store.state.token}`
+                'Authorization':`bearer ${this.$cookies.get('token')}`
                 }
                 });
                 this.diagnosas = await data.data

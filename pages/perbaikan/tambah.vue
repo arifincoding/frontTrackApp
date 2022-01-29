@@ -116,7 +116,7 @@ export default {
                 cacatProduk:this.cacatProduk
             },{
             headers:{
-                'Authorization':`bearer ${this.$store.state.token}`
+                'Authorization':`bearer ${this.$cookies.get('token')}`
             }
             })
             this.$router.push({path:'/perbaikan/nota?id='+data.data.idService})

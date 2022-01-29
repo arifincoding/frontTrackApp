@@ -70,11 +70,11 @@ export default {
             errorMessage:'test'
         }
     },
-    async asyncData({route,store}){
-        const api = 'http://localhost:8000/employes/'+route.query.id
+    async mounted(){
+        const api = 'http://localhost:8000/employes/'+this.$route.query.id
         const {data} = await axios.get(api,{
             headers:{
-                'Authorization':`bearer ${store.state.token}`
+                'Authorization':`bearer ${this.$cookies.get('token')}`
             }
             });
         return{
@@ -105,7 +105,7 @@ export default {
                 email:this.email
             },{
             headers:{
-                'Authorization':`bearer ${this.$store.state.token}`
+                'Authorization':`bearer ${this.$cookies.get('token')}`
             }
             })
             console.log(data);

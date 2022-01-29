@@ -14,14 +14,19 @@
 import axios from 'axios'
 export default {
     layout:'admin',
-    async asyncData({route,store}){
-        const api = 'http://localhost:8000/employes/'+route.query.id
+    data(){
+        return {
+            employee:''
+        }
+    },
+    async mounted(){
+        const api = 'http://localhost:8000/employes/'+this.$route.query.id
         const {data} = await axios.get(api,{
             headers:{
-                'Authorization':`bearer ${store.state.token}`
+                'Authorization':`bearer ${this.$cookies.get('token')}`
             }
             })
-        return{employee:data.data} 
+        this.employee = data.data 
     }
 }
 </script>

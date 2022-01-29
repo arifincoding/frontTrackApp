@@ -25,6 +25,7 @@ export default {
         logout(){
             this.$store.commit('setToken','')
             this.$router.push({path:'/'})
+            this.$cookies.remove('token')
         }
     }
 }

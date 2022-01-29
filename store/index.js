@@ -1,5 +1,5 @@
 import Vuex from 'vuex'
-
+// import Cookies from 'js-cookie'
 const createStore = ()=>{
     return new Vuex.Store({
         state:{

@@ -33,14 +33,14 @@ export default {
             categories:''
         }
     },
-    async asyncData({store}){
+    async mounted(){
         const api = 'http://localhost:8000/categories'
         const {data} = await axios.get(api,{
             headers:{
-                'Authorization':`bearer ${store.state.token}`
+                'Authorization':`bearer ${this.$cookies.get('token')}`
             }
             })
-        return {categories:data.data}
+        this.categories = data.data
     },
     methods:{
         async deleteData(idKategori){
@@ -48,7 +48,7 @@ export default {
             const api = 'http://localhost:8000/categories/'+idKategori
             const {data} = await axios.delete(api,{
             headers:{
-                'Authorization':`bearer ${this.$store.state.token}`
+                'Authorization':`bearer ${this.$cookies.get('token')}`
             }
             })
             console.log(await data)
@@ -59,7 +59,7 @@ export default {
             const api = 'http://localhost:8000/categories'
             const {data} = await axios.get(api,{
             headers:{
-                'Authorization':`bearer ${this.$store.state.token}`
+                'Authorization':`bearer ${this.$cookies.get('token')}`
             }
             })
             this.categories = data.data

@@ -124,21 +124,23 @@
 <script>
 import axios from 'axios';
 export default {
-    async asyncData({route,store}){
-        const api = `http://localhost:8000/services/${route.query.id}`;
-        const {data} = await axios.get(api,{
-            headers:{
-                'Authorization':`bearer ${store.state.token}`
-            }
-            });
+    data(){
         return {
-            customer:data.data.customer,
-            product:data.data.product
+            customer:'',
+            product:''
         }
     },
-    mounted(){
-        window.print()
-    }
+    async mounted(){
+        const api = `http://localhost:8000/services/${this.$route.query.id}`;
+        const {data} = await axios.get(api,{
+            headers:{
+                'Authorization':`bearer ${this.$cookies.get('token')}`
+            }
+            });
+            this.customer = await data.data.customer
+            this.product = await data.data.product
+            await window.print()
+    },
 }
 </script>
 

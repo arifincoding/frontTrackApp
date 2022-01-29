@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!this.$cookies.get('token')">
     <Input title="username">
       <input id="username" v-model="username" type="text" class="form-control form-control-sm">
     </Input>
@@ -20,6 +20,11 @@ export default {
       password:''
     }
   },
+  beforeCreate(){
+    if(this.$cookies.get('token')){
+      this.$router.push({path:'/perbaikan'})
+    }
+  },
   methods:{
     async login(){
       const api = 'http://localhost:8000/user/login'
@@ -28,6 +33,7 @@ export default {
         password:this.password
       })
       await this.$store.commit('setToken',data.token)
+      await this.$cookies.set("token", data.token);
       this.$router.push({path:'/perbaikan'})
     }
   }

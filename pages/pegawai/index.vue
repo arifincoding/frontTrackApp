@@ -34,14 +34,14 @@ export default {
             employes:''
         }
     },
-    async asyncData({store}){
+    async mounted(){
         const api = 'http://localhost:8000/employes?limit=100';
         const {data} = await axios.get(api,{
             headers:{
-                'Authorization':`bearer ${store.state.token}`
+                'Authorization':`bearer ${this.$cookies.get('token')}`
             }
             });
-        return {employes:data.data};
+        this.employes = data.data
     },
     methods:{
         async deleteData(id){
@@ -49,7 +49,7 @@ export default {
             const api = 'http://localhost:8000/employes/'+id;
             await axios.delete(api,{
             headers:{
-                'Authorization':`bearer ${this.$store.state.token}`
+                'Authorization':`bearer ${this.$cookies.get('token')}`
             }
             });
             this.refreshData();
@@ -59,7 +59,7 @@ export default {
             const api = 'http://localhost:8000/employes?limit=100';
             const {data} = await axios.get(api,{
             headers:{
-                'Authorization':`bearer ${this.$store.state.token}`
+                'Authorization':`bearer ${this.$cookies.get('token')}`
             }
             });
             this.employes = data.data;

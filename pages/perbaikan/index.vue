@@ -47,14 +47,14 @@ export default {
             services:''
         }
     },
-    async asyncData({store}){
+    async created(){
         const api = 'http://localhost:8000/services'
         const {data} = await axios.get(api,{
             headers:{
-                'Authorization':`bearer ${store.state.token}`
+                'Authorization':`bearer ${this.$cookies.get("token")}`
             }
             });
-        return {services:data.data}
+        this.services = data.data
     },
     methods:{
         async deleteData(id){

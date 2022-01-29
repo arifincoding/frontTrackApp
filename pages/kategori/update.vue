@@ -27,17 +27,14 @@ export default {
             errorMessage:'test'
         }
     },
-    async asyncData({params,store}){
-        const api = `http://localhost:8000/categories/${params.id}`
+    async mounted(){
+        const api = `http://localhost:8000/categories/${this.$route.params.id}`
         const {data} = await axios.get(api,{
             headers:{
-                'Authorization':`bearer ${store.state.token}`
+                'Authorization':`bearer ${this.$cookies.get('token')}`
             }
             })
-        return {namaKategori:data.data.kategori}
-    },
-    created(){
-        console.log(this.$route.params)
+        this.namaKategori = data.data.kategori
     },
     methods:{
         async addCategory(){
@@ -47,7 +44,7 @@ export default {
                 kategori:this.namaKategori
             },{
             headers:{
-                'Authorization':`bearer ${this.$store.state.token}`
+                'Authorization':`bearer ${this.$cookies.get('token')}`
             }
             })
             console.log(data)

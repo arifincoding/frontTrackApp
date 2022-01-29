@@ -91,11 +91,11 @@ export default {
             errorMessage:'test'
         }
     },
-    async asyncData({route,store}){
-        const api = 'http://localhost:8000/services/'+route.query.id
+    async mounted(){
+        const api = 'http://localhost:8000/services/'+this.$route.query.id
         const {data} = await axios.get(api,{
             headers:{
-                'Authorization':`bearer ${store.state.token}`
+                'Authorization':`bearer ${this.$cookies.get('token')}`
             }
             })
         return{
@@ -136,7 +136,7 @@ export default {
                 cacatProduk:this.cacatProduk
             },{
             headers:{
-                'Authorization':`bearer ${this.$store.state.token}`
+                'Authorization':`bearer ${this.$cookies.get('token')}`
             }
             })
             console.log(await data)
