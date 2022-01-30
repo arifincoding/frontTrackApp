@@ -17,19 +17,21 @@
 import axios from 'axios'
 export default {
     layout:'admin',
-    async asyncData({route}){
-        const api = `http://localhost:8000/services/diagnosas/${route.query.id}`;
-        const {data} = await axios.get(api);
-        return {
-            kerusakan:data.data.judul,
-            status:data.data.status
-        }
-    },
     data(){
         return {
             kerusakan:'',
             status:''
         }
+    },
+    async mounted(){
+        const api = `http://localhost:8000/services/diagnosas/${this.$route.query.id}`;
+        const {data} = await axios.get(api,{
+            headers:{
+                'Authorization':`bearer ${this.$cookies.get('token')}`
+            }
+            });
+        this.kerusakan=data.data.judul
+        this.status=data.data.status
     },
     methods:{
         async saveData(){
@@ -37,8 +39,12 @@ export default {
             const {data} = await axios.put(api,{
                 judul: this.kerusakan,
                 status: this.status
+            },{
+            headers:{
+                'Authorization':`bearer ${this.$cookies.get('token')}`
+            }
             });
-            this.$router.push({path:`/perbaikan/detail?id=${data.data.idService}`});
+            this.$router.push({path:`/perbaikan/progres/detail?id=${data.data.idService}`});
         }
     }
 }

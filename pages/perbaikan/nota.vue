@@ -131,7 +131,7 @@ export default {
         }
     },
     async mounted(){
-        const api = `http://localhost:8000/services/${this.$route.query.id}`;
+        const api = `http://localhost:8000/services/${this.$route.query.id}/detail`;
         const {data} = await axios.get(api,{
             headers:{
                 'Authorization':`bearer ${this.$cookies.get('token')}`

@@ -22,7 +22,7 @@ export default {
   },
   beforeCreate(){
     if(this.$cookies.get('token')){
-      this.$router.push({path:'/perbaikan'})
+      this.$router.push({path:'/perbaikan/antrian'})
     }
   },
   methods:{

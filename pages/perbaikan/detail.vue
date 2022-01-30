@@ -22,7 +22,6 @@
                     <p>Tanggal Ambil : {{product.tanggalAmbil}} ({{product.jamAmbil}})</p>
                     <p>Customer Service : {{product.customerService}}</p>
                     <p>Teknisi : {{product.teknisi}}</p>
-                    <NuxtLink :to="{path:'/perbaikan/nota',query:{id:product.id}}">nota</NuxtLink>
                 </div>
             </div>
             <div class="col">
@@ -31,11 +30,8 @@
                     <div v-for="item in diagnosas" :key="item.idDiagnosa">
                         <div class = "mt-2">
                             -{{item.judul}} [{{ item.status }}]
-                            <NuxtLink class="btn btn-sm btn-primary" :to="{path:'/kerusakan/update',query:{id:item.idDiagnosa}}">Update</NuxtLink>
-                            <span class="btn btn-sm btn-danger" @click="deleteKerusakan(item.idDiagnosa)">Hapus</span>
                         </div>
                     </div>
-                    <NuxtLink class="btn btn-sm btn-success" :to="{path:'/kerusakan/tambah',query:{id:product.id}}">Tambah</NuxtLink>
                 </div>
             </div>
         </div>
@@ -54,7 +50,7 @@ export default {
         }
     },
     async mounted(){
-        const serviceApi = 'http://localhost:8000/services/'+this.$route.query.id;
+        const serviceApi = `http://localhost:8000/services/${this.$route.query.id}/detail`;
         const service = await axios.get(serviceApi,{
             headers:{
                 'Authorization':`bearer ${this.$cookies.get('token')}`
@@ -77,34 +73,6 @@ export default {
         this.product = service.data.data.product
         this.diagnosas = diagnosa
     },
-    
-    methods:{
-        async deleteKerusakan(id){
-            if(confirm("Yakin ingin menghapus data?") === true){
-            const api = `http://localhost:8000/services/diagnosas/${id}`;
-            await axios.delete(api,{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            })
-            this.refreshDiagnosa();
-            }
-        },
-        async refreshDiagnosa(){
-            try{
-                const diagnosaApi = `http://localhost:8000/services/${this.$route.query.id}/diagnosas`
-            
-                const {data} = await axios.get(diagnosaApi,{
-                headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-                }
-                });
-                this.diagnosas = await data.data
-            }catch{
-                this.diagnosas = []
-            }
-        }
-    }
 }
 </script>
 <style lang="scss"></style>
