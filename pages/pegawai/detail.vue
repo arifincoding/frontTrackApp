@@ -7,7 +7,7 @@
         <p>Peran : {{employee.peran}}</p>
         <p>Email : {{employee.email}}</p>
         <p>Alamat : {{employee.alamat}}</p>
-        <div v-if="employee.tanggungJawab !== null">
+        <div v-if="employee.peran === 'teknisi'">
         <p>Tanggung Jawab : </p>
         <ul v-for="item in employee.tanggungJawab" :key="item">
             <li>{{item.kategori}} <div class="btn btn-sm btn-danger" @click="deleteData(item.idTanggungJawab)">Hapus</div> </li>

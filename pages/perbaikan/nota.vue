@@ -139,7 +139,7 @@ export default {
             });
             this.customer = await data.data.customer
             this.product = await data.data.product
-            await window.print()
+            setTimeout(function () {window.print()}, 3000);
     },
 }
 </script>

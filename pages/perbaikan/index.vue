@@ -26,7 +26,7 @@
                     <td>{{item.product.nama}} ({{ item.product.kategori }})</td>
                     <td>{{item.product.keluhan}}</td>
                     <td>{{item.product.status}}</td>
-                    <td>{{item.product.totalHarga}}</td>
+                    <td><span v-if="item.product.totalHarga">Rp.{{item.product.totalHarga}}</span></td>
                     <td>
                         <NuxtLink class="btn btn-sm btn-outline-success" :to="{path:'/perbaikan/detail',query:{id:item.product.id}}">Detail</NuxtLink>
                         <NuxtLink class="btn btn-sm btn-primary" :to="{path:'/perbaikan/update',query:{id:item.product.id}}">Update</NuxtLink>
@@ -62,7 +62,7 @@ export default {
             const api = 'http://localhost:8000/services/'+id
             await axios.delete(api,{
             headers:{
-                'Authorization':`bearer ${this.$store.state.token}`
+                'Authorization':`bearer ${this.$cookies.get("token")}`
             }
             })
             await this.refreshData()
@@ -72,7 +72,7 @@ export default {
             const api = 'http://localhost:8000/services'
             const {data} = await axios.get(api,{
             headers:{
-                'Authorization':`bearer ${this.$store.state.token}`
+                'Authorization':`bearer ${this.$cookies.get("token")}`
             }
             });
             this.services = data.data

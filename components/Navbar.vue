@@ -7,8 +7,9 @@
         <div  id="navbarText" class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
                 <!-- <NavItem link="/dashboard" text="dashboard"/> -->
-                <NavItem link="/perbaikan" text="data service"/>
-                <!-- <NavItem link="/progress" text="progress service"/> -->
+                <NavItem v-if="role === 'pemilik' || role === 'customer service'" link="/perbaikan" text="data service"/>
+                <NavItem v-if="role === 'teknisi'" link="/perbaikan/antrian" text="antrian service"/>
+                <NavItem v-if="role === 'teknisi'" link="/perbaikan/progres" text="progress service"/>
                 <NavItem v-if="role === 'pemilik'" link="/pegawai" text="data pegawai"/>
                 <NavItem v-if="role === 'pemilik'" link="/kategori" text="data kategori"/>
             </ul>

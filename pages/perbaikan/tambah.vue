@@ -41,13 +41,6 @@
             <input id="keluhan" v-model="keluhan" type="text" class="form-control form-control-sm">
         </Input>
         <div class="form-check">
-            <input class="form-check-input" v-model="membutuhkanSpesialis" type="checkbox" value="true" id="membutuhkanSpesialis">
-            <label class="form-check-label" for="membutuhkanSpesialis">
-                Membutuhkan Spesialis
-            </label>
-        </div>
-        <br/>
-        <div class="form-check">
             <input class="form-check-input" v-model="membutuhkanKonfirmasi" type="checkbox" value="true" id="membutuhkanKonfirmasi">
             <label class="form-check-label" for="membutuhkanKonfirmasi">
                 Membutuhkan Konfirmasi
@@ -83,12 +76,11 @@ export default {
             namaCustomer:'',
             jenisKelamin:'',
             noHp:'',
-            mendukungWhatsapp:'',
+            mendukungWhatsapp:false,
             namaBarang:'',
             kategori:'',
             keluhan:'',
-            membutuhkanSpesialis:'',
-            membutuhkanKonfirmasi:'',
+            membutuhkanKonfirmasi:false,
             kelengkapan:'',
             catatan:'',
             uangMuka:'',
@@ -117,7 +109,6 @@ export default {
                 namaBarang:this.namaBarang,
                 kategori:this.kategori,
                 keluhan:this.keluhan,
-                membutuhkanSpesialis:this.membutuhkanSpesialis.toString(),
                 membutuhkanKonfirmasi:this.membutuhkanKonfirmasi.toString(),
                 kelengkapan:this.kelengkapan,
                 catatan:this.catatan,
@@ -129,7 +120,7 @@ export default {
                 'Authorization':`bearer ${this.$cookies.get('token')}`
             }
             })
-            this.$router.push({path:'/perbaikan/nota?id='+data.data.idService})
+            await this.$router.push({path:'/perbaikan/nota?id='+data.data.idService})
             // await console.log(data)
             }catch({response}){
                 this.errorMessage=[]

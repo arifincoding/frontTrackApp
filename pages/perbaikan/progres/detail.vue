@@ -27,6 +27,8 @@
                             -{{item.judul}} [{{ item.status }}]
                             <NuxtLink v-if="product.status === 'diagnosa'" class="btn btn-sm btn-primary" :to="{path:'/kerusakan/update',query:{id:item.idDiagnosa}}">Update</NuxtLink>
                             <span v-if="product.status === 'diagnosa'" class="btn btn-sm btn-danger" @click="deleteKerusakan(item.idDiagnosa)">Hapus</span>
+                            <span v-if="item.status === 'antri' && product.status === 'proses'" class="btn btn-sm btn-warning" @click="updateStatusDiagnosa(item.idDiagnosa,'proses')">Proses</span>
+                            <span v-if="item.status === 'proses' && product.status === 'proses'" class="btn btn-sm btn-success" @click="updateStatusDiagnosa(item.idDiagnosa,'selesai')">Selesai</span>
                         </div>
                     </div>
                     <NuxtLink v-if="product.status === 'diagnosa'" class="btn btn-sm btn-success" :to="{path:'/kerusakan/tambah',query:{id:product.id}}">Tambah</NuxtLink>
@@ -122,6 +124,19 @@ export default {
                 }
                 });
             this.product = service.data.data.product
+        },
+        async updateStatusDiagnosa(id,statusDiagnosa){
+            if(confirm(`Yakin ingin ${statusDiagnosa} kerusakan?`) === true){
+            const api = `http://localhost:8000/services/diagnosas/${id}/status`
+            await axios.put(api,{
+                status:statusDiagnosa
+            },{
+            headers:{
+                'Authorization':`bearer ${this.$cookies.get("token")}`
+            }
+            })
+            this.refreshDiagnosa()
+            }
         }
     }
 }

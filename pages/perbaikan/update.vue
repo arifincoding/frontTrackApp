@@ -37,13 +37,6 @@
                 <input id="keluhan" v-model="keluhan" type="text" class="form-control form-control-sm">
             </Input>
             <div class="form-check">
-                <input class="form-check-input" v-model="membutuhkanSpesialis" type="checkbox" value="true" id="membutuhkanSpesialis">
-                <label class="form-check-label" for="membutuhkanSpesialis">
-                    Membutuhkan Spesialis
-                </label>
-            </div>
-            <br/>
-            <div class="form-check">
                 <input class="form-check-input" v-model="membutuhkanKonfirmasi" type="checkbox" value="true" id="membutuhkanKonfirmasi">
                 <label class="form-check-label" for="membutuhkanKonfirmasi">
                     Membutuhkan Konfirmasi
@@ -83,7 +76,6 @@ export default {
             namaBarang:'',
             kategori:'',
             keluhan:'',
-            membutuhkanSpesialis:'',
             membutuhkanKonfirmasi:'',
             kelengkapan:'',
             catatan:'',
@@ -114,7 +106,6 @@ export default {
         this.namaBarang = data.data.product.nama
         this.kategori = data.data.product.kategori
         this.keluhan = data.data.product.keluhan
-        this.membutuhkanSpesialis = data.data.product.membutuhkanSpesialis
         this.membutuhkanKonfirmasi = data.data.product.membutuhkanKonfirmasi
         this.kelengkapan = data.data.product.kelengkapan
         this.catatan = data.data.product.catatan
@@ -134,7 +125,6 @@ export default {
                 namaBarang:this.namaBarang,
                 kategori:this.kategori,
                 keluhan:this.keluhan,
-                membutuhkanSpesialis:this.membutuhkanSpesialis.toString(),
                 membutuhkanKonfirmasi:this.membutuhkanKonfirmasi.toString(),
                 kelengkapan:this.kelengkapan,
                 catatan:this.catatan,
