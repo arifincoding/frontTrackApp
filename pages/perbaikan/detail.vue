@@ -16,6 +16,7 @@
                     <p>Uang Muka : {{product.uangMuka}}</p>
                     <p>Estimasi Harga : {{product.estimasiHarga}}</p>
                     <p>Total Harga : Rp.{{product.totalHarga}}</p>
+                    <p>Status : {{ product.status }} <span v-if="product.diambil === true">[diambil]</span> </p>
                     <p>Catatan : {{product.catatan}}</p>
                     <p>Lama Garansi : {{product.lamaGaransi}}</p>
                     <p>Tanggal Masuk : {{product.tanggalMasuk}} ({{product.jamMasuk}})</p>
@@ -31,11 +32,11 @@
                         <div class = "mt-2">
                             -{{item.judul}} [{{ item.status }}] 
                             <span v-if="item.biaya"> [Rp.{{ item.biaya }}] </span> 
-                            <NuxtLink v-if="role === 'pemilik'" class="btn btn-sm btn-primary" :to="{path:'/perbaikan/updateHarga',query:{id:item.idDiagnosa}}" >Update Biaya</NuxtLink>
+                            <NuxtLink v-if="role === 'pemilik' && product.status !== 'diagnosa'" class="btn btn-sm btn-primary" :to="{path:'/perbaikan/updateHarga',query:{id:item.idDiagnosa}}" >Update Biaya</NuxtLink>
                         </div>
                     </div>
                 </div>
-                <div v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === false" class="mt-2 btn btn-success" @click="confirmCost(product.id)">Konfirmasi Biaya</div>
+                <div v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === false && product.status === 'selesai diagnosa'" class="mt-2 btn btn-success" @click="confirmCost(product.id)">Konfirmasi Biaya</div>
                 <NuxtLink v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.diambil === false" class="mt-2 btn btn-primary" :to="{path:'/perbaikan/garansi',query:{id:product.id}}">Update Garansi</NuxtLink>
                 <div v-if="product.status === 'selesai' && product.sudahKonfirmasiBiaya === true && product.diambil === false" class="mt-2 btn btn-success" @click="take(product.id)">Ambil Barang</div>
             </div>
@@ -99,14 +100,28 @@ export default {
             }
         },
         async refreshData(){
-            const serviceApi = `http://localhost:8000/services/${this.$route.query.id}/detail`;
-            const service = await axios.get(serviceApi,{
+            const api = `http://localhost:8000/services/${this.$route.query.id}/detail`;
+            const {data} = await axios.get(api,{
+                    headers:{
+                        'Authorization':`bearer ${this.$cookies.get('token')}`
+                    }
+                });
+            this.customer = data.data.customer
+            this.product = data.data.product
+        },
+        async take(id){
+            if(confirm("Yakin ingin mengambil barang ?") === true){
+            const api =`http://localhost:8000/services/${id}/take`
+            const {data} = await axios.put(api,{
+                ambil:'true'
+            },{
                 headers:{
                     'Authorization':`bearer ${this.$cookies.get('token')}`
                 }
-                });
-            this.customer = service.data.data.customer
-            this.product = service.data.data.product
+            })
+            console.log(data)
+            await this.$router.push({path:`/perbaikan/nota-ambil?id=${id}`})
+        }
         }
     }
 }

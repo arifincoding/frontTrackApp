@@ -4,7 +4,7 @@
         
         <div class="row">
             <div class="ml-3 col-6 font-weight-bold">
-                <NuxtLink to="/perbaikan">
+                <NuxtLink class="text-dark" to="/perbaikan">
                     <h1>MASKOM</h1>
                 </NuxtLink>
                 <div>JL GAJAYANA 20 A3 KOTA MALANG</div>
@@ -113,7 +113,7 @@
                     <td class="text-center" style="height:15px; width:200px; font-size:12px">CS</td>
                 </tr>
                 <tr>
-                    <td>{{product.customerService}}</td>
+                    <td class="text-center">{{user}}</td>
                 </tr>
             </table>
         </div>
@@ -123,11 +123,13 @@
 
 <script>
 import axios from 'axios';
+import decode from 'jwt-decode'
 export default {
     data(){
         return {
             customer:'',
-            product:''
+            product:'',
+            user:''
         }
     },
     async mounted(){
@@ -137,9 +139,11 @@ export default {
                 'Authorization':`bearer ${this.$cookies.get('token')}`
             }
             });
-            this.customer = await data.data.customer
-            this.product = await data.data.product
-            setTimeout(function () {window.print()}, 3000);
+        const payload = await decode(this.$cookies.get('token'))
+        this.user = payload.shortName
+        this.customer = await data.data.customer
+        this.product = await data.data.product
+        setTimeout(function () {window.print()}, 3000);
     },
 }
 </script>

@@ -5,9 +5,6 @@
             <Input title="kerusakan">
                 <input type="text" id="kerusakan" v-model="kerusakan" class="form-control form-control-sm">
             </Input>
-            <Input title="status">
-                <input type="text" id="status" v-model="status" class="form-control form-control-sm">
-            </Input>
             <div class="btn btn-success" @click="saveData()">Simpan</div>
         </form>
     </div>
@@ -19,8 +16,7 @@ export default {
     layout:'admin',
     data(){
         return {
-            kerusakan:'',
-            status:''
+            kerusakan:''
         }
     },
     async mounted(){
@@ -31,14 +27,13 @@ export default {
             }
             });
         this.kerusakan=data.data.judul
-        this.status=data.data.status
     },
     methods:{
         async saveData(){
             const api = `http://localhost:8000/services/diagnosas/${this.$route.query.id}`;
             const {data} = await axios.put(api,{
                 judul: this.kerusakan,
-                status: this.status
+                status: 'antri'
             },{
             headers:{
                 'Authorization':`bearer ${this.$cookies.get('token')}`
