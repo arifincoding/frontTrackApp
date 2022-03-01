@@ -1,5 +1,6 @@
 <template>
   <div v-if="!this.$cookies.get('token')">
+    <div class="container mt-4">
     <div v-if="errorMessage !=='test'">
       <div class="small bg-danger text-light rounded p-2">
       <div>
@@ -7,6 +8,7 @@
       </div>
       </div>
       </div>
+    <TitleHeading class="mt-3" text="Login Admin"/>
     <Input title="username">
       <input id="username" v-model="username" type="text" class="form-control form-control-sm">
     </Input>
@@ -14,11 +16,11 @@
       <input id="password" v-model="password" type="password" class="form-control form-control-sm">
     </Input>
     <div class="btn btn-success" @click="login()">Login</div>
+    </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
 import decode from 'jwt-decode'
 export default {
   // layout: 'admin',
@@ -42,8 +44,8 @@ export default {
   methods:{
     async login(){
       try{
-      const api = 'http://localhost:8000/user/login'
-      const {data} = await axios.post(api,{
+      const api = '/user/login'
+      const data = await this.$axios.$post(api,{
         username:this.username,
         password:this.password
       })

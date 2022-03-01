@@ -36,8 +36,17 @@
                         </div>
                     </div>
                 </div>
+                <!-- konfirmasi biaya -->
                 <div v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === false && product.status === 'selesai diagnosa'" class="mt-2 btn btn-success" @click="confirmCost(product.id)">Konfirmasi Biaya</div>
+
+                <div v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.membutuhkanKonfirmasi === true" class="mt-2 btn btn-success" @click="confirmService(product.id,'true')">Disetujui</div>
+
+                <div v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.membutuhkanKonfirmasi === true" class="mt-2 btn btn-danger" @click="confirmService(product.id,'false')">Dibatakkan</div>
+
+                <!-- update garansi -->
                 <NuxtLink v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.diambil === false" class="mt-2 btn btn-primary" :to="{path:'/perbaikan/garansi',query:{id:product.id}}">Update Garansi</NuxtLink>
+                
+                <!-- ambil barang -->
                 <div v-if="product.status === 'selesai' && product.sudahKonfirmasiBiaya === true && product.diambil === false" class="mt-2 btn btn-success" @click="take(product.id)">Ambil Barang</div>
             </div>
         </div>
@@ -45,7 +54,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import decode from 'jwt-decode'
 export default {
     layout:'admin',
@@ -58,21 +66,13 @@ export default {
         }
     },
     async mounted(){
-        const serviceApi = `http://localhost:8000/services/${this.$route.query.id}/detail`;
-        const service = await axios.get(serviceApi,{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            });
 
-        const diagnosaApi = `http://localhost:8000/services/${this.$route.query.id}/diagnosas`
+        const service = await this.$repositories.service.show(this.$route.query.id,this.$cookies.get('token'))
+
         let diagnosa = []
         try{
-            const {data} = await axios.get(diagnosaApi,{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            });
+            const data = await this.$repositories.diagnosa.all(this.$route.query.id,this.$cookies.get('token'))
+            
             diagnosa = await data.data
         }catch{
             diagnosa = []
@@ -81,47 +81,39 @@ export default {
         const payload = await decode(this.$cookies.get('token'))
         this.role = payload.role
 
-        this.customer = service.data.data.customer
-        this.product = service.data.data.product
+        this.customer = service.data.customer
+        this.product = service.data.product
         this.diagnosas = diagnosa
     },
     methods:{
         async confirmCost(id){
             if(confirm("Yakin ingin konfirmasi biaya ?") === true){
-                const api = `http://localhost:8000/services/${id}/confirm-cost`
-                await axios.put(api,{
+                
+                await this.$repositories.service.updateConfirmCost(id,{
                     konfirmasiBiaya:'true'
-                },{
-                headers:{
-                    'Authorization':`bearer ${this.$cookies.get('token')}`
-                }
-                })
+                },this.$cookies.get('token'))
+                
                 await this.refreshData()
             }
         },
         async refreshData(){
-            const api = `http://localhost:8000/services/${this.$route.query.id}/detail`;
-            const {data} = await axios.get(api,{
-                    headers:{
-                        'Authorization':`bearer ${this.$cookies.get('token')}`
-                    }
-                });
+            const data = await this.$repositories.service.show(this.$route.query.id,this.$cookies.get('token'))
             this.customer = data.data.customer
             this.product = data.data.product
         },
         async take(id){
             if(confirm("Yakin ingin mengambil barang ?") === true){
-            const api =`http://localhost:8000/services/${id}/take`
-            const {data} = await axios.put(api,{
-                ambil:'true'
-            },{
-                headers:{
-                    'Authorization':`bearer ${this.$cookies.get('token')}`
-                }
-            })
-            console.log(data)
-            await this.$router.push({path:`/perbaikan/nota-ambil?id=${id}`})
+                await this.$repositories.service.updateTake(id,{
+                    ambil:'true'
+                },this.$cookies.get('token'))
+                await this.$router.push({path:`/perbaikan/nota-ambil?id=${id}`})
         }
+        },
+        async confirmService(id,value){
+            await this.$repositories.service.updateConfirmation(id,{
+                konfirmasi:value
+            },this.$cookies.get('token'))
+            await this.refreshData()
         }
     }
 }

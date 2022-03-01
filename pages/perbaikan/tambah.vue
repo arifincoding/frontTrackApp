@@ -68,7 +68,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
     layout:'admin',
     data(){
@@ -91,17 +90,13 @@ export default {
         }
     },
     async mounted(){
-        const api = 'http://localhost:8000/categories'
-        const {data} = await axios.get(api,{headers:{
-            'Authorization':`bearer ${this.$cookies.get('token')}`
-        }})
+        const data = await this.$repositories.category.all(this.$cookies.get('token'))
         this.listKategori = data.data
     },
     methods:{
         async saveInput(){
             try{
-            const api = 'http://localhost:8000/services'
-            const {data} = await axios.post(api,{
+            const data = await this.$repositories.service.create({
                 namaCustomer:this.namaCustomer,
                 jenisKelamin:this.jenisKelamin,
                 noHp:this.noHp,
@@ -115,11 +110,8 @@ export default {
                 uangMuka:this.uangMuka,
                 estimasiHarga:this.estimasiHarga,
                 cacatProduk:this.cacatProduk
-            },{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            })
+            },this.$cookies.get('token'))
+
             await this.$router.push({path:'/perbaikan/nota?id='+data.data.idService})
             // await console.log(data)
             }catch({response}){

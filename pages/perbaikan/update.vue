@@ -64,7 +64,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
     layout:'admin',
     data(){
@@ -87,17 +86,11 @@ export default {
         }
     },
     async mounted(){
-        const api = `http://localhost:8000/services/${this.$route.query.id}/detail`
-        const {data} = await axios.get(api,{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            })
-        const apiKategori = 'http://localhost:8000/categories'
-        const dataKategori = await axios.get(apiKategori,{headers:{
-            'Authorization':`bearer ${this.$cookies.get('token')}`
-        }})
-        this.listKategori = dataKategori.data.data
+        const data = await this.$repositories.service.show(this.$route.query.id,this.$cookies.get('token'))
+
+        const dataKategori = await this.$repositories.category.all(this.$cookies.get('token'))
+
+        this.listKategori = dataKategori.data
         
         this.namaCustomer = data.data.customer.nama
         this.jenisKelamin = data.data.customer.jenisKelamin
@@ -116,28 +109,22 @@ export default {
     methods:{
         async saveInput(){
             try{
-            const api = 'http://localhost:8000/services/'+this.$route.query.id
-            const {data} = await axios.put(api,{
-                namaCustomer:this.namaCustomer,
-                jenisKelamin:this.jenisKelamin,
-                noHp:this.noHp,
-                mendukungWhatsapp:this.mendukungWhatsapp.toString(),
-                namaBarang:this.namaBarang,
-                kategori:this.kategori,
-                keluhan:this.keluhan,
-                membutuhkanKonfirmasi:this.membutuhkanKonfirmasi.toString(),
-                kelengkapan:this.kelengkapan,
-                catatan:this.catatan,
-                uangMuka:this.uangMuka,
-                estimasiHarga:this.estimasiHarga,
-                cacatProduk:this.cacatProduk
-            },{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            })
-            console.log(await data)
-            this.$router.push({path:'/perbaikan'})
+                await this.$repositories.service.update(this.$route.query.id,{
+                    namaCustomer:this.namaCustomer,
+                    jenisKelamin:this.jenisKelamin,
+                    noHp:this.noHp,
+                    mendukungWhatsapp:this.mendukungWhatsapp.toString(),
+                    namaBarang:this.namaBarang,
+                    kategori:this.kategori,
+                    keluhan:this.keluhan,
+                    membutuhkanKonfirmasi:this.membutuhkanKonfirmasi.toString(),
+                    kelengkapan:this.kelengkapan,
+                    catatan:this.catatan,
+                    uangMuka:this.uangMuka,
+                    estimasiHarga:this.estimasiHarga,
+                    cacatProduk:this.cacatProduk
+                },this.$cookies.get('token'))
+                this.$router.push({path:'/perbaikan'})
             }catch({response}){
                 this.errorMessage=[]
                 for (const key in response.data.error) {

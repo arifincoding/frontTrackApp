@@ -89,7 +89,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import decode from 'jwt-decode'
 export default {
     data(){
@@ -101,21 +100,11 @@ export default {
         }
     },
     async mounted(){
-        const serviceApi = `http://localhost:8000/services/${this.$route.query.id}/detail`;
-        const service = await axios.get(serviceApi,{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            });
+        const service = await this.$repositories.service.show(this.$route.query.id,this.$cookies.get('token'))
 
-        const diagnosaApi = `http://localhost:8000/services/${this.$route.query.id}/diagnosas`
         let diagnosa = []
         try{
-            const {data} = await axios.get(diagnosaApi,{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            });
+            const data = await this.$repositories.diagnosa.all(this.$route.query.id, this.$cookies.get('token'))
             diagnosa = await data.data
         }catch{
             diagnosa = []
@@ -124,8 +113,8 @@ export default {
         const payload = await decode(this.$cookies.get('token'))
         this.user = payload.shortName
 
-        this.customer = service.data.data.customer
-        this.product = service.data.data.product
+        this.customer = service.data.customer
+        this.product = service.data.product
         this.diagnosas = diagnosa
         setTimeout(function () {window.print()}, 3000);
     }

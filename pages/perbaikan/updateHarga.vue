@@ -12,7 +12,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
     layout:'admin',
     data(){
@@ -22,25 +21,15 @@ export default {
         }
     },
     async mounted(){
-        const api = `http://localhost:8000/services/diagnosas/${this.$route.query.id}`;
-        const {data} = await axios.get(api,{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            });
+        const data = await this.$repositories.diagnosa.show(this.$route.query.id,this.$cookies.get('token'))
         this.kerusakan = data.data.judul
-        this.biaya=data.data.harga
+        this.biaya= data.data.harga
     },
     methods:{
         async saveData(){
-            const api = `http://localhost:8000/services/diagnosas/${this.$route.query.id}/cost`;
-            const {data} = await axios.put(api,{
+            const data = await this.$repositories.diagnosa.updateCost(this.$route.query.id,{
                 biaya: this.biaya
-            },{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            });
+            },this.$cookies.get('token'))
             this.$router.push({path:`/perbaikan/detail?id=${data.data.idService}`});
         }
     }

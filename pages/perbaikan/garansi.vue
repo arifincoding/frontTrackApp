@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
     layout:'admin',
     data(){
@@ -21,14 +20,9 @@ export default {
     },
     methods:{
         async saveData(){
-            const api = `http://localhost:8000/services/${this.$route.query.id}/warranty`;
-            await axios.put(api,{
+            await this.$repositories.service.updateWarranty(this.$route.query.id,{
                 garansi: this.garansi
-            },{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            });
+            },this.$cookies.get('token'))
             this.$router.push({path:`/perbaikan/detail?id=${this.$route.query.id}`});
         }
     }

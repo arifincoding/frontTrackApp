@@ -122,7 +122,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import decode from 'jwt-decode'
 export default {
     data(){
@@ -133,12 +132,7 @@ export default {
         }
     },
     async mounted(){
-        const api = `http://localhost:8000/services/${this.$route.query.id}/detail`;
-        const {data} = await axios.get(api,{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            });
+        const data = await this.$repositories.service.show(this.$route.query.id, this.$cookies.get('token'))
         const payload = await decode(this.$cookies.get('token'))
         this.user = payload.shortName
         this.customer = await data.data.customer

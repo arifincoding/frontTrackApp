@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+
 export default {
     layout:'admin',
     data(){
@@ -48,33 +48,18 @@ export default {
         }
     },
     async created(){
-        const api = 'http://localhost:8000/services'
-        const {data} = await axios.get(api,{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get("token")}`
-            }
-            });
+        const data = await this.$repositories.service.all(this.$cookies.get("token"))
         this.services = data.data
     },
     methods:{
         async deleteData(id){
             if(confirm("Yakin ingin menghapus data?") === true){
-            const api = 'http://localhost:8000/services/'+id
-            await axios.delete(api,{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get("token")}`
-            }
-            })
-            await this.refreshData()
+                await this.$repositories.service.delete(id,this.$cookies.get("token"))
+                await this.refreshData()
             }
         },
         async refreshData(){
-            const api = 'http://localhost:8000/services'
-            const {data} = await axios.get(api,{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get("token")}`
-            }
-            });
+            const data = await this.$repositories.service.all(this.$cookies.get("token"))
             this.services = data.data
         }
     }

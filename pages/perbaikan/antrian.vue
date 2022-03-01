@@ -31,7 +31,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
     layout:'admin',
     data(){
@@ -40,27 +39,17 @@ export default {
         }
     },
     async mounted(){
-        const api = 'http://localhost:8000/services/queue'
-        const {data} = await axios.get(api,{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get("token")}`
-            }
-            })
+        const data = await this.$repositories.service.listQueue(this.$cookies.get('token'))
         this.queues = data.data
     },
     methods:{
         async updateStatus(id){
             if(confirm("Yakin ingin mendiagnosa data?") === true){
-            const api = `http://localhost:8000/services/${id}/status`
-            await axios.put(api,{
-                status:'diagnosa'
-            },{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get("token")}`
+                await this.$repositories.service.updateStatus(id,{
+                    status:'diagnosa'
+                },this.$cookies.get("token"))
+                await this.$router.push({path:`/perbaikan/progres/detail?id=${id}`})
             }
-            })
-            await this.$router.push({path:`/perbaikan/progres/detail?id=${id}`})
-        }
         }
     }
 }
