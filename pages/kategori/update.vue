@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
     layout:'admin',
     data(){
@@ -28,27 +27,16 @@ export default {
         }
     },
     async mounted(){
-        const api = `http://localhost:8000/categories/${this.$route.params.id}`
-        const {data} = await axios.get(api,{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            })
+        const data = await this.$repositories.category.show(this.$route.params.id, this.$cookies.get('token'))
         this.namaKategori = data.data.kategori
     },
     methods:{
         async addCategory(){
             try{
-            const api = 'http://localhost:8000/categories/'+this.$route.params.id
-            const {data} = await axios.put(api,{
-                kategori:this.namaKategori
-            },{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            })
-            console.log(data)
-            this.$router.push({path:'/kategori'})
+                await this.$repositories.category.update(this.$route.params.id, {
+                    kategori:this.namaKategori
+                },this.$cookies.get('token'))
+                this.$router.push({path:'/kategori'})
             }catch({response}){
                 this.errorMessage=[]
                 for (const key in response.data.error) {

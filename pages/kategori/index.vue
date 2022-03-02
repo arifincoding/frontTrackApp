@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
     layout:'admin',
     data(){
@@ -34,34 +33,18 @@ export default {
         }
     },
     async mounted(){
-        const api = 'http://localhost:8000/categories'
-        const {data} = await axios.get(api,{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            })
+        const data = await this.$repositories.category.all(this.$cookies.get('token'))
         this.categories = data.data
     },
     methods:{
         async deleteData(idKategori){
             if(confirm("Yakin ingin menghapus data?") === true){
-            const api = 'http://localhost:8000/categories/'+idKategori
-            const {data} = await axios.delete(api,{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            })
-            console.log(await data)
-            await this.refreshData()
+                await this.$repositories.category.delete(idKategori,this.$cookies.get('token'))
+                await this.refreshData()
             }
         },
         async refreshData(){
-            const api = 'http://localhost:8000/categories'
-            const {data} = await axios.get(api,{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            })
+            const data = await this.$repositories.category.all(this.$cookies.get('token')) 
             this.categories = data.data
         }
     }

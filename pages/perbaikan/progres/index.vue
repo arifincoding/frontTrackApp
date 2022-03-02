@@ -32,7 +32,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
     layout:'admin',
     data(){
@@ -41,12 +40,7 @@ export default {
         }
     },
     async mounted(){
-        const api = 'http://localhost:8000/services/progress'
-        const {data} = await axios.get(api,{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get("token")}`
-            }
-            })
+        const data = await this.$repositories.service.listProgress(this.$cookies.get("token"))
         this.queues = data.data
     }
 }

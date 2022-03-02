@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
     layout:'admin',
     data(){
@@ -27,37 +26,21 @@ export default {
         }
     },
     async mounted(){
-        const api = 'http://localhost:8000/employes/'+this.$route.query.id
-        const {data} = await axios.get(api,{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            })
+        const data = await this.$repositories.employee.show(this.$route.query.id, this.$cookies.get('token'))
         this.employee = data.data
         
     },
     methods:{
         async deleteData(id){
             if(confirm("Yakin ingin menghapus data?") === true){
-                const api = `http://localhost:8000/employes/technician/responbility/${id}`
-                await axios.delete(api,{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            })
-            this.refreshData()
+                await this.$repositories.responbility.delete(id,this.$cookies.get('token'))
+                this.refreshData()
             }
         },
         async refreshData(){
-        const api = 'http://localhost:8000/employes/'+this.$route.query.id
-        const {data} = await axios.get(api,{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            })
-        this.employee = data.data
-        
-    }
+            const data = await this.$repositories.employee.show(this.$route.query.id, this.$cookies.get('token'))
+            this.employee = data.data
+        }
     }
 }
 </script>

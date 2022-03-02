@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
     layout:'admin',
     data(){
@@ -30,16 +29,10 @@ export default {
     methods:{
         async addCategory(){
             try{
-            const api = 'http://localhost:8000/categories'
-            const {data} = await axios.post(api,{
-                kategori:this.namaKategori
-            },{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            })
-            console.log(data)
-            this.$router.push({path:'/kategori'})
+                await this.$repositories.create({
+                    kategori:this.namaKategori
+                },this.$cookies.get('token'))
+                this.$router.push({path:'/kategori'})
             }catch({response}){
                 this.errorMessage=[]
                 for (const key in response.data.error) {

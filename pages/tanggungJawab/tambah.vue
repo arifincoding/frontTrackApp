@@ -14,7 +14,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
     layout:'admin',
     data(){
@@ -24,20 +23,14 @@ export default {
         }
     },
     async mounted(){
-        const api = 'http://localhost:8000/categories'
-        const {data} = await axios.get(api,{headers:{
-            'Authorization':`bearer ${this.$cookies.get('token')}`
-        }})
+        const data = await this.$repositories.category.all(this.$cookies.get('token'))
         this.categories = data.data
     },
     methods:{
         async saveData(){
-            const api = `http://localhost:8000/employes/${this.$route.query.id}/technician/responbility`
-            await axios.post(api,{
+            await this.$repositories.responbility.create(this.$route.query.id,{
                 idKategori : this.idKategori
-            },{headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }})
+            },this.$cookies.get('token'))
             this.$router.push({path:`/pegawai/detail?id=${this.$route.query.id}`})
         }
     }

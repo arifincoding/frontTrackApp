@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
     layout:'admin',
     data(){
@@ -20,25 +19,15 @@ export default {
         }
     },
     async mounted(){
-        const api = `http://localhost:8000/services/diagnosas/${this.$route.query.id}`;
-        const {data} = await axios.get(api,{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            });
+        const data = await this.$repositories.diagnosa.show(this.$route.query.id, this.$cookies.get('token'))
         this.kerusakan=data.data.judul
     },
     methods:{
         async saveData(){
-            const api = `http://localhost:8000/services/diagnosas/${this.$route.query.id}`;
-            const {data} = await axios.put(api,{
+            const data = await this.$repositories.diagnosa.update(this.$route.query.id,{
                 judul: this.kerusakan,
                 status: 'antri'
-            },{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            });
+            },this.$cookies.get('token'))
             this.$router.push({path:`/perbaikan/progres/detail?id=${data.data.idService}`});
         }
     }

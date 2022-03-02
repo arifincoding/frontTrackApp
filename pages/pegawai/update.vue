@@ -69,44 +69,33 @@ export default {
         }
     },
     async mounted(){
-        const api = 'http://localhost:8000/employes/'+this.$route.query.id
-        const {data} = await axios.get(api,{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            });
+        const data = await this.$repositories.employee.show(this.$route.query.id,this.$cookies.get('token'))
             
-            this.namaDepan = data.data.namaDepan
-            this.namaBelakang=data.data.namaBelakang
-            this.namaPendek= data.data.namaPendek
-            this.tanggalBergabung=data.data.tanggalBergabung
-            this.jenisKelamin= data.data.jenisKelamin
-            this.noHp=data.data.noHp
-            this.alamat=data.data.alamat
-            this.peran=data.data.peran
-            this.email=data.data.email
+        this.namaDepan = data.data.namaDepan
+        this.namaBelakang=data.data.namaBelakang
+        this.namaPendek= data.data.namaPendek
+        this.tanggalBergabung=data.data.tanggalBergabung
+        this.jenisKelamin= data.data.jenisKelamin
+        this.noHp=data.data.noHp
+        this.alamat=data.data.alamat
+        this.peran=data.data.peran
+        this.email=data.data.email
     },
     methods:{
         async saveEmployee(){
             try{
-            const api = 'http://localhost:8000/employes/'+this.$route.query.id
-            const {data} = await axios.put(api,{
-                namaDepan:this.namaDepan,
-                namaBelakang:this.namaBelakang,
-                namaPendek:this.namaPendek,
-                tanggalBergabung:this.tanggalBergabung,
-                jenisKelamin:this.jenisKelamin,
-                noHp:this.noHp,
-                alamat:this.alamat,
-                peran:this.peran,
-                email:this.email
-            },{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            })
-            console.log(data);
-            this.$router.push({path:'/pegawai'})
+                await this.$repositories.employee.update(this.$route.query.id,{
+                    namaDepan:this.namaDepan,
+                    namaBelakang:this.namaBelakang,
+                    namaPendek:this.namaPendek,
+                    tanggalBergabung:this.tanggalBergabung,
+                    jenisKelamin:this.jenisKelamin,
+                    noHp:this.noHp,
+                    alamat:this.alamat,
+                    peran:this.peran,
+                    email:this.email
+                },this.$cookies.get('token'))
+                this.$router.push({path:'/pegawai'})
             }catch({response}){
                 this.errorMessage=[]
                 for (const key in response.data.error) {

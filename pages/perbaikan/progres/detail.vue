@@ -42,7 +42,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
     layout:'admin',
     data(){
@@ -53,51 +52,31 @@ export default {
         }
     },
     async mounted(){
-        const serviceApi = `http://localhost:8000/services/${this.$route.query.id}/detail`;
-        const service = await axios.get(serviceApi,{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            });
+        const service = await this.$repositories.service.show(this.$route.query.id, this.$cookies.get('token'))
 
-        const diagnosaApi = `http://localhost:8000/services/${this.$route.query.id}/diagnosas`
         let diagnosa = []
         try{
-            const {data} = await axios.get(diagnosaApi,{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            });
+            const data = await this.$repositories.diagnosa.all(this.$route.query.id, this.$cookies.get('token'))
+            
             diagnosa = await data.data
         }catch{
             diagnosa = []
         }
-        this.customer = service.data.data.customer
-        this.product = service.data.data.product
+        this.customer = service.data.customer
+        this.product = service.data.product
         this.diagnosas = diagnosa
     },
     
     methods:{
         async deleteKerusakan(id){
             if(confirm("Yakin ingin menghapus data?") === true){
-            const api = `http://localhost:8000/services/diagnosas/${id}`;
-            await axios.delete(api,{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            })
+            await this.$repositories.diagnosa.delete(id,this.$cookies.get('token'))
             this.refreshDiagnosa();
             }
         },
         async refreshDiagnosa(){
             try{
-                const diagnosaApi = `http://localhost:8000/services/${this.$route.query.id}/diagnosas`
-            
-                const {data} = await axios.get(diagnosaApi,{
-                headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-                }
-                });
+                const data = await this.$repositories.diagnosa.all(this.$route.query.id,this.$cookies.get('token'))
                 this.diagnosas = await data.data
             }catch{
                 this.diagnosas = []
@@ -105,37 +84,22 @@ export default {
         },
         async updateStatus(id,inputStatus){
             if(confirm(`Yakin ingin ${inputStatus} data?`) === true){
-            const api = `http://localhost:8000/services/${id}/status`
-            await axios.put(api,{
-                status:inputStatus
-            },{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get("token")}`
+                await this.$repositories.service.updateStatus(id,{
+                    status:inputStatus
+                },this.$cookies.get("token"))
+                await this.refreshData()
             }
-            })
-            await this.refreshData()
-        }
         },
         async refreshData(){
-            const serviceApi = `http://localhost:8000/services/${this.$route.query.id}/detail`;
-            const service = await axios.get(serviceApi,{
-                headers:{
-                    'Authorization':`bearer ${this.$cookies.get('token')}`
-                }
-                });
-            this.product = service.data.data.product
+            const service = await this.$repositories.service.show(this.$route.query.id,this.$cookies.get('token'))
+            this.product = service.data.product
         },
         async updateStatusDiagnosa(id,statusDiagnosa){
             if(confirm(`Yakin ingin ${statusDiagnosa} kerusakan?`) === true){
-            const api = `http://localhost:8000/services/diagnosas/${id}/status`
-            await axios.put(api,{
-                status:statusDiagnosa
-            },{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get("token")}`
-            }
-            })
-            this.refreshDiagnosa()
+                await this.$repositories.diagnosa.updateStatus(id,{
+                    status:statusDiagnosa
+                },this.$cookies.get("token"))
+                this.refreshDiagnosa()
             }
         }
     }

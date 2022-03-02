@@ -53,7 +53,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
     layout:"admin",
     data(){
@@ -73,24 +72,18 @@ export default {
     methods:{
         async addEmployee() {
             try{
-            const api = 'http://localhost:8000/employes'
-            const {data} = await axios.post(api,{
-                namaDepan:this.namaDepan,
-                namaBelakang:this.namaBelakang,
-                namaPendek:this.namaPendek,
-                jenisKelamin:this.jenisKelamin,
-                noHp:this.noHp,
-                tanggalBergabung: this.tanggalBergabung,
-                alamat:this.alamat,
-                peran:this.peran,
-                email:this.email
-            },{
-            headers:{
-                'Authorization':`bearer ${this.$cookies.get('token')}`
-            }
-            })
-            console.log(data)
-            this.$router.push({ path:'/pegawai' })
+                await this.$repositories.employee.create({
+                    namaDepan:this.namaDepan,
+                    namaBelakang:this.namaBelakang,
+                    namaPendek:this.namaPendek,
+                    jenisKelamin:this.jenisKelamin,
+                    noHp:this.noHp,
+                    tanggalBergabung: this.tanggalBergabung,
+                    alamat:this.alamat,
+                    peran:this.peran,
+                    email:this.email
+                },this.$cookies.get('token'))
+                this.$router.push({ path:'/pegawai' })
             }catch({response}){
                 this.errorMessage=[]
                 for (const key in response.data.error) {
