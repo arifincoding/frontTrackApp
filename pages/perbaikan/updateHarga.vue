@@ -21,7 +21,7 @@ export default {
         }
     },
     async mounted(){
-        const data = await this.$repositories.diagnosa.show(this.$route.query.id,this.$cookies.get('token'))
+        const data = await this.$repositories.diagnosa.show(this.$route.query.id)
         this.kerusakan = data.data.judul
         this.biaya= data.data.harga
     },
@@ -29,7 +29,7 @@ export default {
         async saveData(){
             const data = await this.$repositories.diagnosa.updateCost(this.$route.query.id,{
                 biaya: this.biaya
-            },this.$cookies.get('token'))
+            })
             this.$router.push({path:`/perbaikan/detail?id=${data.data.idService}`});
         }
     }

@@ -26,19 +26,19 @@ export default {
         }
     },
     async mounted(){
-        const data = await this.$repositories.employee.show(this.$route.query.id, this.$cookies.get('token'))
+        const data = await this.$repositories.employee.show(this.$route.query.id)
         this.employee = data.data
         
     },
     methods:{
         async deleteData(id){
             if(confirm("Yakin ingin menghapus data?") === true){
-                await this.$repositories.responbility.delete(id,this.$cookies.get('token'))
+                await this.$repositories.responbility.delete(id)
                 this.refreshData()
             }
         },
         async refreshData(){
-            const data = await this.$repositories.employee.show(this.$route.query.id, this.$cookies.get('token'))
+            const data = await this.$repositories.employee.show(this.$route.query.id)
             this.employee = data.data
         }
     }

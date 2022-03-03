@@ -22,7 +22,7 @@ export default {
         async saveData(){
             await this.$repositories.diagnosa.create(this.$route.query.id,{
                 judul:this.kerusakan
-            },this.$cookies.get('token'))
+            })
             this.$router.push({path:`/perbaikan/progres/detail?id=${this.$route.query.id}`});
         }
     }

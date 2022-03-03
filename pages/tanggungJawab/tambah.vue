@@ -23,14 +23,14 @@ export default {
         }
     },
     async mounted(){
-        const data = await this.$repositories.category.all(this.$cookies.get('token'))
+        const data = await this.$repositories.category.all()
         this.categories = data.data
     },
     methods:{
         async saveData(){
             await this.$repositories.responbility.create(this.$route.query.id,{
                 idKategori : this.idKategori
-            },this.$cookies.get('token'))
+            })
             this.$router.push({path:`/pegawai/detail?id=${this.$route.query.id}`})
         }
     }

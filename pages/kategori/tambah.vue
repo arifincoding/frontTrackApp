@@ -31,7 +31,7 @@ export default {
             try{
                 await this.$repositories.create({
                     kategori:this.namaKategori
-                },this.$cookies.get('token'))
+                })
                 this.$router.push({path:'/kategori'})
             }catch({response}){
                 this.errorMessage=[]

@@ -33,18 +33,18 @@ export default {
         }
     },
     async mounted(){
-        const data = await this.$repositories.category.all(this.$cookies.get('token'))
+        const data = await this.$repositories.category.all()
         this.categories = data.data
     },
     methods:{
         async deleteData(idKategori){
             if(confirm("Yakin ingin menghapus data?") === true){
-                await this.$repositories.category.delete(idKategori,this.$cookies.get('token'))
+                await this.$repositories.category.delete(idKategori)
                 await this.refreshData()
             }
         },
         async refreshData(){
-            const data = await this.$repositories.category.all(this.$cookies.get('token')) 
+            const data = await this.$repositories.category.all() 
             this.categories = data.data
         }
     }

@@ -52,11 +52,11 @@ export default {
         }
     },
     async mounted(){
-        const service = await this.$repositories.service.show(this.$route.query.id, this.$cookies.get('token'))
+        const service = await this.$repositories.service.show(this.$route.query.id)
 
         let diagnosa = []
         try{
-            const data = await this.$repositories.diagnosa.all(this.$route.query.id, this.$cookies.get('token'))
+            const data = await this.$repositories.diagnosa.all(this.$route.query.id)
             
             diagnosa = await data.data
         }catch{
@@ -70,13 +70,13 @@ export default {
     methods:{
         async deleteKerusakan(id){
             if(confirm("Yakin ingin menghapus data?") === true){
-            await this.$repositories.diagnosa.delete(id,this.$cookies.get('token'))
+            await this.$repositories.diagnosa.delete(id)
             this.refreshDiagnosa();
             }
         },
         async refreshDiagnosa(){
             try{
-                const data = await this.$repositories.diagnosa.all(this.$route.query.id,this.$cookies.get('token'))
+                const data = await this.$repositories.diagnosa.all(this.$route.query.id)
                 this.diagnosas = await data.data
             }catch{
                 this.diagnosas = []
@@ -86,19 +86,19 @@ export default {
             if(confirm(`Yakin ingin ${inputStatus} data?`) === true){
                 await this.$repositories.service.updateStatus(id,{
                     status:inputStatus
-                },this.$cookies.get("token"))
+                })
                 await this.refreshData()
             }
         },
         async refreshData(){
-            const service = await this.$repositories.service.show(this.$route.query.id,this.$cookies.get('token'))
+            const service = await this.$repositories.service.show(this.$route.query.id)
             this.product = service.data.product
         },
         async updateStatusDiagnosa(id,statusDiagnosa){
             if(confirm(`Yakin ingin ${statusDiagnosa} kerusakan?`) === true){
                 await this.$repositories.diagnosa.updateStatus(id,{
                     status:statusDiagnosa
-                },this.$cookies.get("token"))
+                })
                 this.refreshDiagnosa()
             }
         }

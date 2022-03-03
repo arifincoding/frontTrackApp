@@ -67,18 +67,18 @@ export default {
     },
     async mounted(){
 
-        const service = await this.$repositories.service.show(this.$route.query.id,this.$cookies.get('token'))
+        const service = await this.$repositories.service.show(this.$route.query.id)
 
         let diagnosa = []
         try{
-            const data = await this.$repositories.diagnosa.all(this.$route.query.id,this.$cookies.get('token'))
+            const data = await this.$repositories.diagnosa.all(this.$route.query.id)
             
             diagnosa = await data.data
         }catch{
             diagnosa = []
         }
 
-        const payload = await decode(this.$cookies.get('token'))
+        const payload = await decode(this.$store.state.token)
         this.role = payload.role
 
         this.customer = service.data.customer
@@ -91,13 +91,13 @@ export default {
                 
                 await this.$repositories.service.updateConfirmCost(id,{
                     konfirmasiBiaya:'true'
-                },this.$cookies.get('token'))
+                })
                 
                 await this.refreshData()
             }
         },
         async refreshData(){
-            const data = await this.$repositories.service.show(this.$route.query.id,this.$cookies.get('token'))
+            const data = await this.$repositories.service.show(this.$route.query.id)
             this.customer = data.data.customer
             this.product = data.data.product
         },
@@ -105,14 +105,14 @@ export default {
             if(confirm("Yakin ingin mengambil barang ?") === true){
                 await this.$repositories.service.updateTake(id,{
                     ambil:'true'
-                },this.$cookies.get('token'))
+                })
                 await this.$router.push({path:`/perbaikan/nota-ambil?id=${id}`})
         }
         },
         async confirmService(id,value){
             await this.$repositories.service.updateConfirmation(id,{
                 konfirmasi:value
-            },this.$cookies.get('token'))
+            })
             await this.refreshData()
         }
     }

@@ -90,7 +90,7 @@ export default {
         }
     },
     async mounted(){
-        const data = await this.$repositories.category.all(this.$cookies.get('token'))
+        const data = await this.$repositories.category.all()
         this.listKategori = data.data
     },
     methods:{
@@ -110,7 +110,7 @@ export default {
                 uangMuka:this.uangMuka,
                 estimasiHarga:this.estimasiHarga,
                 cacatProduk:this.cacatProduk
-            },this.$cookies.get('token'))
+            })
 
             await this.$router.push({path:'/perbaikan/nota?id='+data.data.idService})
             // await console.log(data)

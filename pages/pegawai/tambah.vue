@@ -82,7 +82,7 @@ export default {
                     alamat:this.alamat,
                     peran:this.peran,
                     email:this.email
-                },this.$cookies.get('token'))
+                })
                 this.$router.push({ path:'/pegawai' })
             }catch({response}){
                 this.errorMessage=[]

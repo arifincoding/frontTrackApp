@@ -40,7 +40,7 @@ export default {
         }
     },
     async mounted(){
-        const data = await this.$repositories.service.listProgress(this.$cookies.get("token"))
+        const data = await this.$repositories.service.listProgress()
         this.queues = data.data
     }
 }

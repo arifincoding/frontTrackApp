@@ -39,7 +39,7 @@ export default {
         }
     },
     async mounted(){
-        const data = await this.$repositories.service.listQueue(this.$cookies.get('token'))
+        const data = await this.$repositories.service.listQueue()
         this.queues = data.data
     },
     methods:{
@@ -47,7 +47,7 @@ export default {
             if(confirm("Yakin ingin mendiagnosa data?") === true){
                 await this.$repositories.service.updateStatus(id,{
                     status:'diagnosa'
-                },this.$cookies.get("token"))
+                })
                 await this.$router.push({path:`/perbaikan/progres/detail?id=${id}`})
             }
         }

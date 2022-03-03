@@ -48,18 +48,18 @@ export default {
         }
     },
     async created(){
-        const data = await this.$repositories.service.all(this.$cookies.get("token"))
+        const data = await this.$repositories.service.all()
         this.services = data.data
     },
     methods:{
         async deleteData(id){
             if(confirm("Yakin ingin menghapus data?") === true){
-                await this.$repositories.service.delete(id,this.$cookies.get("token"))
+                await this.$repositories.service.delete(id)
                 await this.refreshData()
             }
         },
         async refreshData(){
-            const data = await this.$repositories.service.all(this.$cookies.get("token"))
+            const data = await this.$repositories.service.all()
             this.services = data.data
         }
     }

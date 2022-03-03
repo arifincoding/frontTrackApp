@@ -86,9 +86,9 @@ export default {
         }
     },
     async mounted(){
-        const data = await this.$repositories.service.show(this.$route.query.id,this.$cookies.get('token'))
+        const data = await this.$repositories.service.show(this.$route.query.id)
 
-        const dataKategori = await this.$repositories.category.all(this.$cookies.get('token'))
+        const dataKategori = await this.$repositories.category.all()
 
         this.listKategori = dataKategori.data
         
@@ -123,7 +123,7 @@ export default {
                     uangMuka:this.uangMuka,
                     estimasiHarga:this.estimasiHarga,
                     cacatProduk:this.cacatProduk
-                },this.$cookies.get('token'))
+                })
                 this.$router.push({path:'/perbaikan'})
             }catch({response}){
                 this.errorMessage=[]

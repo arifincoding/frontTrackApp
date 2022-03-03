@@ -22,7 +22,7 @@ export default {
         async saveData(){
             await this.$repositories.service.updateWarranty(this.$route.query.id,{
                 garansi: this.garansi
-            },this.$cookies.get('token'))
+            })
             this.$router.push({path:`/perbaikan/detail?id=${this.$route.query.id}`});
         }
     }

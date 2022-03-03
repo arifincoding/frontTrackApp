@@ -1,45 +1,45 @@
 const resource = '/employes'
 
-export default ($axios) => ({
-    all(token){
+export default ($axios, store) => ({
+    all(){
         return $axios.$get(`${resource}`,{
             headers:{
-                'Authorization':`bearer ${token}`
+                'Authorization':`bearer ${store.state.token}`
             }
         })
     },
-    show(id,token){
+    show(id){
         return $axios.$get(`${resource}/${id}`,{
             headers:{
-                'Authorization':`bearer ${token}`
+                'Authorization':`bearer ${store.state.token}`
             }
         })
     },
-    create(payload,token){
+    create(payload){
         return $axios.$post(`${resource}`,payload,{
             headers:{
-                'Authorization':`bearer ${token}`
+                'Authorization':`bearer ${store.state.token}`
             }
         })
     },
-    update(id,payload,token){
+    update(id,payload){
         return $axios.$put(`${resource}/${id}`,payload,{
             headers:{
-                'Authorization':`bearer ${token}`
+                'Authorization':`bearer ${store.state.token}`
             }
         })
     },
-    updateStatus(id,payload,token){
+    updateStatus(id,payload){
         return $axios.$put(`${resource}/${id}/status`,payload,{
             headers:{
-                'Authorization':`bearer ${token}`
+                'Authorization':`bearer ${store.state.token}`
             }
         })
     },
-    delete(id,token){
+    delete(id){
         return $axios.$delete(`${resource}/${id}`,{
             headers:{
-                'Authorization':`bearer ${token}`
+                'Authorization':`bearer ${store.state.token}`
             }
         })
     }

@@ -100,17 +100,17 @@ export default {
         }
     },
     async mounted(){
-        const service = await this.$repositories.service.show(this.$route.query.id,this.$cookies.get('token'))
+        const service = await this.$repositories.service.show(this.$route.query.id)
 
         let diagnosa = []
         try{
-            const data = await this.$repositories.diagnosa.all(this.$route.query.id, this.$cookies.get('token'))
+            const data = await this.$repositories.diagnosa.all(this.$route.query.id)
             diagnosa = await data.data
         }catch{
             diagnosa = []
         }
 
-        const payload = await decode(this.$cookies.get('token'))
+        const payload = await decode(this.$store.state.token)
         this.user = payload.shortName
 
         this.customer = service.data.customer

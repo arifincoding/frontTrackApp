@@ -132,8 +132,8 @@ export default {
         }
     },
     async mounted(){
-        const data = await this.$repositories.service.show(this.$route.query.id, this.$cookies.get('token'))
-        const payload = await decode(this.$cookies.get('token'))
+        const data = await this.$repositories.service.show(this.$route.query.id)
+        const payload = await decode(this.$store.state.token)
         this.user = payload.shortName
         this.customer = await data.data.customer
         this.product = await data.data.product

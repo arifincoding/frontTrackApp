@@ -19,7 +19,7 @@ export default {
         }
     },
     async mounted(){
-        const data = await this.$repositories.diagnosa.show(this.$route.query.id, this.$cookies.get('token'))
+        const data = await this.$repositories.diagnosa.show(this.$route.query.id)
         this.kerusakan=data.data.judul
     },
     methods:{
@@ -27,7 +27,7 @@ export default {
             const data = await this.$repositories.diagnosa.update(this.$route.query.id,{
                 judul: this.kerusakan,
                 status: 'antri'
-            },this.$cookies.get('token'))
+            })
             this.$router.push({path:`/perbaikan/progres/detail?id=${data.data.idService}`});
         }
     }

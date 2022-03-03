@@ -27,7 +27,7 @@ export default {
         }
     },
     async mounted(){
-        const data = await this.$repositories.category.show(this.$route.params.id, this.$cookies.get('token'))
+        const data = await this.$repositories.category.show(this.$route.params.id)
         this.namaKategori = data.data.kategori
     },
     methods:{
@@ -35,7 +35,7 @@ export default {
             try{
                 await this.$repositories.category.update(this.$route.params.id, {
                     kategori:this.namaKategori
-                },this.$cookies.get('token'))
+                })
                 this.$router.push({path:'/kategori'})
             }catch({response}){
                 this.errorMessage=[]

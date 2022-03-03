@@ -68,7 +68,7 @@ export default {
         }
     },
     async mounted(){
-        const data = await this.$repositories.employee.show(this.$route.query.id,this.$cookies.get('token'))
+        const data = await this.$repositories.employee.show(this.$route.query.id)
             
         this.namaDepan = data.data.namaDepan
         this.namaBelakang=data.data.namaBelakang
@@ -93,7 +93,7 @@ export default {
                     alamat:this.alamat,
                     peran:this.peran,
                     email:this.email
-                },this.$cookies.get('token'))
+                })
                 this.$router.push({path:'/pegawai'})
             }catch({response}){
                 this.errorMessage=[]
