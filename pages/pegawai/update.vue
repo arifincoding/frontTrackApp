@@ -67,18 +67,20 @@ export default {
             errorMessage:'test'
         }
     },
-    async mounted(){
-        const data = await this.$repositories.employee.show(this.$route.query.id)
+    async asyncData({app, query}){
+        const data = await app.$repositories.employee.show(query.id)
             
-        this.namaDepan = data.data.namaDepan
-        this.namaBelakang=data.data.namaBelakang
-        this.namaPendek= data.data.namaPendek
-        this.tanggalBergabung=data.data.tanggalBergabung
-        this.jenisKelamin= data.data.jenisKelamin
-        this.noHp=data.data.noHp
-        this.alamat=data.data.alamat
-        this.peran=data.data.peran
-        this.email=data.data.email
+        return {
+            namaDepan : data.data.namaDepan,
+            namaBelakang : data.data.namaBelakang,
+            namaPendek : data.data.namaPendek,
+            tanggalBergabung : data.data.tanggalBergabung,
+            jenisKelamin : data.data.jenisKelamin,
+            noHp : data.data.noHp,
+            alamat : data.data.alamat,
+            peran : data.data.peran,
+            email : data.data.email
+        }
     },
     methods:{
         async saveEmployee(){

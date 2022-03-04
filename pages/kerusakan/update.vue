@@ -18,9 +18,9 @@ export default {
             kerusakan:''
         }
     },
-    async mounted(){
-        const data = await this.$repositories.diagnosa.show(this.$route.query.id)
-        this.kerusakan=data.data.judul
+    async asyncData({app,query}){
+        const data = await app.$repositories.diagnosa.show(query.id)
+        return {kerusakan : data.data.judul}
     },
     methods:{
         async saveData(){

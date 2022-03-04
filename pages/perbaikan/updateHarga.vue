@@ -16,14 +16,15 @@ export default {
     layout:'admin',
     data(){
         return {
-            biaya:'',
-            kerusakan:''
+            biaya:''
         }
     },
-    async mounted(){
-        const data = await this.$repositories.diagnosa.show(this.$route.query.id)
-        this.kerusakan = data.data.judul
-        this.biaya= data.data.harga
+    async asyncData({app, query}){
+        const data = await app.$repositories.diagnosa.show(query.id)
+        return {
+            kerusakan : data.data.judul,
+            biaya : data.data.harga
+        }
     },
     methods:{
         async saveData(){

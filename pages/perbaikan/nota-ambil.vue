@@ -91,32 +91,28 @@
 <script>
 import decode from 'jwt-decode'
 export default {
-    data(){
-        return{
-            diagnosas:'',
-            customer:'',
-            product:'',
-            user:''
-        }
-    },
-    async mounted(){
-        const service = await this.$repositories.service.show(this.$route.query.id)
+    async asyncData({app, query, store}){
+        const service = await app.$repositories.service.show(query.id)
 
         let diagnosa = []
         try{
-            const data = await this.$repositories.diagnosa.all(this.$route.query.id)
+            const data = await app.$repositories.diagnosa.all(query.id)
             diagnosa = await data.data
         }catch{
             diagnosa = []
         }
 
-        const payload = await decode(this.$store.state.token)
-        this.user = payload.shortName
+        const payload = await decode(store.state.token)
 
-        this.customer = service.data.customer
-        this.product = service.data.product
-        this.diagnosas = diagnosa
-        setTimeout(function () {window.print()}, 3000);
+        return {
+            customer : service.data.customer,
+            product : service.data.product,
+            diagnosas : diagnosa,
+            user : payload.shortName
+        }
+    },
+    mounted(){
+        window.print()
     }
 }
 </script>

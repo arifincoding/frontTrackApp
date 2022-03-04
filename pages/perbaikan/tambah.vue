@@ -85,13 +85,12 @@ export default {
             uangMuka:'',
             estimasiHarga:'',
             cacatProduk:'',
-            errorMessage:'test',
-            listKategori:''
+            errorMessage:'test'
         }
     },
-    async mounted(){
-        const data = await this.$repositories.category.all()
-        this.listKategori = data.data
+    async asyncData({app}){
+        const data = await app.$repositories.category.all()
+        return {listKategori : data.data}
     },
     methods:{
         async saveInput(){

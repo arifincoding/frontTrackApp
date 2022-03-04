@@ -26,9 +26,9 @@ export default {
             errorMessage:'test'
         }
     },
-    async mounted(){
-        const data = await this.$repositories.category.show(this.$route.params.id)
-        this.namaKategori = data.data.kategori
+    async asyncData({app,params}){
+        const data = await app.$repositories.category.show(params.id)
+        return {namaKategori : data.data.kategori}
     },
     methods:{
         async addCategory(){

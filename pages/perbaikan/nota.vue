@@ -124,21 +124,18 @@
 <script>
 import decode from 'jwt-decode'
 export default {
-    data(){
+    async asyncData({app, query, store}){
+        const data = await app.$repositories.service.show(query.id)
+        const payload = await decode(store.state.token)
         return {
-            customer:'',
-            product:'',
-            user:''
+            user : payload.shortName,
+            customer : data.data.customer,
+            product : data.data.product,
         }
     },
-    async mounted(){
-        const data = await this.$repositories.service.show(this.$route.query.id)
-        const payload = await decode(this.$store.state.token)
-        this.user = payload.shortName
-        this.customer = await data.data.customer
-        this.product = await data.data.product
-        setTimeout(function () {window.print()}, 3000);
-    },
+    mounted(){
+        window.print()
+    }
 }
 </script>
 

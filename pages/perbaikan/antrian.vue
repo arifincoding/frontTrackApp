@@ -33,14 +33,9 @@
 <script>
 export default {
     layout:'admin',
-    data(){
-        return {
-            queues:''
-        }
-    },
-    async mounted(){
-        const data = await this.$repositories.service.listQueue()
-        this.queues = data.data
+    async asyncData({app}){
+        const data = await app.$repositories.service.listQueue()
+        return {queues : data.data}
     },
     methods:{
         async updateStatus(id){

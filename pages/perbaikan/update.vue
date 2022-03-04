@@ -81,30 +81,30 @@ export default {
             uangMuka:'',
             estimasiHarga:'',
             cacatProduk:'',
-            errorMessage:'test',
-            listKategori:''
+            errorMessage:'test'
         }
     },
-    async mounted(){
-        const data = await this.$repositories.service.show(this.$route.query.id)
+    async asyncData({app, query}){
+        const data = await app.$repositories.service.show(query.id)
 
-        const dataKategori = await this.$repositories.category.all()
-
-        this.listKategori = dataKategori.data
+        const dataKategori = await app.$repositories.category.all()
         
-        this.namaCustomer = data.data.customer.nama
-        this.jenisKelamin = data.data.customer.jenisKelamin
-        this.noHp = data.data.customer.noHp
-        this.mendukungWhatsapp = data.data.customer.mendukungWhatsapp
-        this.namaBarang = data.data.product.nama
-        this.kategori = data.data.product.kategori
-        this.keluhan = data.data.product.keluhan
-        this.membutuhkanKonfirmasi = data.data.product.membutuhkanKonfirmasi
-        this.kelengkapan = data.data.product.kelengkapan
-        this.catatan = data.data.product.catatan
-        this.uangMuka = data.data.product.uangMuka
-        this.estimasiHarga = data.data.product.estimasiHarga
-        this.cacatProduk = data.data.product.cacatProduk
+        return {
+            listKategori : dataKategori.data,
+            namaCustomer : data.data.customer.nama,
+            jenisKelamin : data.data.customer.jenisKelamin,
+            noHp : data.data.customer.noHp,
+            mendukungWhatsapp : data.data.customer.mendukungWhatsapp,
+            namaBarang : data.data.product.nama,
+            kategori : data.data.product.kategori,
+            keluhan : data.data.product.keluhan,
+            membutuhkanKonfirmasi : data.data.product.membutuhkanKonfirmasi,
+            kelengkapan : data.data.product.kelengkapan,
+            catatan : data.data.product.catatan,
+            uangMuka : data.data.product.uangMuka,
+            estimasiHarga : data.data.product.estimasiHarga,
+            cacatProduk : data.data.product.cacatProduk,
+        }
     },
     methods:{
         async saveInput(){

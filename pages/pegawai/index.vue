@@ -33,9 +33,11 @@ export default {
             employes:''
         }
     },
-    async mounted(){
-        const data = await this.$repositories.employee.all()
-        this.employes = data.data
+    async asyncData({app}){
+        const data = await app.$repositories.employee.all()
+        return {
+            employes : data.data
+        }
     },
     methods:{
         async deleteData(id){

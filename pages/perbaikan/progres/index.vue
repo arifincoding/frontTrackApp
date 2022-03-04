@@ -34,14 +34,11 @@
 <script>
 export default {
     layout:'admin',
-    data(){
+    async asyncData({app}){
+        const data = await app.$repositories.service.listProgress()
         return {
-            queues:'',
+            queues : data.data
         }
-    },
-    async mounted(){
-        const data = await this.$repositories.service.listProgress()
-        this.queues = data.data
     }
 }
 </script>

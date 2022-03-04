@@ -32,9 +32,9 @@ export default {
             categories:''
         }
     },
-    async mounted(){
-        const data = await this.$repositories.category.all()
-        this.categories = data.data
+    async asyncData({app}){
+        const data = await app.$repositories.category.all()
+        return {categories : data.data}
     },
     methods:{
         async deleteData(idKategori){

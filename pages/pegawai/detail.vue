@@ -25,9 +25,9 @@ export default {
             employee:''
         }
     },
-    async mounted(){
-        const data = await this.$repositories.employee.show(this.$route.query.id)
-        this.employee = data.data
+    async asyncData({app,query}){
+        const data = await app.$repositories.employee.show(query.id)
+        return {employee : data.data}
         
     },
     methods:{

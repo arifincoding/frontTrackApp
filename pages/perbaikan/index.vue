@@ -47,9 +47,9 @@ export default {
             services:''
         }
     },
-    async created(){
-        const data = await this.$repositories.service.all()
-        this.services = data.data
+    async asyncData({app}){
+        const data = await app.$repositories.service.all()
+        return {services : data.data}
     },
     methods:{
         async deleteData(id){

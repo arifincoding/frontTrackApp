@@ -59,31 +59,31 @@ export default {
     layout:'admin',
     data(){
         return{
-            diagnosas:'',
             customer:'',
-            product:'',
-            role:''
+            product:''
         }
     },
-    async mounted(){
+    async asyncData({app, query, store}){
 
-        const service = await this.$repositories.service.show(this.$route.query.id)
+        const service = await app.$repositories.service.show(query.id)
 
         let diagnosa = []
         try{
-            const data = await this.$repositories.diagnosa.all(this.$route.query.id)
+            const data = await app.$repositories.diagnosa.all(query.id)
             
             diagnosa = await data.data
         }catch{
             diagnosa = []
         }
 
-        const payload = await decode(this.$store.state.token)
-        this.role = payload.role
+        const payload = await decode(store.state.token)
 
-        this.customer = service.data.customer
-        this.product = service.data.product
-        this.diagnosas = diagnosa
+        return {
+            customer : service.data.customer,
+            product : service.data.product,
+            diagnosas : diagnosa,
+            role : payload.role
+        }
     },
     methods:{
         async confirmCost(id){

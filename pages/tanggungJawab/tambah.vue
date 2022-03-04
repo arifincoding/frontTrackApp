@@ -18,13 +18,14 @@ export default {
     layout:'admin',
     data(){
         return{
-            categories:'',
             idKategori:[]
         }
     },
-    async mounted(){
-        const data = await this.$repositories.category.all()
-        this.categories = data.data
+    async asyncData({app}){
+        const data = await app.$repositories.category.all()
+        return {
+            categories : data.data
+        }
     },
     methods:{
         async saveData(){

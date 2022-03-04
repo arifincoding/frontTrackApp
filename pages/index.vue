@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!this.$cookies.get('token')">
+  <div v-if="!this.$store.state.token">
     <div class="container mt-4">
     <div v-if="errorMessage !=='test'">
       <div class="small bg-danger text-light rounded p-2">
@@ -32,8 +32,8 @@ export default {
     }
   },
   async mounted(){
-    if(this.$cookies.get('token')){
-      const payload = await decode(this.$cookies.get('token'))
+    if(this.$store.state.token){
+      const payload = await decode(this.$store.state.token)
       if(payload.role === 'teknisi'){
         this.$router.push({path:'/perbaikan/antrian'})
       }else{
