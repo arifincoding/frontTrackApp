@@ -1,9 +1,8 @@
 <template>
-    <div class="form-group">
-            <label class="text-capitalize" v-bind:for="label">{{title}}</label>
+    <b-form-group :label="title" :label-for="label" label-size="Default" class="text-capitalize">
             <slot></slot>
             <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
-    </div>
+    </b-form-group>
 </template>
 
 <script>
