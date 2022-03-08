@@ -1,38 +1,31 @@
 <template>
     <div>
         <TitleHeading text="antrian perbaikan"/>
-        <Table>
-            <template v-slot:header>
-                <th>No</th>
-                <th>Kode</th>
-                <th>Barang</th>
-                <th>Keluhan</th>
-                <th>Status</th>
-                <th>Aksi</th>
+        <DataTable :fields="fields" :items="queues">
+            <template #cell(produk)="data"> 
+                <p>{{ data.item.nama }}</p>
+                <p> {{ data.item.kategori }} </p> 
             </template>
-            <template v-slot:body>
-                <tr v-for="(item,index) in queues" :key="index">
-                    <td>{{index+1}}</td>
-                    <td>{{item.kode}}</td>
-                    <td> 
-                        <p>{{ item.nama }}</p>
-                        <p> {{ item.kategori }} </p> 
-                    </td>
-                    <td> {{ item.keluhan }} </td>
-                    <td class="text-danger"> {{ item.status }} </td>
-                    <td>
-                        <div></div>
-                        <div class="btn btn-sm btn-primary" @click="updateStatus(item.idService)">Diagnosa</div>
-                    </td>
-                </tr>
+            <template #cell(menu)="data">
+                <div></div>
+                <div class="btn btn-sm btn-primary" @click="updateStatus(data.item.idService)">Diagnosa</div>
             </template>
-        </Table>
+        </DataTable>
     </div>
 </template>
 
 <script>
+import DataTable from '@/components/DataTable'
 export default {
     layout:'admin',
+    components:{
+        DataTable
+    },
+    data(){
+        return{
+            fields:['no','kode','produk','keluhan','status','menu']
+        }
+    },
     async asyncData({app}){
         const data = await app.$repositories.service.listQueue()
         return {queues : data.data}

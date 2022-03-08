@@ -2,35 +2,27 @@
     <div>
         <TitleHeading text="data pegawai"/>
         <NuxtLink to="/pegawai/tambah" class="btn btn-success btn-sm mb-2"> Tambah Pegawai </NuxtLink>
-        <Table>
-            <template v-slot:header>
-                <th>nama</th>
-                <th>peran</th>
-                <th>status</th>
-                <th>Menu</th>
+        <DataTable :fields="fields" :items="employes">
+            <template #cell(menu)="data">
+                <NuxtLink class="btn btn-sm btn-outline-success" :to="{path:'/pegawai/detail',query:{id:data.item.idPegawai}}">detail</NuxtLink>
+                <NuxtLink class="btn btn-sm btn-primary" :to="{path:'/pegawai/update',query:{id:data.item.idPegawai}}">update</NuxtLink>
+                <div class="btn btn-sm btn-danger" @click="deleteData(data.item.idPegawai)">Delete</div>
             </template>
-            <template v-slot:body>
-                <tr v-for="employee in employes" :key="employee.idPegawai">
-                    <td>{{employee.nama}}</td>
-                    <td>{{employee.peran}}</td>
-                    <td>{{employee.status}}</td>
-                    <td>
-                        <NuxtLink class="btn btn-sm btn-outline-success" :to="{path:'/pegawai/detail',query:{id:employee.idPegawai}}">detail</NuxtLink>
-                        <NuxtLink class="btn btn-sm btn-primary" :to="{path:'/pegawai/update',query:{id:employee.idPegawai}}">update</NuxtLink>
-                        <div class="btn btn-sm btn-danger" @click="deleteData(employee.idPegawai)">Delete</div>
-                    </td>
-                </tr>
-            </template>
-        </Table>
+        </DataTable>
     </div>
 </template>
 
 <script>
+import DataTable from '@/components/DataTable'
 export default {
     layout:'admin',
+    components:{
+        DataTable
+    },
     data(){
         return {
-            employes:''
+            employes:'',
+            fields:['no','nama','peran','status','menu']
         }
     },
     async asyncData({app}){

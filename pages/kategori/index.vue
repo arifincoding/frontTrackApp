@@ -4,32 +4,26 @@
         <NuxtLink to="/kategori/tambah">
             <ButtonAdd text="tambah kategori"/>
         </NuxtLink>
-        <Table>
-            <template v-slot:header>
-                <th>No</th>
-                <th>Kategori</th>
-                <th>Menu</th>
+        <DataTable :items="categories" :fields="fields">
+            <template #cell(menu)="data">
+                <NuxtLink class="btn btn-sm btn-primary" :to="{name:'kategori-update',params:{id:data.item.idKategori}}">update</NuxtLink>
+                <div class="btn btn-sm btn-danger" @click="deleteData(data.item.idKategori)">Hapus</div>
             </template>
-            <template v-slot:body>
-                <tr v-for="(item, index) in categories" :key="index">
-                    <td>{{ index+1 }}</td>
-                    <td>{{item.kategori}}</td>
-                    <td>
-                        <NuxtLink class="btn btn-primary" :to="{name:'kategori-update',params:{id:item.idKategori}}">update</NuxtLink>
-                        <div class="btn btn-danger" @click="deleteData(item.idKategori)">Hapus</div>
-                    </td>
-                </tr>
-            </template>
-        </Table>
+        </DataTable>
     </div>
 </template>
 
 <script>
+import DataTable from '@/components/DataTable'
 export default {
     layout:'admin',
+    components:{
+        DataTable
+    },
     data(){
         return{
-            categories:''
+            categories:'',
+            fields:['no','kategori','menu']
         }
     },
     async asyncData({app}){

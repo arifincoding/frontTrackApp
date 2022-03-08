@@ -4,47 +4,46 @@
         <NuxtLink to="/perbaikan/tambah">
             <ButtonAdd text="tambah perbaikan"/>
         </NuxtLink>
-        <Table>
-            <template v-slot:header>
-                <th>No</th>
-                <th>Kode</th>
-                <th>Klien</th>
-                <th>Barang</th>
-                <th>Keluhan</th>
-                <th>Status</th>
-                <th>Total Harga</th>
-                <th>Menu</th>
+        <DataTable :fields="fields" :items="services">
+            <template #cell(klien)="data">
+                <p>{{data.item.customer.nama}}</p>
+                <p>{{data.item.customer.noHp}}</p>
             </template>
-            <template v-slot:body>
-                <tr v-for="(item,index) in services" :key="index">
-                    <td>{{index + 1}}</td>
-                    <td>{{item.product.kode}}</td>
-                    <td>
-                        <p>{{item.customer.nama}}</p>
-                        <p>{{item.customer.noHp}}</p>
-                    </td>
-                    <td>{{item.product.nama}} ({{ item.product.kategori }})</td>
-                    <td>{{item.product.keluhan}}</td>
-                    <td>{{item.product.status}}</td>
-                    <td><span v-if="item.product.totalHarga">Rp.{{item.product.totalHarga}}</span></td>
-                    <td>
-                        <NuxtLink class="btn btn-sm btn-outline-success" :to="{path:'/perbaikan/detail',query:{id:item.product.id}}">Detail</NuxtLink>
-                        <NuxtLink class="btn btn-sm btn-primary" :to="{path:'/perbaikan/update',query:{id:item.product.id}}">Update</NuxtLink>
-                        <div class="btn btn-sm btn-danger" @click="deleteData(item.product.id)">Delete</div>
-                    </td>
-                </tr>
+            <template #cell(produk)="data">
+                {{data.item.product.nama}} ({{ data.item.product.kategori }})
             </template>
-        </Table>
+            <template #cell(totalharga)="data">
+                <span v-if="data.item.product.totalHarga">Rp.{{data.item.product.totalHarga}}</span>
+            </template>
+            <template #cell(menu)="data">
+                <NuxtLink class="btn btn-sm btn-outline-success" :to="{path:'/perbaikan/detail',query:{id:data.item.product.id}}">Detail</NuxtLink>
+                <NuxtLink class="btn btn-sm btn-primary" :to="{path:'/perbaikan/update',query:{id:data.item.product.id}}">Update</NuxtLink>
+                <div class="btn btn-sm btn-danger" @click="deleteData(data.item.product.id)">Delete</div>
+            </template>
+        </DataTable>
     </div>
 </template>
 
 <script>
-
+import DataTable from '@/components/DataTable'
 export default {
     layout:'admin',
+    components:{
+        DataTable
+    },
     data(){
         return {
-            services:''
+            services:'',
+            fields:[
+                'no',
+                {key:'product.kode', label:'kode'},
+                'klien',
+                'produk',
+                {key:'product.keluhan', label:'keluhan'},
+                {key:'product.status', label:'status'},
+                {key:'totalharga', label:'total harga'},
+                'menu'
+            ]
         }
     },
     async asyncData({app}){

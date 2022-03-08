@@ -1,39 +1,39 @@
 <template>
     <div>
         <TitleHeading text="progres perbaikan anda"/>
-        <Table>
-            <template v-slot:header>
-                <th>No</th>
-                <th>Kode</th>
-                <th>Barang</th>
-                <th>Keluhan</th>
-                <th>Status</th>
-                <th>Aksi</th>
+        <DataTable :fields="fields" :items="queues">
+            
+            <template #cell(produk)="data"> 
+                <p>{{ data.item.nama }}</p>
+                <p> {{ data.item.kategori }} </p> 
             </template>
-            <template v-slot:body>
-                <tr v-for="(item,index) in queues" :key="index">
-                    <td>{{index+1}}</td>
-                    <td>{{item.kode}}</td>
-                    <td> 
-                        <p>{{ item.nama }}</p>
-                        <p> {{ item.kategori }} </p> 
-                    </td>
-                    <td> {{ item.keluhan }} </td>
-                    <td v-if="item.status === 'diagnosa' || item.status === 'selesai diagnosa'" class="text-primary"> {{ item.status }} </td>
-                    <td v-else-if="item.status === 'proses'" class="text-warning"> {{ item.status }} </td>
-                    <td v-else-if="item.status === 'selesai'" class="text-success"> {{ item.status }} </td>
-                    <td>
-                        <NuxtLink class="btn btn-sm btn-outline-success" :to="{path:'/perbaikan/progres/detail',query:{id:item.idService}}">detail</NuxtLink>
-                    </td>
-                </tr>
+
+            <template #cell(status)="data">
+                <td v-if="data.item.status === 'diagnosa' || data.item.status === 'selesai diagnosa'" class="text-primary"> {{ data.item.status }} </td>
+                <td v-else-if="data.item.status === 'proses'" class="text-warning"> {{ data.item.status }} </td>
+                <td v-else-if="data.item.status === 'selesai'" class="text-success"> {{ data.item.status }} </td>
             </template>
-        </Table>
+            
+            <template #cell(menu)="data">
+                <NuxtLink class="btn btn-sm btn-outline-success" :to="{path:'/perbaikan/progres/detail',query:{id:data.item.idService}}">detail</NuxtLink>
+            </template>
+
+        </DataTable>
     </div>
 </template>
 
 <script>
+import DataTable from '@/components/DataTable'
 export default {
     layout:'admin',
+    components:{
+        DataTable
+    },
+    data(){
+        return{
+            fields:['no','kode','produk','keluhan','status','menu']
+        }
+    },
     async asyncData({app}){
         const data = await app.$repositories.service.listProgress()
         return {
