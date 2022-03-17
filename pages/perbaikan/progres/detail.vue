@@ -2,22 +2,13 @@
     <div>
         <div class="row">
             <div class="col-4">
-                <div class="border rounded p-3">
-                    <h4>Detail Klien</h4>
-                    <p>Nama : {{ customer.nama }}</p>
-                    <p>No HP : {{customer.noHp}}</p>
-                </div>
-                <div class="border rounded p-3 mt-2">
-                    <h4>Detail Barang</h4>
-                    <p>Nama : {{product.nama}} ({{product.kategori}}) </p>
-                    <p>Kelengkapan : {{product.kelengkapan}}</p>
-                    <p>Keluhan : {{product.keluhan}}</p>
-                    <p>Cacat Product : {{product.cacatProduk}}</p>
+                <DetailKlien :nama="customer.nama" :no-hp="customer.noHp"/>
+                <DetailProduk :product="product">
                     <p>Catatan : {{product.catatan}}</p>
                     <p>Tanggal Masuk : {{product.tanggalMasuk}} ({{product.jamMasuk}})</p>
                     <p>Customer Service : {{product.customerService}}</p>
                     <p>Status pengerjaan: {{ product.status }} </p>
-                </div>
+                </DetailProduk>
             </div>
             <div class="col">
                 <div class="border rounded p-3">
@@ -42,8 +33,14 @@
 </template>
 
 <script>
+import DetailKlien from '@/components/DetailKlien'
+import DetailProduk from '@/components/DetailProduk'
 export default {
     layout:'admin',
+    components:{
+        DetailKlien,
+        DetailProduk
+    },
     data(){
         return{
             diagnosas:''

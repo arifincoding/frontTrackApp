@@ -2,28 +2,19 @@
     <div>
         <div class="row">
             <div class="col-4">
-                <div class="border rounded p-3">
-                    <h4>Detail Klien</h4>
-                    <p>Nama : {{ customer.nama }}</p>
-                    <p>No HP : {{customer.noHp}}</p>
-                </div>
-                <div class="border rounded p-3 mt-2">
-                    <h4>Detail Barang</h4>
-                    <p>Nama : {{product.nama}} ({{product.kategori}}) </p>
-                    <p>Kelengkapan : {{product.kelengkapan}}</p>
-                    <p>Keluhan : {{product.keluhan}}</p>
-                    <p>Cacat Product : {{product.cacatProduk}}</p>
+                <DetailKlien :nama="customer.nama" :no-hp="customer.noHp"/>
+                <DetailProduk :product="product">
                     <p>Uang Muka : {{product.uangMuka}}</p>
                     <p>Estimasi Harga : {{product.estimasiHarga}}</p>
                     <p>Total Harga : Rp.{{product.totalHarga}}</p>
-                    <p>Status : {{ product.status }} <span v-if="product.diambil === true">[diambil]</span> </p>
+                    <p>Status pengerjaan : {{ product.status }} <span v-if="product.diambil === true">[diambil]</span> </p>
                     <p>Catatan : {{product.catatan}}</p>
                     <p>Lama Garansi : {{product.lamaGaransi}}</p>
                     <p>Tanggal Masuk : {{product.tanggalMasuk}} ({{product.jamMasuk}})</p>
                     <p>Tanggal Ambil : {{product.tanggalAmbil}} ({{product.jamAmbil}})</p>
                     <p>Customer Service : {{product.customerService}}</p>
                     <p>Teknisi : {{product.teknisi}}</p>
-                </div>
+                </DetailProduk>
             </div>
             <div class="col">
                 <div class="border rounded p-3">
