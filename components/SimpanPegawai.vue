@@ -9,45 +9,59 @@
         </div>
         </div>
         <form>
-            <Input title="nama depan">
-                <b-form-input id="namaDepan" v-model="namaDepan" type="text" placeholder="masukkan nama depan" size="sm"/>
-            </Input>
-            <Input title="nama belakang">
-                <b-form-input id="namaBelakang" v-model="namaBelakang" type="text" placeholder="masukkan nama belakang" size="sm"/>
-            </Input>
-            <Input title="nama pendek">
-                <b-form-input id="namaPendek" v-model="namaPendek" type="text" placeholder="masukkan nama pendek" size="sm"/>
-            </Input>
-            <Input title="tanggal bergabung">
-                <b-form-input id="tanggalBergabung" v-model="tanggalBergabung" type="text" placeholder="masukkan nama depan" size="sm"/>
-            </Input>
-            <Input title="jenis kelamin">
-                <b-form-select id="jenisKelamin" v-model="jenisKelamin" :options="genders" size="sm"/>
-            </Input>
-            <Input title="no hp">
-                <b-form-input id="noHp" v-model="noHp" type="text" placeholder="masukkan nomor handphone aktif" size="sm"/>
-            </Input>
-            <Input title="alamat">
-                <b-form-input id="alamat" v-model="alamat" type="text" placeholder="masukkan alamat rumah" size="sm"/>
-            </Input>
-            <Input title="peran">
-                <b-form-select id="peran" v-model="peran" :options="roles" size="sm"/>
-            </Input>
-            <Input title="email">
-                <b-form-input id="email" v-model="email" type="text" placeholder="masukkan email aktif" size="sm"/>
-            </Input>
-            <b-button type="button" @click="saveEmployee()" variant="success">Simpan</b-button>
+            <b-row class="my-3">
+                <b-col lg="6">
+                    <InputText input-id="namaDepan" label="nama depan" v-model="namaDepan" placeholder="masukkan nama depan"/>
+                </b-col>
+                <b-col lg="6">
+                    <InputText input-id="namaBelakang" label="nama belakang" v-model="namaBelakang" placeholder="masukkan nama belakang"/>
+                </b-col>
+            </b-row>
+            <b-row>
+                <b-col lg="6">
+                    <InputText input-id="namaPendek" label="nama pendek" v-model="namaPendek" placeholder="masukkan nama pendek"/>
+                </b-col>
+                <b-col lg="6">
+                    <InputText input-id="noHp" label="no hp" v-model="noHp" placeholder="masukkan nomor handphone aktif"/>
+                </b-col>
+            </b-row>
+            <b-row>
+                <b-col lg="6">
+                    <InputSelect label="jenis kelamin" input-id="jenisKelamin" v-model="jenisKelamin" :options="genders"/>
+                </b-col>
+                <b-col lg="6">
+                    <InputText input-id="tanggalBergabung" label="tanggal bergabung" v-model="tanggalBergabung" placeholder="masukkan nama depan"/>
+                </b-col>
+            </b-row>
+            <InputText input-id="alamat" label="alamat" v-model="alamat" placeholder="masukkan alamat rumah"/>
+            <b-row>
+                <b-col lg="6">
+                    <InputSelect label="peran" input-id="peran" v-model="peran" :options="roles"/>
+                </b-col>
+                <b-col lg="6">
+                    <InputText input-id="email" label="email" v-model="email" placeholder="masukkan email aktif"/>
+                </b-col>
+            </b-row>
+
+            <b-button type="button" class="float-right" @click="saveEmployee()" variant="success">Simpan</b-button>
+            <div class="clearfix"></div>
         </form>
     </div>
 </template>
 
 <script>
+import InputText from '@/components/InputText';
+import InputSelect from '@/components/InputSelect';
 export default {
     layout:'admin',
     props:{
         dataPegawai: Object,
         pegawaiId: String,
         title: String
+    },
+    components:{
+        InputText,
+        InputSelect
     },
     data(){
         return {

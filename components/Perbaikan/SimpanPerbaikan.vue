@@ -8,58 +8,74 @@
         </div>
         </div>
         </div>
-        <form>
-            <Input title="nama pelanggan">
-                <b-form-input id="namaPelanggan" v-model="namaCustomer" type="text" placeholder="masukkan nama pelanggan" size="sm"/>
-            </Input>
-            <Input title="jenis kelamin">
-                <b-form-select id="jenisKelamin" v-model="jenisKelamin" :options="genders" size="sm"/>
-            </Input>
-            <Input title="no hp">
-                <b-form-input id="noHp" v-model="noHp" type="text" placeholder="masukkan nomor handphone pelanggan" size="sm"/>
-            </Input>
-            <b-form-group>
-                <b-form-checkbox v-model="mendukungWhatsapp" value="true">Mendukung Whatsapp</b-form-checkbox>
-            </b-form-group>
-            <Input title="nama produk">
-                <b-form-input id="namaBarang" v-model="namaBarang" type="text" placeholder="masukkan nama produk" size="sm"/>
-            </Input>
-            <Input title="kategori">
-                <b-form-select id="kategori" v-model="kategori" :options="listKategori" size="sm"/>
-            </Input>
-            <Input title="keluhan">
-                <b-form-input id="keluhan" v-model="keluhan" type="text" placeholder="masukkan keluhan produk" size="sm"/>
-            </Input>
-            <b-form-group>
-                <b-form-checkbox v-model="membutuhkanKonfirmasi" value="true">Membutuhkan Konfirmasi</b-form-checkbox>
-            </b-form-group>
-            <Input title="kelengkapan">
-                <b-form-input id="kelengkapan" v-model="kelengkapan" type="text" placeholder="masukkan kelengkapan produk" size="sm"/>
-            </Input>
-            <Input title="catatan">
-                <b-form-input id="catatan" v-model="catatan" type="text" placeholder="masukkan catatan dari pelanggan" size="sm"/>
-            </Input>
-            <Input title="uang muka">
-                <b-form-input id="uangMuka" v-model="uangMuka" type="text" placeholder="masukkan uang muka perbaikan" size="sm"/>
-            </Input>
-            <Input title="estimasi harga">
-                <b-form-input id="estimasiHarga" v-model="estimasiHarga" type="text" placeholder="masukkan estimasi harga perbaikan" size="sm"/>
-            </Input>
-            <Input title="cacat produk">
-                <b-form-input id="cacatProduk" v-model="cacatProduk" type="text" placeholder="masukkan cacat dari produk" size="sm"/>
-            </Input>
-            <b-button type="button" variant="success" @click="saveInput()">Simpan</b-button>
+        <form class="my-3">
+            <InputGroup title="Detail Pelanggan">
+                <b-row>
+                    <b-col lg="6">
+                        <InputText input-id="namaPelanggan" label="nama" v-model="namaCustomer" placeholder="masukkan nama pelanggan"/>
+                    </b-col>
+                    <b-col lg="6">
+                        <InputSelect label="jenis kelamin" input-id="jenisKelamin" v-model="jenisKelamin" :options="genders"/>
+                    </b-col>
+                </b-row>
+                <InputText input-id="noHp" label="No Handphone" v-model="noHp" placeholder="masukkan nomor handphone pelanggan" />
+                <InputCheckbox label="Mendukung Whatsapp" value="true" v-model="mendukungWhatsapp"/>
+            </InputGroup>
+            
+            <InputGroup title="Detail Produk" class="my-4">
+                <b-row>
+                    <b-col lg="6">
+                        <InputText input-id="namaBarang" label="nama produk" v-model="namaBarang" placeholder="masukkan nama produk" />
+                    </b-col>
+                    <b-col lg="6">
+                        <InputSelect label="kategori" input-id="kategori" v-model="kategori" :options="listKategori"/>
+                    </b-col>
+                </b-row>
+                <InputText label="keluhan" input-id="keluhan" v-model="keluhan" placeholder="masukkan keluhan produk"/>
+                <InputCheckbox label="Membutuhkan Konfirmasi" value="true" v-model="membutuhkanKonfirmasi"/>
+                <b-row>
+                    <b-col lg="6">
+                        <InputText input-id="kelengkapan" label="kelengkapan" v-model="kelengkapan" placeholder="masukkan kelengkapan produk"/>
+                    </b-col>
+                    <b-col lg="6">
+                        <InputText input-id="catatan" label="catatan" v-model="catatan" placeholder="masukkan catatan dari pelanggan"/>
+                    </b-col>
+                </b-row>
+                <InputText input-id="cacatProduk" label="cacat produk" v-model="cacatProduk" placeholder="masukkan cacat dari produk"/>
+                <b-row>
+                    <b-col lg="6">
+                        <InputText input-id="uangMuka" label="uang muka" v-model="uangMuka" placeholder="masukkan uang muka perbaikan"/>
+                    </b-col>
+                    <b-col lg="6">
+                        <InputText input-id="estimasiHarga" label="estimasi harga" v-model="estimasiHarga" placeholder="masukkan estimasi harga perbaikan"/>
+                    </b-col>
+                </b-row>                
+            </InputGroup>
+
+            <b-button type="button" variant="success" class="float-right" @click="saveInput()">Simpan</b-button>
+            <div class="clearfix"></div>
         </form>
     </div>
 </template>
 
 <script>
+import InputText from '@/components/InputText';
+import InputSelect from '@/components/InputSelect';
+import InputCheckbox from '@/components/InputCheckbox';
+import InputGroup from '@/components/Perbaikan/InputGroup'
 export default {
     layout:'admin',
     props:{
         dataService: Object,
         serviceId: String,
-        title: String
+        title: String,
+        listKategori:Array
+    },
+    components:{
+        InputText,
+        InputSelect,
+        InputCheckbox,
+        InputGroup
     },
     data(){
         return{
@@ -77,19 +93,10 @@ export default {
             estimasiHarga:'',
             cacatProduk:'',
             errorMessage:'test',
-            listKategori:[],
-            genders:[{text:"-pilih satu-",value:null},"pria","wanita"]
+            genders:["pria","wanita"]
         }
     },
-    async mounted(){
-        const dataKategori = await this.$repositories.category.all()
-        
-        this.listKategori = [{text:"-pilih satu-"}]
-        const kategoriArr = dataKategori.data
-        kategoriArr.forEach((value)=>{
-            this.listKategori.push(value.kategori)
-        })
-
+    mounted(){
         if(this.serviceId){
             this.namaCustomer = this.dataService.customer.nama
             this.jenisKelamin = this.dataService.customer.jenisKelamin

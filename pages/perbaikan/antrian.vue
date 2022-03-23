@@ -1,13 +1,13 @@
 <template>
     <div>
         <TitleHeading text="antrian perbaikan"/>
-        <DataTable :fields="fields" :items="queues">
-            <template #cell(produk)="data"> 
-                <p>{{ data.item.nama }}</p>
-                <p> {{ data.item.kategori }} </p> 
+        <DataTable :fields="fields" :items="queues" filter>
+            <template v-slot:filterItems>
+                <DropdownFormGroup title="Kategori">
+                    <b-form-radio-group v-model="filterCategory" :options="categoryOptions" stacked/>
+                </DropdownFormGroup>
             </template>
             <template #cell(menu)="data">
-                <div></div>
                 <div class="btn btn-sm btn-primary" @click="updateStatus(data.item.idService)">Diagnosa</div>
             </template>
         </DataTable>
@@ -16,19 +16,40 @@
 
 <script>
 import DataTable from '@/components/DataTable'
+import DropdownFormGroup from '@/components/DropdownFormGroup'
 export default {
     layout:'admin',
     components:{
-        DataTable
+        DataTable,
+        DropdownFormGroup
     },
     data(){
         return{
-            fields:['no','kode','produk','keluhan','status','menu']
+            filterCategory:'',
+            fields:[
+                {key:'no'},
+                {key:'kode'},
+                {key:'nama', label:'produk', sortable:true},
+                {key:'kategori', sortable:true},
+                {key:'keluhan', sortable:true},
+                {key:'status', tdClass:'text-danger'},
+                {key:'menu'}
+            ]
         }
     },
     async asyncData({app}){
-        const data = await app.$repositories.service.listQueue()
-        return {queues : data.data}
+        const dataQueue = await app.$repositories.service.listQueue()
+        const dataCategory = await app.$repositories.responbility.all()
+        const arrCategory = [];
+
+        dataCategory.data.forEach((item)=>{
+                arrCategory.push({text:item.kategori, value:item.kategori})
+        })
+
+        return {
+            queues : dataQueue.data,
+            categoryOptions :arrCategory
+        }
     },
     methods:{
         async updateStatus(id){

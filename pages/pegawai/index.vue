@@ -22,7 +22,12 @@ export default {
     data(){
         return {
             employes:'',
-            fields:['no','nama','peran','status','menu']
+            fields:[
+                {key:'no'},
+                {key:'nama', sortable:true},
+                {key:'peran', sortable:true},
+                {key:'status', sortable:true},
+                {key:'menu'}]
         }
     },
     async asyncData({app}){

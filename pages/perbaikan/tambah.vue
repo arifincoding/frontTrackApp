@@ -1,6 +1,6 @@
 <template>
     <div>
-        <SimpanPerbaikan title="tambah data perbaikan"/>
+        <SimpanPerbaikan title="tambah data perbaikan" :list-kategori="listKategori"/>
     </div>
 </template>
 
@@ -11,5 +11,17 @@ export default {
     components:{
         SimpanPerbaikan
     },
+    async asyncData(app){
+        const dataKategori = await app.$repositories.category.all()
+
+        const kategoriObj = dataKategori.data
+        const kategoriArr = []
+        kategoriObj.forEach((value)=>{
+            kategoriArr.push(value.kategori)
+        })
+        return {
+            listKategori : kategoriArr
+        }
+    }
 }
 </script>

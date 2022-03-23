@@ -23,7 +23,16 @@ export default {
     data(){
         return{
             categories:'',
-            fields:['no','kategori','menu']
+            fields:[
+                {
+                    key:'no'
+                },
+                {
+                    key:'kategori',
+                    sortable:true
+                },
+                {key:'menu'}
+            ]
         }
     },
     async asyncData({app}){

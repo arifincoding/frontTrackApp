@@ -9,9 +9,9 @@
             </template>
 
             <template #cell(status)="data">
-                <td v-if="data.item.status === 'diagnosa' || data.item.status === 'selesai diagnosa'" class="text-primary"> {{ data.item.status }} </td>
-                <td v-else-if="data.item.status === 'proses'" class="text-warning"> {{ data.item.status }} </td>
-                <td v-else-if="data.item.status === 'selesai'" class="text-success"> {{ data.item.status }} </td>
+                <td v-if="data.value === 'diagnosa' || data.value === 'selesai diagnosa'" class="text-primary"> {{ data.value }} </td>
+                <td v-else-if="data.value === 'proses'" class="text-warning"> {{ data.value }} </td>
+                <td v-else-if="data.value === 'selesai'" class="text-success"> {{ data.value }} </td>
             </template>
             
             <template #cell(menu)="data">
@@ -31,7 +31,15 @@ export default {
     },
     data(){
         return{
-            fields:['no','kode','produk','keluhan','status','menu']
+            fields:[
+                {key:'no'},
+                {key:'kode'},
+                {key:'nama', label:'produk', sortable:true},
+                {key:'kategori', sortable:true},
+                {key:'keluhan', sortable:true},
+                {key:'status', sortable:true},
+                {key:'menu'}
+            ]
         }
     },
     async asyncData({app}){
