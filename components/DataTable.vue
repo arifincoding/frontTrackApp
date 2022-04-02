@@ -6,13 +6,12 @@
                     <b-form-input v-model="search" type="search" placeholder="ketik untuk mencari..."></b-form-input>
                 </b-input-group>
             </b-col>
-            <b-col lg="2" class="my-1">
-                <v-slot name="filterItems"></v-slot>
+            <b-col v-if="withFilter === true" lg="2" class="my-1">
                 <b-dropdown id="dropdown-grouped" style="width:80px" variant="outline-success" size="sm" text="Filter" no-caret>
                     <slot name="filterItems"></slot>
                     <b-dropdown-divider></b-dropdown-divider>
                     <b-dropdown-form>
-                        <b-button class="float-right" variant="primary" size="sm">Cari</b-button>
+                        <slot name="filterBtn"></slot>
                         <div class="clearfix"/>
                     </b-dropdown-form>
                 </b-dropdown>
@@ -52,17 +51,22 @@ export default {
         items: Array,
         fields: Array,
         categoryOptions: Array,
-        statusOptions: Array
+        statusOptions: Array,
+        withFilter: Boolean
     },
     data(){
         return {
             search:null,
             perPage:5,
             currentPage:1,
-            totalRows:this.items.length,
             pageOptions:[5,10,50,100,{value:this.items.length, text:'semua'}],
             category:'',
             status:''
+        }
+    },
+    computed:{
+        totalRows(){
+            return this.items.length
         }
     }
 }

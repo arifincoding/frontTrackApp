@@ -1,11 +1,12 @@
 const resource = '/employes'
 
 export default ($axios, store) => ({
-    all(){
+    all(filters){
         return $axios.$get(`${resource}`,{
             headers:{
                 'Authorization':`bearer ${store.state.token}`
-            }
+            },
+            params:filters
         })
     },
     show(id){

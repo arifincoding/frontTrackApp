@@ -1,8 +1,20 @@
 <template>
     <div>
         <TitleHeading text="progres perbaikan anda"/>
-        <DataTable :fields="fields" :items="queues">
+        <DataTable :fields="fields" :items="queues" with-filter>
             
+            <template v-slot:filterItems>
+                <DropdownFormGroup title="Kategori">
+                    <b-form-radio-group v-model="filterCategory" :options="categoryOptions" stacked/>
+                </DropdownFormGroup>
+                <DropdownFormGroup title="Status">
+                    <b-form-radio-group v-model="filterStatus" :options="statusOptions" stacked/>
+                </DropdownFormGroup>
+            </template>
+            <template v-slot:filterBtn>
+                    <b-dd-item-btn class="float-right" button-class="bg-primary text-white btn-sm" @click="onFilter()">Ok</b-dd-item-btn>
+            </template>
+
             <template #cell(produk)="data"> 
                 <p>{{ data.item.nama }}</p>
                 <p> {{ data.item.kategori }} </p> 
@@ -31,6 +43,7 @@ export default {
     },
     data(){
         return{
+            queues:[],
             fields:[
                 {key:'no'},
                 {key:'kode'},
@@ -39,13 +52,38 @@ export default {
                 {key:'keluhan', sortable:true},
                 {key:'status', sortable:true},
                 {key:'menu'}
+            ],
+            filterCategory:null,
+            filterStatus:null,
+            statusOptions:[
+                {text:'semua',value:null},
+                'diagnosa','tunggu','proses','selesai'
             ]
         }
     },
     async asyncData({app}){
         const data = await app.$repositories.service.listProgress()
+        
+        const dataCategory = await app.$repositories.responbility.all()
+        const arrCategory = [{text:'semua', value:null}];
+
+        dataCategory.data.forEach((item)=>{
+                arrCategory.push({text:item.kategori, value:item.kategori})
+        })
+
         return {
-            queues : data.data
+            queues : data.data,
+            categoryOptions:arrCategory
+        }
+    },
+    methods:{
+        async onFilter(){
+            const filters = {
+                kategori:this.filterCategory,
+                status:this.filterStatus
+            }
+            const data = await this.$repositories.service.listProgress(filters)
+            this.queues = data.data
         }
     }
 }

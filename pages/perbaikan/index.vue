@@ -4,7 +4,20 @@
         <NuxtLink to="/perbaikan/tambah">
             <ButtonAdd text="tambah perbaikan"/>
         </NuxtLink>
-        <DataTable :fields="fields" :items="services">
+        <DataTable :fields="fields" :items="services" with-filter>
+
+            <template v-slot:filterItems>
+                <DropdownFormGroup title="Kategori">
+                    <b-form-radio-group v-model="filterCategory" :options="categoryOptions" stacked/>
+                </DropdownFormGroup>
+                <DropdownFormGroup title="Status">
+                    <b-form-radio-group v-model="filterStatus" :options="statusOptions" stacked/>
+                </DropdownFormGroup>
+            </template>
+            <template v-slot:filterBtn>
+                    <b-dd-item-btn class="float-right" button-class="bg-primary text-white btn-sm" @click="refreshData()">Ok</b-dd-item-btn>
+            </template>
+
             <template #cell(klien)="data">
                 <p>{{data.item.customer.nama}}</p>
                 <p>{{data.item.customer.noHp}}</p>
@@ -33,7 +46,7 @@ export default {
     },
     data(){
         return {
-            services:'',
+            services:[],
             fields:[
                 'no',
                 {key:'product.kode', label:'kode'},
@@ -43,12 +56,28 @@ export default {
                 {key:'product.status', label:'status'},
                 {key:'totalharga', label:'total harga'},
                 'menu'
+            ],
+            filterCategory:null,
+            filterStatus:null,
+            statusOptions:[
+                {text:'semua',value:null},
+                'antri','diagnosa','tunggu','proses','selesai'
             ]
         }
     },
     async asyncData({app}){
         const data = await app.$repositories.service.all()
-        return {services : data.data}
+        const dataCategory = await app.$repositories.category.all()
+        const arrCategory = [{text:'semua', value:null}];
+
+        dataCategory.data.forEach((item)=>{
+                arrCategory.push({text:item.kategori, value:item.kategori})
+        })
+
+        return {
+            services : data.data,
+            categoryOptions: arrCategory
+        }
     },
     methods:{
         async deleteData(id){
@@ -58,7 +87,11 @@ export default {
             }
         },
         async refreshData(){
-            const data = await this.$repositories.service.all()
+            const filters = {
+                kategori:this.filterCategory,
+                status:this.filterStatus
+            }
+            const data = await this.$repositories.service.all(filters)
             this.services = data.data
         }
     }

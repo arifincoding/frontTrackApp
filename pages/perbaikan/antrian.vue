@@ -1,11 +1,14 @@
 <template>
     <div>
         <TitleHeading text="antrian perbaikan"/>
-        <DataTable :fields="fields" :items="queues" filter>
+        <DataTable :fields="fields" :items="queues" with-filter>
             <template v-slot:filterItems>
                 <DropdownFormGroup title="Kategori">
                     <b-form-radio-group v-model="filterCategory" :options="categoryOptions" stacked/>
                 </DropdownFormGroup>
+            </template>
+            <template v-slot:filterBtn>
+                <b-dd-item-btn class="float-right" button-class="bg-primary text-white btn-sm" @click="onFilter()">Ok</b-dd-item-btn>
             </template>
             <template #cell(menu)="data">
                 <div class="btn btn-sm btn-primary" @click="updateStatus(data.item.idService)">Diagnosa</div>
@@ -25,7 +28,7 @@ export default {
     },
     data(){
         return{
-            filterCategory:'',
+            filterCategory:null,
             fields:[
                 {key:'no'},
                 {key:'kode'},
@@ -34,13 +37,15 @@ export default {
                 {key:'keluhan', sortable:true},
                 {key:'status', tdClass:'text-danger'},
                 {key:'menu'}
-            ]
+            ],
+            queues:[]
         }
     },
     async asyncData({app}){
+        
         const dataQueue = await app.$repositories.service.listQueue()
         const dataCategory = await app.$repositories.responbility.all()
-        const arrCategory = [];
+        const arrCategory = [{text:'semua', value:null}];
 
         dataCategory.data.forEach((item)=>{
                 arrCategory.push({text:item.kategori, value:item.kategori})
@@ -59,6 +64,13 @@ export default {
                 })
                 await this.$router.push({path:`/perbaikan/progres/detail?id=${id}`})
             }
+        },
+        async onFilter(){
+            const filters = {
+                kategori:this.filterCategory
+            }
+            const dataQueue = await this.$repositories.service.listQueue(filters)
+            this.queues = dataQueue.data
         }
     }
 }

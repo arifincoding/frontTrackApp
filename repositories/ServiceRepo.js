@@ -1,11 +1,12 @@
 const resource = '/services'
 
 export default ($axios,store) => ({
-    all(){
+    all(filters){
         return $axios.$get(`${resource}`,{
             headers:{
                 'Authorization':`bearer ${store.state.token}`
-            }
+            },
+            params:filters
         })
     },
     show(id){
@@ -15,18 +16,20 @@ export default ($axios,store) => ({
             }
         })
     },
-    listQueue(){
+    listQueue(filters){
         return $axios.$get(`${resource}/queue`,{
             headers:{
                 'Authorization':`bearer ${store.state.token}`
-            }
+            },
+            params:filters
         })
     },
-    listProgress(){
+    listProgress(filters){
         return $axios.$get(`${resource}/progress`,{
             headers:{
                 'Authorization':`bearer ${store.state.token}`
-            }
+            },
+            params: filters
         })
     },
     create(payload){
