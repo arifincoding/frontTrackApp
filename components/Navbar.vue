@@ -21,20 +21,17 @@
 </template>
 
 <script>
-import decode from 'jwt-decode'
 export default {
     data(){
         return {
-            role:''
+            role:this.$store.state.role
         }
     },
-    async created(){
-        const payload = await decode(this.$cookies.get('token'))
-        this.role = payload.role
-    },
     methods:{
-        logout(){
-            this.$store.commit('setToken','')
+        async logout(){
+            await this.$repositories.auth.logout()
+            this.$store.commit('setToken',null),
+            this.$store.commit('setUserInfo',null);
             this.$router.push({path:'/'})
             this.$cookies.remove('token')
         }

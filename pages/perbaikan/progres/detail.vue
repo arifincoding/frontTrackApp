@@ -6,7 +6,7 @@
                 <DetailProduk :product="product">
                     <p>Catatan : {{product.catatan}}</p>
                     <p>Tanggal Masuk : {{product.tanggalMasuk}} ({{product.jamMasuk}})</p>
-                    <p>Customer Service : {{product.customerService}}</p>
+                    <p>Customer Service : {{product.usernameCS}}</p>
                     <p>Status pengerjaan: {{ product.status }} </p>
                 </DetailProduk>
             </div>

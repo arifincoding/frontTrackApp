@@ -5,15 +5,15 @@
                 <DetailKlien :nama="customer.nama" :no-hp="customer.noHp"/>
                 <DetailProduk :product="product">
                     <p>Uang Muka : {{product.uangMuka}}</p>
-                    <p>Estimasi Harga : {{product.estimasiHarga}}</p>
-                    <p>Total Harga : Rp.{{product.totalHarga}}</p>
+                    <p>Estimasi Harga : {{product.estimasiBiaya}}</p>
+                    <p>Total Harga : Rp.{{product.totalBiaya}}</p>
                     <p>Status pengerjaan : {{ product.status }} <span v-if="product.diambil === true">[diambil]</span> </p>
                     <p>Catatan : {{product.catatan}}</p>
-                    <p>Lama Garansi : {{product.lamaGaransi}}</p>
+                    <p>Lama Garansi : {{product.garansi}}</p>
                     <p>Tanggal Masuk : {{product.tanggalMasuk}} ({{product.jamMasuk}})</p>
                     <p>Tanggal Ambil : {{product.tanggalAmbil}} ({{product.jamAmbil}})</p>
-                    <p>Customer Service : {{product.customerService}}</p>
-                    <p>Teknisi : {{product.teknisi}}</p>
+                    <p>Customer Service : {{product.usernameCS}}</p>
+                    <p>Teknisi : {{product.usernameTeknisi}}</p>
                 </DetailProduk>
             </div>
             <div class="col">
@@ -30,9 +30,9 @@
                 <!-- konfirmasi biaya -->
                 <div v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === false && product.status === 'selesai diagnosa'" class="mt-2 btn btn-success" @click="confirmCost(product.id)">Konfirmasi Biaya</div>
 
-                <div v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.membutuhkanKonfirmasi === true" class="mt-2 btn btn-success" @click="confirmService(product.id,'true')">Disetujui</div>
+                <div v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.butuhKonfirmasi === true" class="mt-2 btn btn-success" @click="confirmService(product.id,'true')">Disetujui</div>
 
-                <div v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.membutuhkanKonfirmasi === true" class="mt-2 btn btn-danger" @click="confirmService(product.id,'false')">Dibatakkan</div>
+                <div v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.butuhKonfirmasi === true" class="mt-2 btn btn-danger" @click="confirmService(product.id,'false')">Dibatakkan</div>
 
                 <!-- update garansi -->
                 <NuxtLink v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.diambil === false" class="mt-2 btn btn-primary" :to="{path:'/perbaikan/garansi',query:{id:product.id}}">Update Garansi</NuxtLink>
@@ -45,7 +45,6 @@
 </template>
 
 <script>
-import decode from 'jwt-decode'
 export default {
     layout:'admin',
     data(){
@@ -67,22 +66,18 @@ export default {
             diagnosa = []
         }
 
-        const payload = await decode(store.state.token)
-
         return {
             customer : service.data.customer,
             product : service.data.product,
             diagnosas : diagnosa,
-            role : payload.role
+            role : store.state.role
         }
     },
     methods:{
         async confirmCost(id){
             if(confirm("Yakin ingin konfirmasi biaya ?") === true){
                 
-                await this.$repositories.service.updateConfirmCost(id,{
-                    konfirmasiBiaya:'true'
-                })
+                await this.$repositories.service.setConfirmCost(id)
                 
                 await this.refreshData()
             }
@@ -94,19 +89,16 @@ export default {
         },
         async take(id){
             if(confirm("Yakin ingin mengambil barang ?") === true){
-                await this.$repositories.service.updateTake(id,{
-                    ambil:'true'
-                })
+                await this.$repositories.service.setTake(id)
                 await this.$router.push({path:`/perbaikan/nota-ambil?id=${id}`})
         }
         },
         async confirmService(id,value){
             await this.$repositories.service.updateConfirmation(id,{
-                konfirmasi:value
+                dikonfirmasi:value
             })
             await this.refreshData()
         }
     }
 }
 </script>
-<style lang="scss"></style>

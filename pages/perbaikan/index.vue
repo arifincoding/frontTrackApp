@@ -54,7 +54,7 @@ export default {
                 'produk',
                 {key:'product.keluhan', label:'keluhan'},
                 {key:'product.status', label:'status'},
-                {key:'totalharga', label:'total harga'},
+                {key:'totalBiaya', label:'total biaya'},
                 'menu'
             ],
             filterCategory:null,
@@ -71,7 +71,7 @@ export default {
         const arrCategory = [{text:'semua', value:null}];
 
         dataCategory.data.forEach((item)=>{
-                arrCategory.push({text:item.kategori, value:item.kategori})
+                arrCategory.push({text:item.nama, value:item.nama})
         })
 
         return {

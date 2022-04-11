@@ -19,18 +19,10 @@
             </b-row>
             <b-row>
                 <b-col lg="6">
-                    <InputText input-id="namaPendek" label="nama pendek" v-model="namaPendek" placeholder="masukkan nama pendek"/>
-                </b-col>
-                <b-col lg="6">
                     <InputText input-id="noHp" label="no hp" v-model="noHp" placeholder="masukkan nomor handphone aktif"/>
                 </b-col>
-            </b-row>
-            <b-row>
                 <b-col lg="6">
                     <InputSelect label="jenis kelamin" input-id="jenisKelamin" v-model="jenisKelamin" :options="genders"/>
-                </b-col>
-                <b-col lg="6">
-                    <InputText input-id="tanggalBergabung" label="tanggal bergabung" v-model="tanggalBergabung" placeholder="masukkan nama depan"/>
                 </b-col>
             </b-row>
             <InputText input-id="alamat" label="alamat" v-model="alamat" placeholder="masukkan alamat rumah"/>
@@ -67,24 +59,20 @@ export default {
         return {
             namaDepan:'',
             namaBelakang:'',
-            namaPendek:'',
-            tanggalBergabung:'',
             jenisKelamin:null,
             noHp:'',
             alamat:'',
             peran:null,
             email:'',
             errorMessage:'test',
-            genders:[{text:"-pilih satu-",value:null},'pria','wanita'],
-            roles:[{text:"-pilih satu-",value:null},'customer service', 'teknisi', 'pemilik']
+            genders:['pria','wanita'],
+            roles:['customer service', 'teknisi', 'pemilik']
         }
     },
     mounted(){
         if(this.pegawaiId){
             this.namaDepan = this.dataPegawai.namaDepan
             this.namaBelakang = this.dataPegawai.namaBelakang
-            this.namaPendek = this.dataPegawai.namaPendek
-            this.tanggalBergabung = this.dataPegawai.tanggalBergabung
             this.jenisKelamin = this.dataPegawai.jenisKelamin
             this.noHp = this.dataPegawai.noHp
             this.alamat = this.dataPegawai.alamat
@@ -98,8 +86,6 @@ export default {
                 const payload = {
                     namaDepan:this.namaDepan,
                     namaBelakang:this.namaBelakang,
-                    namaPendek:this.namaPendek,
-                    tanggalBergabung:this.tanggalBergabung,
                     jenisKelamin:this.jenisKelamin,
                     noHp:this.noHp,
                     alamat:this.alamat,

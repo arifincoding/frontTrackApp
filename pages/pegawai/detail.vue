@@ -1,7 +1,7 @@
 <template>
     <div>
         <TitleHeading text="detail pegawai"/>
-        <p>Nama : {{employee.nama}} ({{ employee.namaPengguna }})</p>
+        <p>Nama : {{employee.namaDepan}} {{employee.namaBelakang}} ({{ employee.username }})</p>
         <p>Jenis Kelamin : {{employee.jenisKelamin}}</p>
         <p>No Handphone : {{employee.noHp}}</p>
         <p>Peran : {{employee.peran}}</p>

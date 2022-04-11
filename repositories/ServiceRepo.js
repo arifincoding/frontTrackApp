@@ -46,15 +46,15 @@ export default ($axios,store) => ({
             }
         })
     },
-    updateConfirmCost(id,payload){
-        return $axios.$put(`${resource}/${id}/confirm-cost`,payload,{
+    updateWarranty(id,payload){
+        return $axios.$put(`${resource}/${id}/warranty`,payload,{
             headers:{
                 'Authorization':`bearer ${store.state.token}`
             }
         })
     },
-    updateWarranty(id,payload){
-        return $axios.$put(`${resource}/${id}/warranty`,payload,{
+    updateStatus(id,payload){
+        return $axios.$put(`${resource}/${id}/status`,payload,{
             headers:{
                 'Authorization':`bearer ${store.state.token}`
             }
@@ -67,15 +67,15 @@ export default ($axios,store) => ({
             }
         })
     },
-    updateTake(id,payload){
-        return $axios.$put(`${resource}/${id}/take`,payload,{
+    setConfirmCost(id){
+        return $axios.$put(`${resource}/${id}/confirm-cost`,[],{
             headers:{
                 'Authorization':`bearer ${store.state.token}`
             }
         })
     },
-    updateStatus(id,payload){
-        return $axios.$put(`${resource}/${id}/status`,payload,{
+    setTake(id){
+        return $axios.$put(`${resource}/${id}/take`,[],{
             headers:{
                 'Authorization':`bearer ${store.state.token}`
             }

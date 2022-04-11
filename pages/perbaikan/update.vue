@@ -18,7 +18,7 @@ export default {
         const kategoriObj = dataKategori.data
         const kategoriArr = []
         kategoriObj.forEach((value)=>{
-            kategoriArr.push(value.kategori)
+            kategoriArr.push(value.nama)
         })
         return {
             dataService : data.data,

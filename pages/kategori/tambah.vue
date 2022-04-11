@@ -29,8 +29,8 @@ export default {
     methods:{
         async addCategory(){
             try{
-                await this.$repositories.create({
-                    kategori:this.namaKategori
+                await this.$repositories.category.create({
+                    nama:this.namaKategori
                 })
                 this.$router.push({path:'/kategori'})
             }catch({response}){

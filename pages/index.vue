@@ -9,12 +9,8 @@
       </div>
       </div>
     <TitleHeading class="mt-3" text="Login Admin"/>
-    <Input title="username">
-      <input id="username" v-model="username" type="text" class="form-control form-control-sm">
-    </Input>
-    <Input title="password">
-      <input id="password" v-model="password" type="password" class="form-control form-control-sm">
-    </Input>
+    <InputText input-id="username" label="username" v-model="username" placeholder="masukkan username akun anda"/>
+    <InputText input-id="password" label="password" input-type="password" v-model="password" placeholder="masukkan password akun anda"/>
     <div class="btn btn-success" @click="login()">Login</div>
     </div>
   </div>
@@ -22,8 +18,13 @@
 
 <script>
 import decode from 'jwt-decode'
+import InputText from '@/components/InputText'
+
 export default {
   // layout: 'admin',
+  components:{
+    InputText
+  },
   data(){
     return {
       username:'',
@@ -31,10 +32,9 @@ export default {
       errorMessage:'test',
     }
   },
-  async mounted(){
+  mounted(){
     if(this.$store.state.token){
-      const payload = await decode(this.$store.state.token)
-      if(payload.role === 'teknisi'){
+      if(this.$store.state.role === 'teknisi'){
         this.$router.push({path:'/perbaikan/antrian'})
       }else{
         this.$router.push({path:'/perbaikan'})
@@ -44,19 +44,24 @@ export default {
   methods:{
     async login(){
       try{
-      const api = '/user/login'
-      const data = await this.$axios.$post(api,{
-        username:this.username,
-        password:this.password
-      })
-      await this.$store.commit('setToken',data.token)
-      await this.$cookies.set("token", data.token);
-      const payload = await decode(data.token)
-      if(payload.role === 'teknisi'){
-        this.$router.push({path:'/perbaikan/antrian'})
-      }else{
-        this.$router.push({path:'/perbaikan'})
-      }
+        const data = await this.$repositories.auth.login({
+          username:this.username,
+          password:this.password
+        })
+        // decode token
+        const payload = decode(data.token)
+        // set store
+        this.$store.commit('setToken',data.token)
+        this.$store.commit('setUserInfo',payload)
+        // set cookies
+        this.$cookies.set("token", data.token)
+        
+        if(this.$store.state.role === 'teknisi'){
+          this.$router.push({path:'/perbaikan/antrian'})
+        }else{
+          this.$router.push({path:'/perbaikan'})
+        }
+
     }catch({response}){
       this.errorMessage = response.data.message
     }

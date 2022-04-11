@@ -10,16 +10,9 @@
         </div>
         <form class="my-3">
             <InputGroup title="Detail Pelanggan">
-                <b-row>
-                    <b-col lg="6">
-                        <InputText input-id="namaPelanggan" label="nama" v-model="namaCustomer" placeholder="masukkan nama pelanggan"/>
-                    </b-col>
-                    <b-col lg="6">
-                        <InputSelect label="jenis kelamin" input-id="jenisKelamin" v-model="jenisKelamin" :options="genders"/>
-                    </b-col>
-                </b-row>
+                <InputText input-id="namaPelanggan" label="nama" v-model="namaCustomer" placeholder="masukkan nama pelanggan"/>
                 <InputText input-id="noHp" label="No Handphone" v-model="noHp" placeholder="masukkan nomor handphone pelanggan" />
-                <InputCheckbox label="Mendukung Whatsapp" value="true" v-model="mendukungWhatsapp"/>
+                <InputCheckbox label="Mendukung Whatsapp" value="true" v-model="bisaWA"/>
             </InputGroup>
             
             <InputGroup title="Detail Produk" class="my-4">
@@ -32,7 +25,7 @@
                     </b-col>
                 </b-row>
                 <InputText label="keluhan" input-id="keluhan" v-model="keluhan" placeholder="masukkan keluhan produk"/>
-                <InputCheckbox label="Membutuhkan Konfirmasi" value="true" v-model="membutuhkanKonfirmasi"/>
+                <InputCheckbox label="Membutuhkan Konfirmasi" value="true" v-model="butuhKonfirmasi"/>
                 <b-row>
                     <b-col lg="6">
                         <InputText input-id="kelengkapan" label="kelengkapan" v-model="kelengkapan" placeholder="masukkan kelengkapan produk"/>
@@ -47,7 +40,7 @@
                         <InputText input-id="uangMuka" label="uang muka" v-model="uangMuka" placeholder="masukkan uang muka perbaikan"/>
                     </b-col>
                     <b-col lg="6">
-                        <InputText input-id="estimasiHarga" label="estimasi harga" v-model="estimasiHarga" placeholder="masukkan estimasi harga perbaikan"/>
+                        <InputText input-id="estimasiBiaya" label="estimasi biaya" v-model="estimasiBiaya" placeholder="masukkan estimasi harga perbaikan"/>
                     </b-col>
                 </b-row>                
             </InputGroup>
@@ -80,36 +73,33 @@ export default {
     data(){
         return{
             namaCustomer:'',
-            jenisKelamin:null,
             noHp:'',
-            mendukungWhatsapp:'',
+            bisaWA:'',
             namaBarang:'',
             kategori:null,
             keluhan:'',
-            membutuhkanKonfirmasi:'',
+            butuhKonfirmasi:'',
             kelengkapan:'',
             catatan:'',
             uangMuka:'',
-            estimasiHarga:'',
+            estimasiBiaya:'',
             cacatProduk:'',
-            errorMessage:'test',
-            genders:["pria","wanita"]
+            errorMessage:'test'
         }
     },
     mounted(){
         if(this.serviceId){
             this.namaCustomer = this.dataService.customer.nama
-            this.jenisKelamin = this.dataService.customer.jenisKelamin
             this.noHp = this.dataService.customer.noHp
-            this.mendukungWhatsapp = this.dataService.customer.mendukungWhatsapp
+            this.bisaWA = this.dataService.customer.bisaWA
             this.namaBarang = this.dataService.product.nama
             this.kategori = this.dataService.product.kategori
             this.keluhan = this.dataService.product.keluhan
-            this.membutuhkanKonfirmasi = this.dataService.product.membutuhkanKonfirmasi
+            this.butuhKonfirmasi = this.dataService.product.butuhKonfirmasi
             this.kelengkapan = this.dataService.product.kelengkapan
             this.catatan = this.dataService.product.catatan
             this.uangMuka = this.dataService.product.uangMuka
-            this.estimasiHarga = this.dataService.product.estimasiHarga
+            this.estimasiBiaya = this.dataService.product.estimasiBiaya
             this.cacatProduk = this.dataService.product.cacatProduk
         }
     },
@@ -118,17 +108,16 @@ export default {
             try{
                 const payload = {
                     namaCustomer:this.namaCustomer,
-                    jenisKelamin:this.jenisKelamin,
                     noHp:this.noHp,
-                    mendukungWhatsapp:this.mendukungWhatsapp.toString(),
+                    bisaWA:this.bisaWA.toString(),
                     namaBarang:this.namaBarang,
                     kategori:this.kategori,
                     keluhan:this.keluhan,
-                    membutuhkanKonfirmasi:this.membutuhkanKonfirmasi.toString(),
+                    butuhKonfirmasi:this.butuhKonfirmasi.toString(),
                     kelengkapan:this.kelengkapan,
                     catatan:this.catatan,
                     uangMuka:this.uangMuka,
-                    estimasiHarga:this.estimasiHarga,
+                    estimasiBiaya:this.estimasiBiaya,
                     cacatProduk:this.cacatProduk
                 }
                 if(this.serviceId){

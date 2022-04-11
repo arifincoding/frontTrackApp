@@ -28,13 +28,13 @@ export default {
     },
     async asyncData({app,params}){
         const data = await app.$repositories.category.show(params.id)
-        return {namaKategori : data.data.kategori}
+        return {namaKategori : data.data.nama}
     },
     methods:{
         async addCategory(){
             try{
                 await this.$repositories.category.update(this.$route.params.id, {
-                    kategori:this.namaKategori
+                    nama:this.namaKategori
                 })
                 this.$router.push({path:'/kategori'})
             }catch({response}){

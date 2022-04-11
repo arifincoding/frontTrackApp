@@ -4,7 +4,7 @@
             <div v-for="item in categories" :key="item" class="form-check">
                 <input class="form-check-input" v-model="idKategori" type="checkbox" :value="item.idKategori">
                 <label class="form-check-label">
-                    {{ item.kategori }}
+                    {{ item.nama }}
                 </label>
                 <br/>
             </div>

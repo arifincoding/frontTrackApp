@@ -65,12 +65,12 @@
     </div>
     <div class="mt-1">
         <div class="font-weight-bold float-left">TOTAL</div>
-        <div class="font-weight-bold float-right harga">Rp.{{product.totalHarga}}</div>
+        <div class="font-weight-bold float-right harga">Rp.{{product.totalBiaya}}</div>
         <div class="clearfix"></div>
     </div>
     <div class="">
         <div>*Barang yang sudah dibeli tidak bisa ditukar/dikembalikan</div>
-        <div>*Garansi {{ product.lamaGaransi }} tidak termasuk(terbakar/kena air)</div>
+        <div>*Garansi {{ product.garansi }} tidak termasuk(terbakar/kena air)</div>
         <div>*Garansi tidak berlaku jika barang sudah dipindah tangankan</div>
     </div>
     <div class="float-right" style="width:250px">
@@ -89,7 +89,6 @@
 </template>
 
 <script>
-import decode from 'jwt-decode'
 export default {
     async asyncData({app, query, store}){
         const service = await app.$repositories.service.show(query.id)
@@ -102,13 +101,11 @@ export default {
             diagnosa = []
         }
 
-        const payload = await decode(store.state.token)
-
         return {
             customer : service.data.customer,
             product : service.data.product,
             diagnosas : diagnosa,
-            user : payload.shortName
+            user : store.state.user
         }
     },
     mounted(){

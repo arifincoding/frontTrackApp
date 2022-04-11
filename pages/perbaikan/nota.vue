@@ -78,9 +78,9 @@
                         <td class="text-center" style="width:25px">:</td>
                         <td class="text-left pl-1" style="width:400px">{{product.cacatProduk}}</td>
                         <td class="text-center" style="width:25px"></td>
-                        <td class="text-right pr-1" style="width:200px">Estimasi Harga</td>
+                        <td class="text-right pr-1" style="width:200px">Estimasi Biaya</td>
                         <td class="text-center" style="width:25px">:</td>
-                        <td class="text-left pl-1 harga" style="width:400px">{{product.estimasiHarga}}</td>
+                        <td class="text-left pl-1 harga" style="width:400px">{{product.estimasiBiaya}}</td>
                     </tr>
                     <tr>
                         <td class="text-right pr-1" style="width:200px">Uang Muka</td>
@@ -122,13 +122,11 @@
 </template>
 
 <script>
-import decode from 'jwt-decode'
 export default {
     async asyncData({app, query, store}){
         const data = await app.$repositories.service.show(query.id)
-        const payload = await decode(store.state.token)
         return {
-            user : payload.shortName,
+            user : store.state.user,
             customer : data.data.customer,
             product : data.data.product,
         }

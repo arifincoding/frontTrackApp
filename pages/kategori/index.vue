@@ -28,7 +28,7 @@ export default {
                     key:'no'
                 },
                 {
-                    key:'kategori',
+                    key:'nama',
                     sortable:true
                 },
                 {key:'menu'}
