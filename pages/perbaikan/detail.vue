@@ -28,17 +28,17 @@
                     </div>
                 </div>
                 <!-- konfirmasi biaya -->
-                <div v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === false && product.status === 'selesai diagnosa'" class="mt-2 btn btn-success" @click="confirmCost(product.id)">Konfirmasi Biaya</div>
+                <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === false && product.status === 'selesai diagnosa'" class="mt-2" message="yakin ingin melakukan konfirmasi biaya kepada customer?" label="Konfirmasi Biaya" @clicked-value="confirmCost($event,product.id)"/>
 
-                <div v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.butuhKonfirmasi === true" class="mt-2 btn btn-success" @click="confirmService(product.id,'true')">Disetujui</div>
+                <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.butuhKonfirmasi === true" class="mt-2" message="yakin ingin menyetujui perbaikan?" label="Disetujui" @clicked-value="confirmService($event,{id:product.id,value:'true'})"/>
 
-                <div v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.butuhKonfirmasi === true" class="mt-2 btn btn-danger" @click="confirmService(product.id,'false')">Dibatakkan</div>
+                <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.butuhKonfirmasi === true" class="mt-2" message="yakin ingin membatalkan perbaikan?" label="dibatalkan" color="danger" @clicked-value="confirmService($event,{id:product.id,value:'false'})"/>
 
                 <!-- update garansi -->
                 <NuxtLink v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.diambil === false" class="mt-2 btn btn-primary" :to="{path:'/perbaikan/garansi',query:{id:product.id}}">Update Garansi</NuxtLink>
                 
                 <!-- ambil barang -->
-                <div v-if="product.status === 'selesai' && product.sudahKonfirmasiBiaya === true && product.diambil === false" class="mt-2 btn btn-success" @click="take(product.id)">Ambil Barang</div>
+                <ModalConfirm v-if="product.status === 'selesai' && product.sudahKonfirmasiBiaya === true && product.diambil === false" class="mt-2" message="yakin ingin mengambil produk?" label="Ambil Produk" @clicked-value="take($event,product.id)"/>
             </div>
         </div>
     </div>
@@ -74,8 +74,8 @@ export default {
         }
     },
     methods:{
-        async confirmCost(id){
-            if(confirm("Yakin ingin konfirmasi biaya ?") === true){
+        async confirmCost(isConfirm,id){
+            if(isConfirm === true){
                 
                 await this.$repositories.service.setConfirmCost(id)
                 
@@ -87,17 +87,19 @@ export default {
             this.customer = data.data.customer
             this.product = data.data.product
         },
-        async take(id){
-            if(confirm("Yakin ingin mengambil barang ?") === true){
+        async take(isConfirm,id){
+            if(isConfirm === true){
                 await this.$repositories.service.setTake(id)
                 await this.$router.push({path:`/perbaikan/nota-ambil?id=${id}`})
         }
         },
-        async confirmService(id,value){
-            await this.$repositories.service.updateConfirmation(id,{
-                dikonfirmasi:value
-            })
-            await this.refreshData()
+        async confirmService(isConfirm,item){
+            if(isConfirm === true){
+                await this.$repositories.service.updateConfirmation(item.id,{
+                    dikonfirmasi:item.value
+                })
+                await this.refreshData()
+            }
         }
     }
 }

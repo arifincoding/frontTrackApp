@@ -11,7 +11,7 @@
                 <b-dd-item-btn class="float-right" button-class="bg-primary text-white btn-sm" @click="onFilter()">Ok</b-dd-item-btn>
             </template>
             <template #cell(menu)="data">
-                <div class="btn btn-sm btn-primary" @click="updateStatus(data.item.idService)">Diagnosa</div>
+                <ModalConfirm message="yakin ingin mulai mendiagnosa produk ini?" label="mulai diagnosa" color="primary" @clicked-value="updateStatus($event,data.item.idService)"/>
             </template>
         </DataTable>
     </div>
@@ -57,8 +57,8 @@ export default {
         }
     },
     methods:{
-        async updateStatus(id){
-            if(confirm("Yakin ingin mendiagnosa data?") === true){
+        async updateStatus(isConfirm,id){
+            if(isConfirm === true){
                 await this.$repositories.service.updateStatus(id,{
                     status:'diagnosa'
                 })

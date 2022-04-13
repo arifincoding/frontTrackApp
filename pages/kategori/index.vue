@@ -7,7 +7,7 @@
         <DataTable :items="categories" :fields="fields">
             <template #cell(menu)="data">
                 <NuxtLink class="btn btn-sm btn-primary" :to="{name:'kategori-update',params:{id:data.item.idKategori}}">update</NuxtLink>
-                <div class="btn btn-sm btn-danger" @click="deleteData(data.item.idKategori)">Hapus</div>
+                <ModalDelete @clicked-value="deleteData($event,data.item.idKategori)"/>
             </template>
         </DataTable>
     </div>
@@ -40,9 +40,9 @@ export default {
         return {categories : data.data}
     },
     methods:{
-        async deleteData(idKategori){
-            if(confirm("Yakin ingin menghapus data?") === true){
-                await this.$repositories.category.delete(idKategori)
+        async deleteData(isConfirm,id){
+            if(isConfirm === true){
+                await this.$repositories.category.delete(id)
                 await this.refreshData()
             }
         },

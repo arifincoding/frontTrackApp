@@ -17,11 +17,14 @@
             </template>
 
             <template #cell(menu)="data">
-                <NuxtLink class="btn btn-sm btn-outline-success" :to="{path:'/pegawai/detail',query:{id:data.item.idPegawai}}">detail</NuxtLink>
+                <DetailEmployee :id-pegawai="data.item.idPegawai"/>
+                <!-- <NuxtLink class="btn btn-sm btn-outline-success" :to="{path:'/pegawai/detail',query:{id:data.item.idPegawai}}">detail</NuxtLink> -->
                 <NuxtLink class="btn btn-sm btn-primary" :to="{path:'/pegawai/update',query:{id:data.item.idPegawai}}">update</NuxtLink>
-                <div class="btn btn-sm btn-danger" @click="deleteData(data.item.idPegawai)">Delete</div>
+                <!-- <div class="btn btn-sm btn-danger" @click="deleteData(data.item.idPegawai)">Delete</div> -->
+                <ModalDelete @clicked-value="deleteData($event,data.item.idPegawai)"/>
             </template>
         </DataTable>
+        {{ coba }}
     </div>
 </template>
 
@@ -51,7 +54,8 @@ export default {
             roleOptions:[
                 {text:'semua', value:null},
                 'customer service','pemilik','teknisi'
-            ]
+            ],
+            coba:''
         }
     },
     async asyncData({app}){
@@ -61,12 +65,6 @@ export default {
         }
     },
     methods:{
-        async deleteData(id){
-            if(confirm("Yakin ingin menghapus data?") === true){
-                await this.$repositories.employee.delete(id)
-                this.refreshData();
-            }
-        },
         async refreshData(){
             const filters = {
                 status:this.filterStatus,
@@ -74,6 +72,12 @@ export default {
             }
             const data = await this.$repositories.employee.all(filters)
             this.employes = data.data;
+        },
+        async deleteData(isConfirm,id){
+            if(isConfirm === true){
+                await this.$repositories.employee.delete(id)
+                this.refreshData();
+            }
         }
     }
 }

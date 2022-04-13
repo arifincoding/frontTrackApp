@@ -9,8 +9,8 @@
         <p>Alamat : {{employee.alamat}}</p>
         <div v-if="employee.peran === 'teknisi'">
         <p>Tanggung Jawab : </p>
-        <ul v-for="item in employee.tanggungJawab" :key="item">
-            <li>{{item.kategori}} <div class="btn btn-sm btn-danger" @click="deleteData(item.idTanggungJawab)">Hapus</div> </li>
+        <ul v-for="item in responbility" :key="item">
+            <li>{{item.kategori}} <ModalDelete @clicked-value="deleteData($event,item.idTanggungJawab)"/> </li>
         </ul>
         <NuxtLink :to="{path:'/tanggungJawab/tambah',query:{id:employee.idPegawai}}">tambah Tanggung jawab</NuxtLink>
         </div>
@@ -22,17 +22,26 @@ export default {
     layout:'admin',
     data(){
         return {
-            employee:''
+            employee:'',
+            responbility:[]
         }
     },
     async asyncData({app,query}){
-        const data = await app.$repositories.employee.show(query.id)
-        return {employee : data.data}
+        const dataEmployee = await app.$repositories.employee.show(query.id)
+        let arrResponbility=[]
+        if(dataEmployee.data.peran === 'teknisi'){
+            const dataResponbility = await app.$repositories.responbility.all(dataEmployee.data.username)
+            arrResponbility = dataResponbility.data
+        }
+        return {
+            employee : dataEmployee.data,
+            responbility : arrResponbility
+        }
         
     },
     methods:{
-        async deleteData(id){
-            if(confirm("Yakin ingin menghapus data?") === true){
+        async deleteData(isConfirm,id){
+            if(isConfirm === true){
                 await this.$repositories.responbility.delete(id)
                 this.refreshData()
             }

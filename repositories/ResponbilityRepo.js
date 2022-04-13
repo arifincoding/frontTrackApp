@@ -1,8 +1,11 @@
-const resource = 'responbility'
+const resource = 'responbilities'
 
 export default ($axios, store) => ({
-    all(){
-        return $axios.$get(`/employes/technician/${resource}`,{
+    all(username = null){
+        if(username === null){
+            username = store.state.username
+        }
+        return $axios.$get(`/employes/${username}/technician/${resource}`,{
             headers:{
                 'Authorization':`bearer ${store.state.token}`
             }
