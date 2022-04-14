@@ -36,8 +36,10 @@ export default {
         }
     },
     async asyncData({app}){
-        const data = await app.$repositories.category.all()
-        return {categories : data.data}
+        try{
+            const data = await app.$repositories.category.all()
+            return {categories : data.data}
+        }catch{}
     },
     methods:{
         async deleteData(isConfirm,id){

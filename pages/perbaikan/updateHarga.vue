@@ -20,11 +20,13 @@ export default {
         }
     },
     async asyncData({app, query}){
-        const data = await app.$repositories.diagnosa.show(query.id)
-        return {
-            kerusakan : data.data.judul,
-            biaya : data.data.harga
-        }
+        try{
+            const data = await app.$repositories.diagnosa.show(query.id)
+            return {
+                kerusakan : data.data.judul,
+                biaya : data.data.harga
+            }
+        }catch{}
     },
     methods:{
         async saveData(){

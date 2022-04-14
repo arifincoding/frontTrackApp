@@ -49,29 +49,30 @@ export default {
     layout:'admin',
     data(){
         return{
-            customer:'',
-            product:''
+            customer:[],
+            product:[]
         }
     },
     async asyncData({app, query, store}){
-
-        const service = await app.$repositories.service.show(query.id)
-
-        let diagnosa = []
         try{
-            const data = await app.$repositories.diagnosa.all(query.id)
-            
-            diagnosa = await data.data
-        }catch{
-            diagnosa = []
-        }
+            const service = await app.$repositories.service.show(query.id)
 
-        return {
-            customer : service.data.customer,
-            product : service.data.product,
-            diagnosas : diagnosa,
-            role : store.state.role
-        }
+            let diagnosa = []
+            try{
+                const data = await app.$repositories.diagnosa.all(query.id)
+                
+                diagnosa = await data.data
+            }catch{
+                diagnosa = []
+            }
+
+            return {
+                customer : service.data.customer,
+                product : service.data.product,
+                diagnosas : diagnosa,
+                role : store.state.role
+            }
+        }catch{}
     },
     methods:{
         async confirmCost(isConfirm,id){

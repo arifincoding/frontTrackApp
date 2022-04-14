@@ -66,18 +66,20 @@ export default {
         }
     },
     async asyncData({app}){
-        const data = await app.$repositories.service.all()
-        const dataCategory = await app.$repositories.category.all()
-        const arrCategory = [{text:'semua', value:null}];
+        try{
+            const data = await app.$repositories.service.all()
+            const dataCategory = await app.$repositories.category.all()
+            const arrCategory = [{text:'semua', value:null}];
 
-        dataCategory.data.forEach((item)=>{
-                arrCategory.push({text:item.nama, value:item.nama})
-        })
+            dataCategory.data.forEach((item)=>{
+                    arrCategory.push({text:item.nama, value:item.nama})
+            })
 
-        return {
-            services : data.data,
-            categoryOptions: arrCategory
-        }
+            return {
+                services : data.data,
+                categoryOptions: arrCategory
+            }
+        }catch{}
     },
     methods:{
         async deleteData(isConfirm, id){

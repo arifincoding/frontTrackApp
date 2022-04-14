@@ -51,21 +51,23 @@ export default {
         }
     },
     async asyncData({app,query}){
-        const service = await app.$repositories.service.show(query.id)
-
-        let diagnosa = []
         try{
-            const data = await app.$repositories.diagnosa.all(query.id)
-            
-            diagnosa = await data.data
-        }catch{
-            diagnosa = []
-        }
-        return {
-            customer : service.data.customer,
-            product : service.data.product,
-            diagnosas : diagnosa
-        }
+            const service = await app.$repositories.service.show(query.id)
+
+            let diagnosa = []
+            try{
+                const data = await app.$repositories.diagnosa.all(query.id)
+                
+                diagnosa = await data.data
+            }catch{
+                diagnosa = []
+            }
+            return {
+                customer : service.data.customer,
+                product : service.data.product,
+                diagnosas : diagnosa
+            }
+        }catch{}
     },
     
     methods:{

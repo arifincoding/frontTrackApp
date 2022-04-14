@@ -27,8 +27,10 @@ export default {
         }
     },
     async asyncData({app,params}){
+        try{
         const data = await app.$repositories.category.show(params.id)
         return {namaKategori : data.data.nama}
+        }catch{}
     },
     methods:{
         async addCategory(){

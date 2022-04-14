@@ -12,11 +12,13 @@ export default {
         SimpanPegawai
     },
     async asyncData({app, query}){
-        const data = await app.$repositories.employee.show(query.id)
+        try{
+            const data = await app.$repositories.employee.show(query.id)
             
-        return {
-            dataPegawai: data.data
-        }
+            return {
+                dataPegawai: data.data
+            }
+        }catch{}
     }
 }
 </script>

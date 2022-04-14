@@ -12,18 +12,20 @@ export default {
         SimpanPerbaikan
     },
     async asyncData({app, query}){
-        const data = await app.$repositories.service.show(query.id)
-        const dataKategori = await app.$repositories.category.all()
+        try{
+            const data = await app.$repositories.service.show(query.id)
+            const dataKategori = await app.$repositories.category.all()
 
-        const kategoriObj = dataKategori.data
-        const kategoriArr = []
-        kategoriObj.forEach((value)=>{
-            kategoriArr.push(value.nama)
-        })
-        return {
-            dataService : data.data,
-            listKategori : kategoriArr
-        }
+            const kategoriObj = dataKategori.data
+            const kategoriArr = []
+            kategoriObj.forEach((value)=>{
+                kategoriArr.push(value.nama)
+            })
+            return {
+                dataService : data.data,
+                listKategori : kategoriArr
+            }
+        }catch{}
     }
 }
 </script>

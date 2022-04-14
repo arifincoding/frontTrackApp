@@ -19,8 +19,10 @@ export default {
         }
     },
     async asyncData({app,query}){
+        try{
         const data = await app.$repositories.diagnosa.show(query.id)
         return {kerusakan : data.data.judul}
+        }catch{}
     },
     methods:{
         async saveData(){

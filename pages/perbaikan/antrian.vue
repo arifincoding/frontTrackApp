@@ -38,23 +38,25 @@ export default {
                 {key:'status', tdClass:'text-danger'},
                 {key:'menu'}
             ],
-            queues:[]
+            queues:[],
+            categoryOptions:[]
         }
     },
     async asyncData({app}){
-        
-        const dataQueue = await app.$repositories.service.listQueue()
-        const dataCategory = await app.$repositories.responbility.all()
-        const arrCategory = [{text:'semua', value:null}];
+        try{
+            const dataQueue = await app.$repositories.service.listQueue()
+            const dataCategory = await app.$repositories.responbility.all()
+            const arrCategory = [{text:'semua', value:null}];
 
-        dataCategory.data.forEach((item)=>{
-                arrCategory.push({text:item.kategori, value:item.kategori})
-        })
+            dataCategory.data.forEach((item)=>{
+                    arrCategory.push({text:item.kategori, value:item.kategori})
+            })
 
-        return {
-            queues : dataQueue.data,
-            categoryOptions :arrCategory
-        }
+            return {
+                queues : dataQueue.data,
+                categoryOptions :arrCategory
+            }
+        }catch{}
     },
     methods:{
         async updateStatus(isConfirm,id){

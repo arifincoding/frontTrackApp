@@ -12,6 +12,7 @@ export default {
         SimpanPerbaikan
     },
     async asyncData(app){
+        try{
         const dataKategori = await app.$repositories.category.all()
 
         const kategoriObj = dataKategori.data
@@ -22,6 +23,7 @@ export default {
         return {
             listKategori : kategoriArr
         }
+        }catch{}
     }
 }
 </script>

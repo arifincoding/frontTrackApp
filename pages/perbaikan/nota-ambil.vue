@@ -91,22 +91,24 @@
 <script>
 export default {
     async asyncData({app, query, store}){
-        const service = await app.$repositories.service.show(query.id)
-
-        let diagnosa = []
         try{
-            const data = await app.$repositories.diagnosa.all(query.id)
-            diagnosa = await data.data
-        }catch{
-            diagnosa = []
-        }
+            const service = await app.$repositories.service.show(query.id)
 
-        return {
-            customer : service.data.customer,
-            product : service.data.product,
-            diagnosas : diagnosa,
-            user : store.state.user
-        }
+            let diagnosa = []
+            try{
+                const data = await app.$repositories.diagnosa.all(query.id)
+                diagnosa = await data.data
+            }catch{
+                diagnosa = []
+            }
+
+            return {
+                customer : service.data.customer,
+                product : service.data.product,
+                diagnosas : diagnosa,
+                user : store.state.user
+            }
+        }catch{}
     },
     mounted(){
         window.print()

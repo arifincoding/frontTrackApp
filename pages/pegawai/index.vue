@@ -59,10 +59,12 @@ export default {
         }
     },
     async asyncData({app}){
+        try{
         const data = await app.$repositories.employee.all()
         return {
             employes : data.data
         }
+        }catch{}
     },
     methods:{
         async refreshData(){

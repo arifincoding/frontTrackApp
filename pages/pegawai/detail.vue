@@ -27,17 +27,18 @@ export default {
         }
     },
     async asyncData({app,query}){
-        const dataEmployee = await app.$repositories.employee.show(query.id)
-        let arrResponbility=[]
-        if(dataEmployee.data.peran === 'teknisi'){
-            const dataResponbility = await app.$repositories.responbility.all(dataEmployee.data.username)
-            arrResponbility = dataResponbility.data
-        }
-        return {
-            employee : dataEmployee.data,
-            responbility : arrResponbility
-        }
-        
+        try{
+            const dataEmployee = await app.$repositories.employee.show(query.id)
+            let arrResponbility=[]
+            if(dataEmployee.data.peran === 'teknisi'){
+                const dataResponbility = await app.$repositories.responbility.all(dataEmployee.data.username)
+                arrResponbility = dataResponbility.data
+            }
+            return {
+                employee : dataEmployee.data,
+                responbility : arrResponbility
+            }
+        }catch{}
     },
     methods:{
         async deleteData(isConfirm,id){
