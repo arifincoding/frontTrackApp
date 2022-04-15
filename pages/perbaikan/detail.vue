@@ -19,20 +19,30 @@
             <div class="col">
                 <div class="border rounded p-3">
                     <h4>Kerusakan</h4>
-                    <div v-for="item in diagnosas" :key="item.idDiagnosa">
+                    <div v-for="item in brokens" :key="item.idKerusakan">
                         <div class = "mt-2">
                             -{{item.judul}} [{{ item.status }}] 
                             <span v-if="item.biaya"> [Rp.{{ item.biaya }}] </span> 
-                            <NuxtLink v-if="role === 'pemilik' && product.status !== 'diagnosa'" class="btn btn-sm btn-primary" :to="{path:'/perbaikan/updateHarga',query:{id:item.idDiagnosa}}" >Update Biaya</NuxtLink>
+                            
+                            <!-- update harga perbaikan -->
+                            <NuxtLink v-if="role === 'pemilik' && product.status === 'selesai diagnosa' && product.sudahKonfirmasiBiaya === false" class="btn btn-sm btn-primary" :to="{path:'/perbaikan/updateHarga',query:{id:item.idKerusakan}}" >Update Biaya</NuxtLink>
+                            
+                            <!-- menyetujui perbaikan -->
+                            <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && isBrokenAgree === null" message="yakin ingin menyetujui perbaikan?" label="Setujui" @clicked-value="setBrokenConfirmation($event,{id:item.idKerusakan,value:true})"/>
+                            
+                            <!-- membatalkan perbaikan -->
+                            <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && isBrokenAgree === null" message="yakin ingin membatalkan perbaikan?" label="Batalkan" @clicked-value="setBrokenConfirmation($event,{id:item.idKerusakan,value:false})"/>
                         </div>
                     </div>
                 </div>
                 <!-- konfirmasi biaya -->
                 <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === false && product.status === 'selesai diagnosa'" class="mt-2" message="yakin ingin melakukan konfirmasi biaya kepada customer?" label="Konfirmasi Biaya" @clicked-value="confirmCost($event,product.id)"/>
-
-                <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.butuhKonfirmasi === true" class="mt-2" message="yakin ingin menyetujui perbaikan?" label="Disetujui" @clicked-value="confirmService($event,{id:product.id,value:'true'})"/>
-
-                <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.butuhKonfirmasi === true" class="mt-2" message="yakin ingin membatalkan perbaikan?" label="dibatalkan" color="danger" @clicked-value="confirmService($event,{id:product.id,value:'false'})"/>
+                
+                <!-- konfirmasi persetujuan perbaikan -->
+                <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.butuhKonfirmasi === true && isBrokenAgree === true" class="mt-2" message="yakin ingin menyetujui perbaikan?" label="Disetujui" @clicked-value="confirmService($event,{id:product.id,value:'true'})"/>
+                
+                <!-- konfirmasi pembatalan perbaikan -->
+                <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.butuhKonfirmasi === true && isBrokenAgree === false" class="mt-2" message="yakin ingin membatalkan perbaikan?" label="dibatalkan" color="danger" @clicked-value="confirmService($event,{id:product.id,value:'false'})"/>
 
                 <!-- update garansi -->
                 <NuxtLink v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.diambil === false" class="mt-2 btn btn-primary" :to="{path:'/perbaikan/garansi',query:{id:product.id}}">Update Garansi</NuxtLink>
@@ -50,26 +60,44 @@ export default {
     data(){
         return{
             customer:[],
-            product:[]
+            product:[],
+            brokens:[],
+            isBrokenAgree:null
         }
     },
     async asyncData({app, query, store}){
         try{
             const service = await app.$repositories.service.show(query.id)
 
-            let diagnosa = []
+            let broken = []
             try{
-                const data = await app.$repositories.diagnosa.all(query.id)
-                
-                diagnosa = await data.data
+                const data = await app.$repositories.broken.all(query.id)
+                let isAllBrokenConfirmed = true
+                data.data.forEach((item)=>{
+                    if(item.dikonfirmasi === null){
+                        isAllBrokenConfirmed = false
+                        break
+                    }
+                })
+                if(isAllBrokenConfirmed === true){
+                    this.isBrokenAgree = false
+                    data.data.forEach((item)=>{
+                        if(item.dikonfirmasi === true){
+                            this.isBrokenAgree = true
+                            break
+                        }
+                    })
+                }
+                broken = await data.data
             }catch{
-                diagnosa = []
+                broken = []
+                this.isBrokenAgree = null
             }
 
             return {
                 customer : service.data.customer,
                 product : service.data.product,
-                diagnosas : diagnosa,
+                brokens : broken,
                 role : store.state.role
             }
         }catch{}
@@ -101,6 +129,34 @@ export default {
                 })
                 await this.refreshData()
             }
+        },
+        async setBrokenConfirmation(isConfirm,item){
+            if(isConfirm === true){
+                await this.$repositories.broken.updateConfirmation(item.id,{
+                    dikonfirmasi:item.value
+                })
+                await this.refreshBroken()
+            }
+        },
+        async refreshBroken(){
+            const data = await app.$repositories.broken.all(query.id)
+            let isAllBrokenConfirmed = true
+            data.data.forEach((item)=>{
+                if(item.dikonfirmasi === null){
+                    isAllBrokenConfirmed = false
+                    break
+                }
+            })
+            if(isAllBrokenConfirmed === true){
+                this.isBrokenAgree = false
+                data.data.forEach((item)=>{
+                    if(item.dikonfirmasi === true){
+                        this.isBrokenAgree = true
+                        break
+                    }
+                })
+            }
+            this.brokens = await data.data
         }
     }
 }

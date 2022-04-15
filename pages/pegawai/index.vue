@@ -8,9 +8,6 @@
                 <DropdownFormGroup title="Peran">
                     <b-form-radio-group v-model="filterRole" :options="roleOptions" stacked/>
                 </DropdownFormGroup>
-                <DropdownFormGroup title="Status">
-                    <b-form-radio-group v-model="filterStatus" :options="statusOptions" stacked/>
-                </DropdownFormGroup>
             </template>
             <template v-slot:filterBtn>
                 <b-dd-item-btn class="float-right" button-class="bg-primary text-white btn-sm" @click="refreshData()">Ok</b-dd-item-btn>
@@ -24,7 +21,6 @@
                 <ModalDelete @clicked-value="deleteData($event,data.item.idPegawai)"/>
             </template>
         </DataTable>
-        {{ coba }}
     </div>
 </template>
 
@@ -42,20 +38,13 @@ export default {
                 {key:'no'},
                 {key:'nama', sortable:true},
                 {key:'peran', sortable:true},
-                {key:'status', sortable:true},
                 {key:'menu'}
             ],
-            filterStatus:null,
             filterRole:null,
-            statusOptions:[
-                {text:'semua', value:null},
-                'active','deactive','registered'
-            ],
             roleOptions:[
                 {text:'semua', value:null},
                 'customer service','pemilik','teknisi'
-            ],
-            coba:''
+            ]
         }
     },
     async asyncData({app}){
@@ -69,7 +58,6 @@ export default {
     methods:{
         async refreshData(){
             const filters = {
-                status:this.filterStatus,
                 peran:this.filterRole
             }
             const data = await this.$repositories.employee.all(filters)

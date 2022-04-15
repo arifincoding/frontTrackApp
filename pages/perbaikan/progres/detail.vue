@@ -13,21 +13,17 @@
             <div class="col">
                 <div class="border rounded p-3">
                     <h4>Kerusakan</h4>
-                    <div v-for="item in diagnosas" :key="item.idDiagnosa">
+                    <div v-for="item in brokens" :key="item.idKerusakan">
                         <div class = "mt-2">
-                            -{{item.judul}} [{{ item.status }}]
-                            <NuxtLink v-if="product.status === 'diagnosa'" class="btn btn-sm btn-primary" :to="{path:'/kerusakan/update',query:{id:item.idDiagnosa}}">Update</NuxtLink>
+                            -{{item.judul}}
+                            <NuxtLink v-if="product.status === 'mulai diagnosa'" class="btn btn-sm btn-primary" :to="{path:'/kerusakan/update',query:{id:item.idDiagnosa}}">Update</NuxtLink>
                             
-                            <ModalDelete v-if="product.status === 'diagnosa'" @clicked-value="deleteKerusakan($event,item.idDiagnosa)"/>
-                            
-                            <ModelConfirm v-if="item.status === 'antri' && product.status === 'proses'" message="yakin ingin memproses kerusakan?" label="proses" color="warning" @clicked-value="updateStatusDiagnosa($event,{id:item.idDiagnosa,value:'proses'})"/>
-                            
-                            <ModelConfirm v-if="item.status === 'proses' && product.status === 'proses'" message="yakin ingin menyelesaikan perbaikan?" label="Selesai" @clicked-value="updateStatusDiagnosa($event,{id:item.idDiagnosa,value:'selesai'})"/>
+                            <ModalDelete v-if="product.status === 'mulai diagnosa'" @clicked-value="deleteKerusakan($event,item.idKerusakan)"/>
                         </div>
                     </div>
-                    <NuxtLink v-if="product.status === 'diagnosa'" class="btn btn-sm btn-success" :to="{path:'/kerusakan/tambah',query:{id:product.id}}">Tambah</NuxtLink>
+                    <NuxtLink v-if="product.status === 'mulai diagnosa'" class="btn btn-sm btn-success" :to="{path:'/kerusakan/tambah',query:{id:product.id}}">Tambah</NuxtLink>
                 </div>
-                <ModelConfirm v-if="product.status === 'diagnosa'" class="mt-3" message="yakin ingin menyelesaikan diagnosa" label="selesai diagnosa" color="primary" @clicked-value="updateStatus($event,{id:product.id,value:'selesai diagnosa'})"/>
+                <ModelConfirm v-if="product.status === 'mulai diagnosa'" class="mt-3" message="yakin ingin menyelesaikan diagnosa" label="selesai diagnosa" color="primary" @clicked-value="updateStatus($event,{id:product.id,value:'selesai diagnosa'})"/>
                 <ModelConfirm v-else-if="product.status === 'selesai diagnosa'" class="mt-3" message="yakin ingin memproses kerusakan" label="proses" color="warning" @clicked-value="updateStatus($event,{id:product.id,value:'proses'})"/>
 
                 <ModelConfirm v-else-if="product.status === 'proses'" class="mt-3" message="yakin ingin menyelesaikan perbaikan?" label="Selesai" @clicked-value="updateStatus($event,{id:product.id,value:'selesai'})">selesai</ModelConfirm>
@@ -47,25 +43,25 @@ export default {
     },
     data(){
         return{
-            diagnosas:''
+            brokens:[]
         }
     },
     async asyncData({app,query}){
         try{
             const service = await app.$repositories.service.show(query.id)
 
-            let diagnosa = []
+            let broken = []
             try{
-                const data = await app.$repositories.diagnosa.all(query.id)
+                const data = await app.$repositories.broken.all(query.id)
                 
-                diagnosa = await data.data
+                broken = await data.data
             }catch{
-                diagnosa = []
+                broken = []
             }
             return {
                 customer : service.data.customer,
                 product : service.data.product,
-                diagnosas : diagnosa
+                brokens : broken
             }
         }catch{}
     },
@@ -73,16 +69,16 @@ export default {
     methods:{
         async deleteKerusakan(isConfirm,id){
             if(isConfirm === true){
-            await this.$repositories.diagnosa.delete(id)
-            this.refreshDiagnosa();
+            await this.$repositories.broken.delete(id)
+            this.refreshBroken();
             }
         },
-        async refreshDiagnosa(){
+        async refreshBroken(){
             try{
-                const data = await this.$repositories.diagnosa.all(this.$route.query.id)
-                this.diagnosas = await data.data
+                const data = await this.$repositories.broken.all(this.$route.query.id)
+                this.brokens = await data.data
             }catch{
-                this.diagnosas = []
+                this.brokens = []
             }
         },
         async updateStatus(isConfirm,item){
@@ -96,14 +92,6 @@ export default {
         async refreshData(){
             const service = await this.$repositories.service.show(this.$route.query.id)
             this.product = service.data.product
-        },
-        async updateStatusDiagnosa(isConfirm,item){
-            if(isConfirm === true){
-                await this.$repositories.diagnosa.updateStatus(item.id,{
-                    status:item.value
-                })
-                this.refreshDiagnosa()
-            }
         }
     }
 }

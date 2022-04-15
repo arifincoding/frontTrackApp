@@ -1,4 +1,4 @@
-const resource = 'diagnosas'
+const resource = 'brokens'
 
 export default ($axios, store) => ({
     all(id){
@@ -36,8 +36,8 @@ export default ($axios, store) => ({
             }
         })
     },
-    updateStatus(id,payload){
-        return $axios.$put(`/services/${resource}/${id}/status`,payload,{
+    updateConfirmation(id,payload){
+        return $axios.$put(`/services/${resource}/${id}/confirm`,payload,{
             headers:{
                 'Authorization':`bearer ${store.state.token}`
             }
