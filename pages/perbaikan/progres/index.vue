@@ -15,7 +15,8 @@
                     <b-dd-item-btn class="float-right" button-class="bg-primary text-white btn-sm" @click="onFilter()">Ok</b-dd-item-btn>
             </template>
             <template #cell(status)="data">
-                <td v-if="data.value === 'diagnosa' || data.value === 'selesai diagnosa'" class="text-primary"> {{ data.value }} </td>
+                <td v-if="data.value === 'mulai diagnosa' || data.value === 'selesai diagnosa'" class="text-primary"> {{ data.value }} </td>
+                <td v-else-if="data.value === 'tunggu'" class="text-secondary"> {{ data.value }} </td>
                 <td v-else-if="data.value === 'proses'" class="text-warning"> {{ data.value }} </td>
                 <td v-else-if="data.value === 'selesai'" class="text-success"> {{ data.value }} </td>
             </template>

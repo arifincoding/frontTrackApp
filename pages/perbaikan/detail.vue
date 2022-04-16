@@ -21,34 +21,35 @@
                     <h4>Kerusakan</h4>
                     <div v-for="item in brokens" :key="item.idKerusakan">
                         <div class = "mt-2">
-                            -{{item.judul}} [{{ item.status }}] 
+                            <span>-{{item.judul}}</span>
+                            <span>[{{ item.dikonfirmasi }}]</span> 
                             <span v-if="item.biaya"> [Rp.{{ item.biaya }}] </span> 
                             
                             <!-- update harga perbaikan -->
-                            <NuxtLink v-if="role === 'pemilik' && product.status === 'selesai diagnosa' && product.sudahKonfirmasiBiaya === false" class="btn btn-sm btn-primary" :to="{path:'/perbaikan/updateHarga',query:{id:item.idKerusakan}}" >Update Biaya</NuxtLink>
+                            <UpdateBiaya v-if="role === 'pemilik' && (product.status === 'selesai diagnosa' || product.status === 'tunggu') && product.sudahKonfirmasiBiaya === false" :data-id="item.idKerusakan" :value-biaya="item.biaya" @save="handleSave"/>
                             
                             <!-- menyetujui perbaikan -->
-                            <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && isBrokenAgree === null" message="yakin ingin menyetujui perbaikan?" label="Setujui" @clicked-value="setBrokenConfirmation($event,{id:item.idKerusakan,value:true})"/>
+                            <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.sudahdikonfirmasi === null && item.dikonfirmasi === 0" message="yakin ingin menyetujui perbaikan?" label="Setujui" @clicked-value="setBrokenConfirmation($event,{id:item.idKerusakan,value:true})"/>
                             
                             <!-- membatalkan perbaikan -->
-                            <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && isBrokenAgree === null" message="yakin ingin membatalkan perbaikan?" label="Batalkan" @clicked-value="setBrokenConfirmation($event,{id:item.idKerusakan,value:false})"/>
+                            <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.sudahdikonfirmasi === null && item.dikonfirmasi === 1" message="yakin ingin membatalkan perbaikan?" label="Batalkan" color="danger" @clicked-value="setBrokenConfirmation($event,{id:item.idKerusakan,value:false})"/>
                         </div>
                     </div>
                 </div>
                 <!-- konfirmasi biaya -->
-                <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === false && product.status === 'selesai diagnosa'" class="mt-2" message="yakin ingin melakukan konfirmasi biaya kepada customer?" label="Konfirmasi Biaya" @clicked-value="confirmCost($event,product.id)"/>
+                <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === false && (product.status === 'selesai diagnosa' || product.status === 'tunggu')" btn-class="mt-2" message="yakin ingin melakukan konfirmasi biaya kepada customer?" label="Konfirmasi Biaya" @clicked-value="confirmCost($event,product.id)"/>
                 
                 <!-- konfirmasi persetujuan perbaikan -->
-                <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.butuhKonfirmasi === true && isBrokenAgree === true" class="mt-2" message="yakin ingin menyetujui perbaikan?" label="Disetujui" @clicked-value="confirmService($event,{id:product.id,value:'true'})"/>
+                <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.butuhKonfirmasi === true && isBrokenAgree === true && product.sudahdikonfirmasi === null" btn-class="mt-2" message="yakin ingin menyetujui perbaikan?" label="konfirmasi persetujuan" @clicked-value="confirmService($event,{id:product.id,value:true})"/>
                 
                 <!-- konfirmasi pembatalan perbaikan -->
-                <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.butuhKonfirmasi === true && isBrokenAgree === false" class="mt-2" message="yakin ingin membatalkan perbaikan?" label="dibatalkan" color="danger" @clicked-value="confirmService($event,{id:product.id,value:'false'})"/>
+                <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.butuhKonfirmasi === true && isBrokenAgree === false && product.sudahdikonfirmasi === null" btn-class="mt-2" message="yakin ingin membatalkan perbaikan?" label="konfirmasi pembatalan" color="danger" @clicked-value="confirmService($event,{id:product.id,value:false})"/>
 
                 <!-- update garansi -->
-                <NuxtLink v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.diambil === false" class="mt-2 btn btn-primary" :to="{path:'/perbaikan/garansi',query:{id:product.id}}">Update Garansi</NuxtLink>
+                <UpdateGaransi v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.diambil === false" :data-id="product.id" :value-garansi="product.garansi" @save="handleSaveWarranty"/>
                 
                 <!-- ambil barang -->
-                <ModalConfirm v-if="product.status === 'selesai' && product.sudahKonfirmasiBiaya === true && product.diambil === false" class="mt-2" message="yakin ingin mengambil produk?" label="Ambil Produk" @clicked-value="take($event,product.id)"/>
+                <ModalConfirm v-if="product.status === 'selesai' && product.sudahKonfirmasiBiaya === true && product.diambil === false" btn-class="mt-2" message="yakin ingin mengambil produk?" label="Ambil Produk" @clicked-value="take($event,product.id)"/>
             </div>
         </div>
     </div>
@@ -57,6 +58,45 @@
 <script>
 export default {
     layout:'admin',
+    async asyncData({app, query, store}){
+        try{
+            const service = await app.$repositories.service.show(query.id)
+
+            let broken = []
+            let setBrokenAgree = null
+            try{
+                const data = await app.$repositories.broken.all(query.id)
+                const isAllBrokenConfirmed = data.data.every((item)=>{
+                    if(item.dikonfirmasi === null){
+                        return false
+                    }
+                    return true
+                })
+                
+                if(isAllBrokenConfirmed === true){
+                    setBrokenAgree = false
+                    data.data.some((item)=>{
+                        if(item.dikonfirmasi === 1){
+                            setBrokenAgree = true
+                            return true
+                        }
+                        return false
+                    })
+                }
+                broken = await data.data
+            }catch{
+                broken = []
+            }
+
+            return {
+                customer : service.data.customer,
+                product : service.data.product,
+                brokens : broken,
+                role : store.state.role,
+                isBrokenAgree : setBrokenAgree
+            }
+        }catch{}
+    },
     data(){
         return{
             customer:[],
@@ -64,43 +104,6 @@ export default {
             brokens:[],
             isBrokenAgree:null
         }
-    },
-    async asyncData({app, query, store}){
-        try{
-            const service = await app.$repositories.service.show(query.id)
-
-            let broken = []
-            try{
-                const data = await app.$repositories.broken.all(query.id)
-                let isAllBrokenConfirmed = true
-                data.data.forEach((item)=>{
-                    if(item.dikonfirmasi === null){
-                        isAllBrokenConfirmed = false
-                        break
-                    }
-                })
-                if(isAllBrokenConfirmed === true){
-                    this.isBrokenAgree = false
-                    data.data.forEach((item)=>{
-                        if(item.dikonfirmasi === true){
-                            this.isBrokenAgree = true
-                            break
-                        }
-                    })
-                }
-                broken = await data.data
-            }catch{
-                broken = []
-                this.isBrokenAgree = null
-            }
-
-            return {
-                customer : service.data.customer,
-                product : service.data.product,
-                brokens : broken,
-                role : store.state.role
-            }
-        }catch{}
     },
     methods:{
         async confirmCost(isConfirm,id){
@@ -139,24 +142,35 @@ export default {
             }
         },
         async refreshBroken(){
-            const data = await app.$repositories.broken.all(query.id)
-            let isAllBrokenConfirmed = true
-            data.data.forEach((item)=>{
+            const data = await this.$repositories.broken.all(this.$route.query.id)
+            const isAllBrokenConfirmed = data.data.every((item)=>{
                 if(item.dikonfirmasi === null){
-                    isAllBrokenConfirmed = false
-                    break
+                    return false
                 }
+                return true
             })
             if(isAllBrokenConfirmed === true){
                 this.isBrokenAgree = false
-                data.data.forEach((item)=>{
-                    if(item.dikonfirmasi === true){
+                data.data.some((item)=>{
+                    if(item.dikonfirmasi === 1){
                         this.isBrokenAgree = true
-                        break
+                        return true
                     }
+                    return false
                 })
             }
             this.brokens = await data.data
+        },
+        handleSave(event){
+            if(event === true){
+                this.refreshBroken()
+                this.refreshData()
+            }
+        },
+        handleSaveWarranty(event){
+            if(event === true){
+                this.refreshData()
+            }
         }
     }
 }

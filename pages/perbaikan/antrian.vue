@@ -11,6 +11,7 @@
                 <b-dd-item-btn class="float-right" button-class="bg-primary text-white btn-sm" @click="onFilter()">Ok</b-dd-item-btn>
             </template>
             <template #cell(menu)="data">
+                <NuxtLink class="btn btn-sm btn-outline-success" :to="{path:'/perbaikan/progres/detail',query:{id:data.item.idService}}">detail</NuxtLink>
                 <ModalConfirm message="yakin ingin mulai mendiagnosa produk ini?" label="mulai diagnosa" color="primary" @clicked-value="updateStatus($event,data.item.idService)"/>
             </template>
         </DataTable>
@@ -62,7 +63,7 @@ export default {
         async updateStatus(isConfirm,id){
             if(isConfirm === true){
                 await this.$repositories.service.updateStatus(id,{
-                    status:'diagnosa'
+                    status:'mulai diagnosa'
                 })
                 await this.$router.push({path:`/perbaikan/progres/detail?id=${id}`})
             }

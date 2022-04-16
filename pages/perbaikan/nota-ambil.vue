@@ -41,20 +41,17 @@
                     <td class="nota-w-no">No</td>
                     <td>Merk</td>
                     <td>Kerusakan</td>
-                    <td>Status</td>
                     <td>Biaya</td>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(item,index) in diagnosas" :key="index">
+                <tr v-for="(item,index) in brokens" :key="index">
                     <td class="ue"> {{ index+1 }} </td>
                     <td> {{ product.nama }} </td>
                     <td> {{ item.judul }} </td>
-                    <td> {{ item.status }} </td>
                     <td>Rp.{{ item.biaya }} </td>
                 </tr>
                 <tr>
-                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -94,18 +91,18 @@ export default {
         try{
             const service = await app.$repositories.service.show(query.id)
 
-            let diagnosa = []
+            let broken = []
             try{
-                const data = await app.$repositories.diagnosa.all(query.id)
-                diagnosa = await data.data
+                const data = await app.$repositories.broken.all(query.id)
+                broken = await data.data
             }catch{
-                diagnosa = []
+                broken = []
             }
 
             return {
                 customer : service.data.customer,
                 product : service.data.product,
-                diagnosas : diagnosa,
+                brokens : broken,
                 user : store.state.user
             }
         }catch{}

@@ -1,6 +1,6 @@
 <template>
     <span>
-        <b-button :variant="color" :size="size" @click="showMsgBox">{{label}}</b-button>
+        <b-button :variant="color" class="text-capitalize" :class="btnClass" :size="size" @click="showMsgBox">{{label}}</b-button>
     </span>
 </template>
 
@@ -16,7 +16,11 @@ export default {
             default:'sm'
         },
         message:String,
-        label:String
+        label:String,
+        btnClass:{
+            type:String,
+            default:''
+        }
     },
     methods:{
         showMsgBox(){

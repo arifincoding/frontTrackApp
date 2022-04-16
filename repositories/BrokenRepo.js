@@ -30,7 +30,7 @@ export default ($axios, store) => ({
         })
     },
     updateCost(id,payload){
-        return $axios.$put(`/service/${resource}/${id}/cost`,payload,{
+        return $axios.$put(`/services/${resource}/${id}/cost`,payload,{
             headers:{
                 'Authorization':`bearer ${store.state.token}`
             }

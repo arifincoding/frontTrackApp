@@ -16,17 +16,23 @@
                     <div v-for="item in brokens" :key="item.idKerusakan">
                         <div class = "mt-2">
                             -{{item.judul}}
-                            <NuxtLink v-if="product.status === 'mulai diagnosa'" class="btn btn-sm btn-primary" :to="{path:'/kerusakan/update',query:{id:item.idDiagnosa}}">Update</NuxtLink>
-                            
+                            <!-- update kerusakan -->
+                            <SimpanKerusakan v-if="product.status === 'mulai diagnosa'" name="update" label="Update Kerusakan" btn-color="primary" :data-id="item.idKerusakan" :value="{judul:item.judul,deskripsi:item.deskripsi}" @save="handleSave"/>
+                            <!-- delete kerusakan -->
                             <ModalDelete v-if="product.status === 'mulai diagnosa'" @clicked-value="deleteKerusakan($event,item.idKerusakan)"/>
                         </div>
                     </div>
-                    <NuxtLink v-if="product.status === 'mulai diagnosa'" class="btn btn-sm btn-success" :to="{path:'/kerusakan/tambah',query:{id:product.id}}">Tambah</NuxtLink>
+                    <!-- tambah kerusakan -->
+                    <SimpanKerusakan v-if="product.status === 'mulai diagnosa'" name="tambah kerusakan" label="tambah kerusakan" btn-color="success" :data-id="product.id" @save="handleSave"/>
                 </div>
-                <ModelConfirm v-if="product.status === 'mulai diagnosa'" class="mt-3" message="yakin ingin menyelesaikan diagnosa" label="selesai diagnosa" color="primary" @clicked-value="updateStatus($event,{id:product.id,value:'selesai diagnosa'})"/>
-                <ModelConfirm v-else-if="product.status === 'selesai diagnosa'" class="mt-3" message="yakin ingin memproses kerusakan" label="proses" color="warning" @clicked-value="updateStatus($event,{id:product.id,value:'proses'})"/>
-
-                <ModelConfirm v-else-if="product.status === 'proses'" class="mt-3" message="yakin ingin menyelesaikan perbaikan?" label="Selesai" @clicked-value="updateStatus($event,{id:product.id,value:'selesai'})">selesai</ModelConfirm>
+                <!-- mulai diagnosa -->
+                <ModalConfirm v-if="product.status === 'antri'" btn-class="mt-3" message="yakin ingin memulai diagnosa" label="Mulai Diagnosa" color="primary" @clicked-value="updateStatus($event,{id:product.id,value:'mulai diagnosa'})"/>
+                <!-- selesai diagnosa -->
+                <ModalConfirm v-if="product.status === 'mulai diagnosa' && brokens.length > 0" btn-class="mt-3" message="yakin ingin menyelesaikan diagnosa" label="selesai diagnosa" color="primary" @clicked-value="updateStatus($event,{id:product.id,value:'selesai diagnosa'})"/>
+                <!-- proses -->
+                <ModalConfirm v-else-if="product.status === 'selesai diagnosa' || (product.sudahdikonfirmasi === 1 && product.status === 'tunggu')" btn-class="mt-3" message="yakin ingin memproses kerusakan" label="proses" color="warning" @clicked-value="updateStatus($event,{id:product.id,value:'proses'})"/>
+                <!-- selesai -->
+                <ModalConfirm v-else-if="product.status === 'proses'" btn-class="mt-3" message="yakin ingin menyelesaikan perbaikan?" label="Selesai" @clicked-value="updateStatus($event,{id:product.id,value:'selesai'})"/>
             </div>
         </div>
     </div>
@@ -40,11 +46,6 @@ export default {
     components:{
         DetailKlien,
         DetailProduk
-    },
-    data(){
-        return{
-            brokens:[]
-        }
     },
     async asyncData({app,query}){
         try{
@@ -65,7 +66,11 @@ export default {
             }
         }catch{}
     },
-    
+    data(){
+        return{
+            brokens:[]
+        }
+    },
     methods:{
         async deleteKerusakan(isConfirm,id){
             if(isConfirm === true){
@@ -92,6 +97,11 @@ export default {
         async refreshData(){
             const service = await this.$repositories.service.show(this.$route.query.id)
             this.product = service.data.product
+        },
+        handleSave(event){
+            if(event === true){
+                this.refreshBroken()
+            }
         }
     }
 }

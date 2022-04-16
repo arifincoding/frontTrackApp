@@ -1,12 +1,10 @@
 <template>
     <div>
         <TitleHeading text="data kategori"/>
-        <NuxtLink to="/kategori/tambah">
-            <ButtonAdd text="tambah kategori"/>
-        </NuxtLink>
+        <SimpanKategori label="Tambah Kategori" name="Tambah Kategori" btn-color="success" @save="handleSave"/>
         <DataTable :items="categories" :fields="fields">
             <template #cell(menu)="data">
-                <NuxtLink class="btn btn-sm btn-primary" :to="{name:'kategori-update',params:{id:data.item.idKategori}}">update</NuxtLink>
+                <SimpanKategori :data-value="data.item.nama" :data-id="data.item.idKategori" label="Update Kategori" name="Update" btn-color="primary" @save="handleSave"/>
                 <ModalDelete @clicked-value="deleteData($event,data.item.idKategori)"/>
             </template>
         </DataTable>
@@ -45,12 +43,17 @@ export default {
         async deleteData(isConfirm,id){
             if(isConfirm === true){
                 await this.$repositories.category.delete(id)
-                await this.refreshData()
+                this.refreshData()
             }
         },
         async refreshData(){
             const data = await this.$repositories.category.all() 
             this.categories = data.data
+        },
+        handleSave(event){
+            if(event === true){
+                this.refreshData()
+            }
         }
     }
 }

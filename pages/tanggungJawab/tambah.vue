@@ -34,7 +34,7 @@ export default {
             await this.$repositories.responbility.create(this.$route.query.id,{
                 idKategori : this.idKategori
             })
-            this.$router.push({path:`/pegawai/detail?id=${this.$route.query.id}`})
+            this.$router.push({path:`/pegawai`})
         }
     }
 }

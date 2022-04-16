@@ -25,8 +25,8 @@
             <template #cell(produk)="data">
                 {{data.item.product.nama}} ({{ data.item.product.kategori }})
             </template>
-            <template #cell(totalharga)="data">
-                <span v-if="data.item.product.totalHarga">Rp.{{data.item.product.totalHarga}}</span>
+            <template #cell(totalBiaya)="data">
+                <span v-if="data.item.product.totalBiaya">Rp.{{data.item.product.totalBiaya}}</span>
             </template>
             <template #cell(menu)="data">
                 <NuxtLink class="btn btn-sm btn-outline-success" :to="{path:'/perbaikan/detail',query:{id:data.item.product.id}}">Detail</NuxtLink>
