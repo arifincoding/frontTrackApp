@@ -16,10 +16,12 @@
                     <div v-for="item in brokens" :key="item.idKerusakan">
                         <div class = "mt-2">
                             -{{item.judul}}
+                            <div v-if="product.status === 'mulai diagnosa'">
                             <!-- update kerusakan -->
-                            <SimpanKerusakan v-if="product.status === 'mulai diagnosa'" name="update" label="Update Kerusakan" btn-color="primary" :data-id="item.idKerusakan" :value="{judul:item.judul,deskripsi:item.deskripsi}" @save="handleSave"/>
+                            <SimpanKerusakan name="update" label="Update Kerusakan" btn-color="primary" :data-id="item.idKerusakan" :value="{judul:item.judul,deskripsi:item.deskripsi}" @save="handleSave"/>
                             <!-- delete kerusakan -->
-                            <ModalDelete v-if="product.status === 'mulai diagnosa'" @clicked-value="deleteKerusakan($event,item.idKerusakan)"/>
+                            <ModalDelete @clicked-value="deleteKerusakan($event,item.idKerusakan)"/>
+                            </div>
                         </div>
                     </div>
                     <!-- tambah kerusakan -->

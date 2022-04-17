@@ -25,30 +25,33 @@
                             <span v-if="item.dikonfirmasi === true">[ Disetujui ]</span>
                             <span v-if="item.dikonfirmasi === false">[ Dibatalkan ]</span> 
                             <span v-if="item.biaya"> [Rp.{{ item.biaya }}] </span> 
-                            
-                            <!-- update harga perbaikan -->
-                            <UpdateBiaya v-if="role === 'pemilik' && (product.status === 'selesai diagnosa' || product.status === 'tunggu') && product.sudahKonfirmasiBiaya === false" :data-id="item.idKerusakan" :value-biaya="item.biaya" @save="handleSave"/>
-                            
-                            <!-- menyetujui perbaikan -->
-                            <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.sudahdikonfirmasi === null && (item.dikonfirmasi === false || item.dikonfirmasi === null)" message="yakin ingin menyetujui perbaikan?" label="Setujui" @clicked-value="setBrokenConfirmation($event,{id:item.idKerusakan,value:true})"/>
-                            
-                            <!-- membatalkan perbaikan -->
-                            <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.sudahdikonfirmasi === null && (item.dikonfirmasi === true || item.dikonfirmasi === null)" message="yakin ingin membatalkan perbaikan?" label="Batalkan" color="danger" @clicked-value="setBrokenConfirmation($event,{id:item.idKerusakan,value:false})"/>
+                            <div v-if="role === 'pemilik'">
+                                <!-- update harga perbaikan -->
+                                <UpdateBiaya v-if="(product.status === 'selesai diagnosa' || product.status === 'tunggu') && product.sudahKonfirmasiBiaya === false" :data-id="item.idKerusakan" :value-biaya="item.biaya" @save="handleSave"/>
+                                <div v-if="product.sudahKonfirmasiBiaya === true && product.sudahdikonfirmasi === null">
+                                    <!-- menyetujui perbaikan -->
+                                    <ModalConfirm v-if="item.dikonfirmasi === false || item.dikonfirmasi === null" message="yakin ingin menyetujui perbaikan?" label="Setujui" @clicked-value="setBrokenConfirmation($event,{id:item.idKerusakan,value:true})"/>
+                                    
+                                    <!-- membatalkan perbaikan -->
+                                    <ModalConfirm v-if=" item.dikonfirmasi === true || item.dikonfirmasi === null" message="yakin ingin membatalkan perbaikan?" label="Batalkan" color="danger" @clicked-value="setBrokenConfirmation($event,{id:item.idKerusakan,value:false})"/>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <!-- konfirmasi biaya -->
-                <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === false && (product.status === 'selesai diagnosa' || product.status === 'tunggu')" btn-class="mt-2" message="yakin ingin melakukan konfirmasi biaya kepada customer?" label="Konfirmasi Biaya" @clicked-value="confirmCost($event,product.id)"/>
                 
-                <!-- konfirmasi persetujuan perbaikan -->
-                <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.butuhKonfirmasi === true && isBrokenAgree === true && product.sudahdikonfirmasi === null" btn-class="mt-2" message="yakin ingin menyetujui perbaikan?" label="konfirmasi persetujuan" @clicked-value="confirmService($event,{id:product.id,value:true})"/>
-                
-                <!-- konfirmasi pembatalan perbaikan -->
-                <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.butuhKonfirmasi === true && isBrokenAgree === false && product.sudahdikonfirmasi === null" btn-class="mt-2" message="yakin ingin membatalkan perbaikan?" label="konfirmasi pembatalan" color="danger" @clicked-value="confirmService($event,{id:product.id,value:false})"/>
-
-                <!-- update garansi -->
-                <UpdateGaransi v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.diambil === false" :data-id="product.id" :value-garansi="product.garansi" @save="handleSaveWarranty"/>
-                
+                <div v-if="role === 'pemilik'">
+                    <!-- konfirmasi biaya -->
+                    <ModalConfirm v-if="product.sudahKonfirmasiBiaya === false && (product.status === 'selesai diagnosa' || product.status === 'tunggu')" btn-class="mt-2" message="yakin ingin melakukan konfirmasi biaya kepada customer?" label="Konfirmasi Biaya" @clicked-value="confirmCost($event,product.id)"/>
+                    <div v-if="product.sudahKonfirmasiBiaya === true && product.butuhKonfirmasi === true && product.sudahdikonfirmasi === null">
+                        <!-- konfirmasi persetujuan perbaikan -->
+                        <ModalConfirm v-if="isBrokenAgree === true" btn-class="mt-2" message="yakin ingin menyetujui perbaikan?" label="konfirmasi persetujuan" @clicked-value="confirmService($event,{id:product.id,value:true})"/>
+                        <!-- konfirmasi pembatalan perbaikan -->
+                        <ModalConfirm v-if="isBrokenAgree === false" btn-class="mt-2" message="yakin ingin membatalkan perbaikan?" label="konfirmasi pembatalan" color="danger" @clicked-value="confirmService($event,{id:product.id,value:false})"/>
+                    </div>
+                    <!-- update garansi -->
+                    <UpdateGaransi v-if="product.sudahKonfirmasiBiaya === true && product.diambil === false" :data-id="product.id" :value-garansi="product.garansi" @save="handleSaveWarranty"/>
+                </div>
                 <!-- ambil barang -->
                 <ModalConfirm v-if="product.status === 'selesai' && product.sudahKonfirmasiBiaya === true && product.diambil === false" btn-class="mt-2" message="yakin ingin mengambil produk?" label="Ambil Produk" @clicked-value="take($event,product.id)"/>
             </div>
