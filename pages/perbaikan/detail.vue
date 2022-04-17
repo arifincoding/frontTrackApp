@@ -22,17 +22,18 @@
                     <div v-for="item in brokens" :key="item.idKerusakan">
                         <div class = "mt-2">
                             <span>-{{item.judul}}</span>
-                            <span>[{{ item.dikonfirmasi }}]</span> 
+                            <span v-if="item.dikonfirmasi === true">[ Disetujui ]</span>
+                            <span v-if="item.dikonfirmasi === false">[ Dibatalkan ]</span> 
                             <span v-if="item.biaya"> [Rp.{{ item.biaya }}] </span> 
                             
                             <!-- update harga perbaikan -->
                             <UpdateBiaya v-if="role === 'pemilik' && (product.status === 'selesai diagnosa' || product.status === 'tunggu') && product.sudahKonfirmasiBiaya === false" :data-id="item.idKerusakan" :value-biaya="item.biaya" @save="handleSave"/>
                             
                             <!-- menyetujui perbaikan -->
-                            <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.sudahdikonfirmasi === null && item.dikonfirmasi === 0" message="yakin ingin menyetujui perbaikan?" label="Setujui" @clicked-value="setBrokenConfirmation($event,{id:item.idKerusakan,value:true})"/>
+                            <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.sudahdikonfirmasi === null && (item.dikonfirmasi === false || item.dikonfirmasi === null)" message="yakin ingin menyetujui perbaikan?" label="Setujui" @clicked-value="setBrokenConfirmation($event,{id:item.idKerusakan,value:true})"/>
                             
                             <!-- membatalkan perbaikan -->
-                            <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.sudahdikonfirmasi === null && item.dikonfirmasi === 1" message="yakin ingin membatalkan perbaikan?" label="Batalkan" color="danger" @clicked-value="setBrokenConfirmation($event,{id:item.idKerusakan,value:false})"/>
+                            <ModalConfirm v-if="role === 'pemilik' && product.sudahKonfirmasiBiaya === true && product.sudahdikonfirmasi === null && (item.dikonfirmasi === true || item.dikonfirmasi === null)" message="yakin ingin membatalkan perbaikan?" label="Batalkan" color="danger" @clicked-value="setBrokenConfirmation($event,{id:item.idKerusakan,value:false})"/>
                         </div>
                     </div>
                 </div>
@@ -76,7 +77,7 @@ export default {
                 if(isAllBrokenConfirmed === true){
                     setBrokenAgree = false
                     data.data.some((item)=>{
-                        if(item.dikonfirmasi === 1){
+                        if(item.dikonfirmasi === true){
                             setBrokenAgree = true
                             return true
                         }
@@ -152,7 +153,7 @@ export default {
             if(isAllBrokenConfirmed === true){
                 this.isBrokenAgree = false
                 data.data.some((item)=>{
-                    if(item.dikonfirmasi === 1){
+                    if(item.dikonfirmasi === true){
                         this.isBrokenAgree = true
                         return true
                     }

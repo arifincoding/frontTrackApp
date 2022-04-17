@@ -1,6 +1,6 @@
 <template>
     <span>
-        <b-button class="text-capitalize" @click="modalShow = !modalShow" size="sm" :variant="btnColor">{{name}}</b-button>
+        <b-button class="text-capitalize" :class="btnClass" @click="modalShow = !modalShow" size="sm" :variant="btnColor">{{name}}</b-button>
         <b-modal v-model="modalShow" centered :title="label" @hidden="$emit('hidden',true)">
             <div>
                 <slot></slot>
@@ -26,7 +26,8 @@ export default {
     props:{
         label:String,
         name:String,
-        btnColor:String
+        btnColor:String,
+        btnClass:String
     },
     data(){
         return {

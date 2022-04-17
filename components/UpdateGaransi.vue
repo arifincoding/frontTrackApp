@@ -1,6 +1,6 @@
 <template>
     <span>
-        <ModalInput name="update garansi" label="update garansi service" btn-color="primary" @submit="saveData">
+        <ModalInput name="update garansi" label="update garansi service" btn-color="primary" btn-class="mt-3" @submit="saveData">
             <InputText input-id="garansi" label="Lama Garansi" placeholder="Masukkan lama garansi service" v-model="garansi"/>
         </ModalInput>
     </span>
