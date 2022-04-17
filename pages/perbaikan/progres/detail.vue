@@ -39,14 +39,8 @@
 </template>
 
 <script>
-import DetailKlien from '@/components/DetailKlien'
-import DetailProduk from '@/components/DetailProduk'
 export default {
     layout:'admin',
-    components:{
-        DetailKlien,
-        DetailProduk
-    },
     async asyncData({app,query}){
         try{
             const service = await app.$repositories.service.show(query.id)

@@ -12,12 +12,8 @@
 </template>
 
 <script>
-import DataTable from '@/components/DataTable'
 export default {
     layout:'admin',
-    components:{
-        DataTable
-    },
     data(){
         return{
             categories:'',

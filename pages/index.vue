@@ -18,13 +18,9 @@
 
 <script>
 import decode from 'jwt-decode'
-import InputText from '@/components/InputText'
 
 export default {
   // layout: 'admin',
-  components:{
-    InputText
-  },
   data(){
     return {
       username:'',

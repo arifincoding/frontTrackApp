@@ -42,18 +42,12 @@
 </template>
 
 <script>
-import InputText from '@/components/InputText';
-import InputSelect from '@/components/InputSelect';
 export default {
     layout:'admin',
     props:{
         dataPegawai: Object,
         pegawaiId: String,
         title: String
-    },
-    components:{
-        InputText,
-        InputSelect
     },
     data(){
         return {

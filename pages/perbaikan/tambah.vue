@@ -5,12 +5,8 @@
 </template>
 
 <script>
-import SimpanPerbaikan from '@/components/Perbaikan/SimpanPerbaikan';
 export default {
     layout:'admin',
-    components:{
-        SimpanPerbaikan
-    },
     async asyncData(app){
         try{
         const dataKategori = await app.$repositories.category.all()

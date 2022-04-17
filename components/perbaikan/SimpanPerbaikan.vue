@@ -52,10 +52,6 @@
 </template>
 
 <script>
-import InputText from '@/components/InputText';
-import InputSelect from '@/components/InputSelect';
-import InputCheckbox from '@/components/InputCheckbox';
-import InputGroup from '@/components/Perbaikan/InputGroup'
 export default {
     layout:'admin',
     props:{
@@ -63,12 +59,6 @@ export default {
         serviceId: String,
         title: String,
         listKategori:Array
-    },
-    components:{
-        InputText,
-        InputSelect,
-        InputCheckbox,
-        InputGroup
     },
     data(){
         return{

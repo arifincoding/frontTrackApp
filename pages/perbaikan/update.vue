@@ -5,12 +5,8 @@
 </template>
 
 <script>
-import SimpanPerbaikan from '@/components/Perbaikan/SimpanPerbaikan';
 export default {
     layout:'admin',
-    components:{
-        SimpanPerbaikan
-    },
     async asyncData({app, query}){
         try{
             const data = await app.$repositories.service.show(query.id)

@@ -19,14 +19,8 @@
 </template>
 
 <script>
-import DataTable from '@/components/DataTable'
-import DropdownFormGroup from '@/components/DropdownFormGroup'
 export default {
     layout:'admin',
-    components:{
-        DataTable,
-        DropdownFormGroup
-    },
     data(){
         return{
             filterCategory:null,

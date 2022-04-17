@@ -5,12 +5,8 @@
 </template>
 
 <script>
-import SimpanPegawai from '@/components/SimpanPegawai'
 export default {
     layout:'admin',
-    components:{
-        SimpanPegawai
-    },
     async asyncData({app, query}){
         try{
             const data = await app.$repositories.employee.show(query.id)

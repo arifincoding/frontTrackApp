@@ -5,11 +5,7 @@
 </template>
 
 <script>
-import SimpanPegawai from '@/components/SimpanPegawai'
 export default {
-    layout:"admin",
-    components:{
-        SimpanPegawai
-    }
+    layout:"admin"
 }
 </script>

@@ -27,7 +27,21 @@ export default {
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
-  components: true,
+  components: {
+    dirs:[
+      '~/components/',
+      '~/components/button',
+      '~/components/dropdown',
+      '~/components/heading',
+      '~/components/input',
+      '~/components/kategori',
+      '~/components/modal',
+      '~/components/navigation',
+      '~/components/pegawai',
+      '~/components/perbaikan',
+      '~/components/table',
+    ]
+  },
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
