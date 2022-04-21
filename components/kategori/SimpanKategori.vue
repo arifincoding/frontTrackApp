@@ -1,6 +1,6 @@
 <template>
     <span>
-        <ModalInput :label="label" :name="name" :btnColor="btnColor" @hidden="resetModal" @submit="saveData">
+        <ModalInput :label="label" :name="name" :btnColor="btnColor" @show="handleShow" @hidden="resetModal" @submit="saveData">
             <InputText input-id = 'nama' label="nama kategori" v-model="nama" placeholder="Masukkan nama kategori"/>
         </ModalInput>
     </span>
@@ -23,12 +23,7 @@ export default {
     },
     data(){
         return {
-            nama:this.dataValue
-        }
-    },
-    watch:{
-        dataValue(newVal){
-            this.nama = newVal
+            nama:''
         }
     },
     methods:{
@@ -50,6 +45,11 @@ export default {
             if(this.dataId === 0){
                 this.nama = ''
             }
+            }
+        },
+        handleShow(event){
+            if(event === true && this.dataId !== 0){
+                this.nama = this.dataValue
             }
         }
     }

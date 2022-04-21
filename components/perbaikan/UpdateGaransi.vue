@@ -1,6 +1,6 @@
 <template>
     <span>
-        <ModalInput name="update garansi" label="update garansi service" btn-color="primary" btn-class="mt-3" @submit="saveData">
+        <ModalInput name="update garansi" label="update garansi service" btn-color="primary" btn-class="mt-3" @show="handleShow" @submit="saveData">
             <InputText input-id="garansi" label="Lama Garansi" placeholder="Masukkan lama garansi service" v-model="garansi"/>
         </ModalInput>
     </span>
@@ -9,17 +9,18 @@
 <script>
 export default {
     props:{
-        dataId:Number,
-        valueGaransi:String
+        dataId:{
+            type:Number,
+            default:0
+        },
+        valueGaransi:{
+            type:String,
+            default:''
+        }
     },
     data(){
         return{
             garansi:this.valueGaransi
-        }
-    },
-    watch:{
-        valueGaransi(newVal){
-            this.garansi = newVal
         }
     },
     methods:{
@@ -27,6 +28,11 @@ export default {
             if(event === true){
                 await this.$repositories.service.updateWarranty(this.dataId,{garansi:this.garansi})
                 this.$emit('save',true)
+            }
+        },
+        handleShow(isConfirm){
+            if(isConfirm === true){
+                this.garansi = this.valueGaransi
             }
         }
     }

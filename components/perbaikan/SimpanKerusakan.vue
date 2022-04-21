@@ -1,6 +1,6 @@
 <template>
     <span>
-        <ModalInput :label="label" :name="name" :btnColor="btnColor" @hidden="resetModal" @submit="saveData">
+        <ModalInput :label="label" :name="name" :btnColor="btnColor" @show="handleShow" @hidden="resetModal" @submit="saveData">
             <InputText input-id="judul" label="Judul Kerusakan" v-model="judul" placeholder="Masukkan judul kerusakan"/>
             <InputTextarea input-id="deskripsi" label="deskripsi" v-model="deskripsi" placeholder="masukkan deskripsi mengenai kerusakan"/>
         </ModalInput>
@@ -29,15 +29,9 @@ export default {
     },
     data(){
         return {
-            judul:this.value.judul,
-            deskripsi:this.value.deskripsi
+            judul:'',
+            deskripsi:''
         }
-    },
-    watch:{
-            value(newVal){
-                this.judul = newVal.judul
-                this.deskripsi = newVal.deskripsi
-            }
     },
     methods:{
         resetModal(event){
@@ -58,6 +52,12 @@ export default {
                     await this.$repositories.broken.update(this.dataId,payload)
                 }
                 this.$emit('save',true)
+            }
+        },
+        handleShow(event){
+            if(event === true && this.value.judul !== ''){
+                this.judul = this.value.judul
+                this.deskripsi = this.value.deskripsi
             }
         }
     }
