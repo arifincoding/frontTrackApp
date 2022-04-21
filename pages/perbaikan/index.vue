@@ -19,11 +19,11 @@
             </template>
 
             <template #cell(klien)="data">
-                <p>{{data.item.customer.nama}}</p>
-                <p>{{data.item.customer.noHp}}</p>
+                <div>{{data.item.customer.nama}}</div>
+                <small class="text-muted">{{data.item.customer.noHp}}</small>
             </template>
             <template #cell(produk)="data">
-                {{data.item.product.nama}} ({{ data.item.product.kategori }})
+                {{data.item.product.nama}} [{{ data.item.product.kategori }}]
             </template>
             <template #cell(totalBiaya)="data">
                 <span v-if="data.item.product.totalBiaya">Rp.{{data.item.product.totalBiaya}}</span>

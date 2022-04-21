@@ -119,8 +119,8 @@ export default {
                 }
             }catch({response}){
                 this.errorMessage=[]
-                for (const key in response.data.error) {
-                        this.errorMessage.push(response.data.error[key][0]);
+                for (const key in response.data.errors) {
+                        this.errorMessage.push(response.data.errors[key][0]);
                 }
             }
         }

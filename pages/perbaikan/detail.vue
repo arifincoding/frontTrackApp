@@ -1,43 +1,55 @@
 <template>
     <div>
         <div class="row">
-            <div class="col-4">
+            <div class="col-5">
+                <h6 class="row mx-0">
+                    <div class="col-lg-5 col-12 text-center border border-success text-white font-weight-bold p-2 bg-success">Status Pengerjaan</div>
+                    <div class="col-lg-7 col-12 text-center border border-success font-weight-bold p-2">{{ product.status }}</div>
+                </h6>
+                <h6 class="row mx-0">
+                    <div class="col-lg-5 col-12 text-center border border-success text-white font-weight-bold p-2 bg-success">Status Persetujuan</div>
+                    <div class="col-lg-7 col-12 text-center border border-success font-weight-bold p-2">
+                        <span v-if="product.sudahdikonfirmasi === true" class="text-success"> Disetujui </span>
+                        <span v-else-if="product.sudahdikonfirmasi === false" class="text-danger">Dibatalkan</span>
+                        <span v-else-if="product.sudahdikonfirmasi === null" >Menunggu Konfirmasi</span>
+                    </div>
+                </h6>
                 <DetailKlien :nama="customer.nama" :no-hp="customer.noHp"/>
                 <DetailProduk :product="product">
-                    <p>Uang Muka : {{product.uangMuka}}</p>
-                    <p>Estimasi Harga : {{product.estimasiBiaya}}</p>
-                    <p>Total Harga : Rp.{{product.totalBiaya}}</p>
-                    <p>Status pengerjaan : {{ product.status }} <span v-if="product.diambil === true">[diambil]</span> </p>
-                    <p>Catatan : {{product.catatan}}</p>
-                    <p>Lama Garansi : {{product.garansi}}</p>
-                    <p>Tanggal Masuk : {{product.tanggalMasuk}} ({{product.jamMasuk}})</p>
-                    <p>Tanggal Ambil : {{product.tanggalAmbil}} ({{product.jamAmbil}})</p>
-                    <p>Customer Service : {{product.usernameCS}}</p>
-                    <p>Teknisi : {{product.usernameTeknisi}}</p>
+                    <DetailText label="Uang Muka" :value-one="product.uangMuka"/>
+                    <DetailText label="Estimasi Harga" :value-one="product.estimasiBiaya"/>
+                    <DetailText label="Total Harga" :value-one="product.totalBiaya"/>
+                    <DetailText label="Catatan" :value-one="product.catatan"/>
+                    <DetailText label="Lama Garansi" :value-one="product.garansi"/>
+                    <DetailText label="Tanggal Masuk" :value-one="product.tanggalMasuk" :value-two="product.jamMasuk"/>
+                    <DetailText label="Tanggal Ambil" :value-one="product.tanggalAmbil" :value-two="product.jamAmbil"/>
+                    <DetailText label="Customer Service" :value-one="product.usernameCS"/>
+                    <DetailText label="Teknisi" :value-one="product.usernameTeknisi"/>
                 </DetailProduk>
             </div>
             <div class="col">
-                <div class="border rounded p-3">
-                    <h4>Kerusakan</h4>
-                    <div v-for="item in brokens" :key="item.idKerusakan">
-                        <div class = "mt-2">
-                            <span>-{{item.judul}}</span>
-                            <span v-if="item.dikonfirmasi === true">[ Disetujui ]</span>
-                            <span v-if="item.dikonfirmasi === false">[ Dibatalkan ]</span> 
-                            <span v-if="item.biaya"> [Rp.{{ item.biaya }}] </span> 
+                <div class="border rounded">
+                    <h6 class="bg-success text-white text-center p-2 font-weight-bold">Kerusakan</h6>
+                    <BorderedTable class="px-2" :items="brokens" :fields="fields">
+                        <template #cell(disetujui)="data">
+                            <span v-if="data.item.dikonfirmasi === true" class="text-success"> Ya </span>
+                            <span v-if="data.item.dikonfirmasi === false" class="text-danger"> Tidak </span> 
+                        </template>
+                        <template #cell(aksi)="data">
+                            <DetailKerusakan :data-id="data.item.idKerusakan"/>
                             <div v-if="role === 'pemilik'">
                                 <!-- update harga perbaikan -->
-                                <UpdateBiaya v-if="(product.status === 'selesai diagnosa' || product.status === 'tunggu') && product.sudahKonfirmasiBiaya === false" :data-id="item.idKerusakan" :value-biaya="item.biaya" @save="handleSave"/>
+                                <UpdateBiaya v-if="(product.status === 'selesai diagnosa' || product.status === 'tunggu') && product.sudahKonfirmasiBiaya === false" :data-id="data.item.idKerusakan" :value-biaya="data.item.biaya" @save="handleSave"/>
                                 <div v-if="product.sudahKonfirmasiBiaya === true && product.sudahdikonfirmasi === null">
                                     <!-- menyetujui perbaikan -->
-                                    <ModalConfirm v-if="item.dikonfirmasi === false || item.dikonfirmasi === null" message="yakin ingin menyetujui perbaikan?" label="Setujui" @clicked-value="setBrokenConfirmation($event,{id:item.idKerusakan,value:true})"/>
+                                    <ModalConfirm v-if="data.item.dikonfirmasi === false || data.item.dikonfirmasi === null" message="yakin ingin menyetujui perbaikan?" label="Setujui" @clicked-value="setBrokenConfirmation($event,{id:data.item.idKerusakan,value:true})"/>
                                     
                                     <!-- membatalkan perbaikan -->
-                                    <ModalConfirm v-if=" item.dikonfirmasi === true || item.dikonfirmasi === null" message="yakin ingin membatalkan perbaikan?" label="Batalkan" color="danger" @clicked-value="setBrokenConfirmation($event,{id:item.idKerusakan,value:false})"/>
+                                    <ModalConfirm v-if=" data.item.dikonfirmasi === true || data.item.dikonfirmasi === null" message="yakin ingin membatalkan perbaikan?" label="Batalkan" color="danger" @clicked-value="setBrokenConfirmation($event,{id:data.item.idKerusakan,value:false})"/>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        </template>
+                    </BorderedTable>
                 </div>
                 
                 <div v-if="role === 'pemilik'">
@@ -106,7 +118,14 @@ export default {
             customer:[],
             product:[],
             brokens:[],
-            isBrokenAgree:null
+            isBrokenAgree:null,
+            fields:[
+                'no',
+                'judul',
+                'biaya',
+                'disetujui',
+                'aksi'
+            ]
         }
     },
     methods:{

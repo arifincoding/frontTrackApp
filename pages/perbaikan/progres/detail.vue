@@ -1,29 +1,36 @@
 <template>
     <div>
         <div class="row">
-            <div class="col-4">
+            <div class="col-5">
+                <h6 class="row mx-0">
+                    <div class="col-lg-5 col-12 text-center border border-success text-white font-weight-bold p-2 bg-success">Status Pengerjaan</div>
+                    <div class="col-lg-7 col-12 text-center border border-success font-weight-bold p-2">{{ product.status }}</div>
+                </h6>
                 <DetailKlien :nama="customer.nama" :no-hp="customer.noHp"/>
                 <DetailProduk :product="product">
-                    <p>Catatan : {{product.catatan}}</p>
-                    <p>Tanggal Masuk : {{product.tanggalMasuk}} ({{product.jamMasuk}})</p>
-                    <p>Customer Service : {{product.usernameCS}}</p>
-                    <p>Status pengerjaan: {{ product.status }} </p>
+                    <DetailText label="catatan" :value-one="product.catatan"/>
+                    <DetailText label="tanggal masuk" :valueOne="product.tanggalMasuk" :value-two="product.jamMasuk"/>
+                    <DetailText label="customer service" :value-one="product.usernameCS"/>
                 </DetailProduk>
             </div>
             <div class="col">
-                <div class="border rounded p-3">
-                    <h4>Kerusakan</h4>
-                    <div v-for="item in brokens" :key="item.idKerusakan">
-                        <div class = "mt-2">
-                            -{{item.judul}}
+                <div class="border rounded">
+                    <h6 class="bg-success text-white text-center p-2 font-weight-bold">Kerusakan</h6>
+                    <BorderedTable class="px-2" :items="brokens" :fields="fields">
+                        <template #cell(disetujui)="data">
+                            <span v-if="data.item.dikonfirmasi === true" class="text-success"> Ya </span>
+                            <span v-if="data.item.dikonfirmasi === false" class="text-danger"> Tidak </span> 
+                        </template>
+                        <template #cell(aksi)="data">
+                            <DetailKerusakan :data-id="data.item.idKerusakan" no-biaya/>
                             <div v-if="product.status === 'mulai diagnosa'">
                             <!-- update kerusakan -->
-                            <SimpanKerusakan name="update" label="Update Kerusakan" btn-color="primary" :data-id="item.idKerusakan" :value="{judul:item.judul,deskripsi:item.deskripsi}" @save="handleSave"/>
+                            <SimpanKerusakan name="update" label="Update Kerusakan" btn-color="primary" :data-id="data.item.idKerusakan" :value="{judul:data.item.judul,deskripsi:data.item.deskripsi}" @save="handleSave"/>
                             <!-- delete kerusakan -->
-                            <ModalDelete @clicked-value="deleteKerusakan($event,item.idKerusakan)"/>
+                            <ModalDelete @clicked-value="deleteKerusakan($event,data.item.idKerusakan)"/>
                             </div>
-                        </div>
-                    </div>
+                        </template>
+                    </BorderedTable>
                     <!-- tambah kerusakan -->
                     <SimpanKerusakan v-if="product.status === 'mulai diagnosa'" name="tambah kerusakan" label="tambah kerusakan" btn-color="success" :data-id="product.id" @save="handleSave"/>
                 </div>
@@ -64,7 +71,13 @@ export default {
     },
     data(){
         return{
-            brokens:[]
+            brokens:[],
+            fields:[
+                'no',
+                'judul',
+                'disetujui',
+                'aksi'
+            ]
         }
     },
     methods:{

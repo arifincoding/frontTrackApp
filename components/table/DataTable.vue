@@ -27,7 +27,7 @@
                 </b-row>
             </b-col>
         </b-row>
-        <b-table hover small responsive sort-icon-left show-empty :filter="search" :items="items" :fields="fields" :current-page="currentPage" :per-page="perPage">
+        <b-table small responsive sort-icon-left show-empty :filter="search" :items="items" :fields="fields" :current-page="currentPage" :per-page="perPage">
             <template #cell(no)="data">
                 {{ data.index + 1 }}
             </template>

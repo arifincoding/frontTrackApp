@@ -15,6 +15,8 @@ export default function ({$axios, redirect}){
         if(error.response.status === 301){
             redirect('/forbiden')
         }
-        return Promise.resolve(false)
+        if(error.response.status !== 422){
+            return Promise.resolve(false)
+        }
     })
 }

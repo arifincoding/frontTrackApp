@@ -1,8 +1,10 @@
 <template>
-    <div class="border rounded p-3">
-        <h4>Detail Klien</h4>
-        <p>Nama : {{ nama }}</p>
-        <p>No HP : {{ noHp }}</p>
+    <div class="mt-3 border rounded">
+        <h6 class="bg-success text-white text-center p-2 font-weight-bold">Detail Klien</h6>
+        <div class="d-flex flex-wrap justify-content-between px-2">
+            <DetailText label="Nama" :valueOne="nama"/>
+            <DetailText label="No HP" :valueOne="noHp"/>
+        </div>
     </div>
 </template>
 

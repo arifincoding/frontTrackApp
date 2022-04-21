@@ -15,6 +15,13 @@ export default ($axios, store) => ({
             }
         })
     },
+    allNotInResponbilities(username){
+        return $axios.$get(`/employes/${username}/categories-not-in-responbility`,{
+            headers:{
+                'Authorization':`bearer ${store.state.token}`
+            }
+        })
+    },
     create(payload){
         return $axios.$post(`${resource}`,payload,{
             headers:{

@@ -9,7 +9,7 @@
         </div>
         </div>
         <form>
-            <b-row class="my-3">
+            <b-row>
                 <b-col lg="6">
                     <InputText input-id="namaDepan" label="nama depan" v-model="namaDepan" placeholder="masukkan nama depan"/>
                 </b-col>
@@ -34,8 +34,18 @@
                     <InputText input-id="email" label="email" v-model="email" placeholder="masukkan email aktif"/>
                 </b-col>
             </b-row>
-
-            <b-button type="button" class="float-right" @click="saveEmployee()" variant="success">Simpan</b-button>
+            <div v-if="peran === 'teknisi' && pegawaiId === 0">
+            <div class="my-1">Tanggung Jawab </div>
+            <div class="d-flex no-wrap">
+            <div v-for="item in categories" :key="item" class="form-check mx-2">
+                <input :id="item.idKategori" class="form-check-input" v-model="idKategori" type="checkbox" :value="item.idKategori">
+                <label :for="item.idKategori" class="form-check-label">
+                    {{ item.nama }}
+                </label>
+            </div>
+            </div>
+            </div>
+            <b-button type="button" class="float-right mt-5" @click="saveEmployee()" variant="success">Simpan</b-button>
             <div class="clearfix"></div>
         </form>
     </div>
@@ -46,8 +56,17 @@ export default {
     layout:'admin',
     props:{
         dataPegawai: Object,
-        pegawaiId: String,
-        title: String
+        pegawaiId: {
+            type:Number,
+            default:0
+        },
+        title: String,
+        categories:{
+            type:Array,
+            default:()=>{
+                return []
+            }
+        }
     },
     data(){
         return {
@@ -58,6 +77,7 @@ export default {
             alamat:'',
             peran:null,
             email:'',
+            idKategori:[],
             errorMessage:'test',
             genders:['pria','wanita'],
             roles:['customer service', 'teknisi', 'pemilik']
@@ -89,13 +109,18 @@ export default {
                 if(this.pegawaiId){
                     await this.$repositories.employee.update(this.pegawaiId,payload)
                 } else {
-                    await this.$repositories.employee.create(payload)
+                    const data = await this.$repositories.employee.create(payload)
+                    if(this.peran === 'teknisi'){
+                        await this.$repositories.responbility.create(data.data.idPegawai,{
+                            idKategori : this.idKategori
+                        })
+                    }
                 }
-                this.$router.push({path:'/pegawai'})
+                // this.$router.push({path:'/pegawai'})
             }catch({response}){
                 this.errorMessage=[]
-                for (const key in response.data.error) {
-                        this.errorMessage.push(response.data.error[key][0]);
+                for (const key in response.data.errors) {
+                        this.errorMessage.push(response.data.errors[key][0]);
                 }
             }
         }

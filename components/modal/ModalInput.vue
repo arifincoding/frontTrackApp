@@ -1,6 +1,6 @@
 <template>
     <span>
-        <b-button class="text-capitalize" :class="btnClass" @click="modalShow = !modalShow" size="sm" :variant="btnColor">{{name}}</b-button>
+        <b-button class="text-capitalize" :class="btnClass" @click="showModal" size="sm" :variant="btnColor">{{name}}</b-button>
         <b-modal v-model="modalShow" centered :title="label" @hidden="$emit('hidden',true)">
             <div>
                 <slot></slot>
@@ -38,6 +38,10 @@ export default {
         close(){
             this.modalShow = false
             this.$emit('submit',true)
+        },
+        showModal(){
+            this.$emit('show',true)
+            this.modalShow = !this.modalShow
         }
     }
 }

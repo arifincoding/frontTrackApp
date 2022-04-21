@@ -1,22 +1,24 @@
 <template>
     <span>
-        <b-button id="show-btn" class="btn btn-sm btn-success" @click="showModal(idPegawai)">Detail</b-button>
+        <b-button id="show-btn" size="sm" variant="outline-success" @click="showModal(idPegawai)">Detail</b-button>
 
         <b-modal v-model="modalShow" hide-footer centered scrollable title="Detail Pegawai">
             
             <div v-if="employee !== []">
-                <p>Nama : {{employee.namaDepan}} {{employee.namaBelakang}} ({{ employee.username }})</p>
-                <p>Jenis Kelamin : {{employee.jenisKelamin}}</p>
-                <p>No Handphone : {{employee.noHp}}</p>
-                <p>Peran : {{employee.peran}}</p>
-                <p>Email : {{employee.email}}</p>
-                <p>Alamat : {{employee.alamat}}</p>
+                <DetailText label="nama" :value-one="fullName" :value-two="employee.username"/>
+                <DetailText label="jenis kelamin" :value-one="employee.jenisKelamin"/>
+                <DetailText label="no handphone" :value-one="employee.noHp"/>
+                <DetailText label="peran" :value-one="employee.peran"/>
+                <DetailText label="email" :value-one="employee.email"/>
+                <DetailText label="alamat" :value-one="employee.alamat"/>
                 <div v-if="employee.peran === 'teknisi'">
-                <p>Tanggung Jawab : </p>
-                <ul v-for="item in responbility" :key="item">
-                    <li>{{item.kategori}} <ModalDelete @clicked-value="deleteData($event,item.idTanggungJawab)"/> </li>
-                </ul>
-                <NuxtLink :to="{path:'/tanggungJawab/tambah',query:{id:employee.idPegawai}}">tambah Tanggung jawab</NuxtLink>
+                <p class="mt-1 mb-0 font-weight-bold">Tanggung Jawab : </p>
+                <BorderedTable :items="responbilities" :fields="fields">
+                    <template #cell(aksi)="data">
+                        <ModalDelete @clicked-value="deleteData($event,data.item.idTanggungJawab)"/>
+                    </template>
+                </BorderedTable>
+                <SimpanTanggungJawab :data-id="employee.idPegawai" :username="employee.username" @save="handleSave"/>
                 </div>
             </div>
         </b-modal>
@@ -35,7 +37,13 @@ export default {
         return {
             modalShow:false,
             employee:[],
-            responbility:[]
+            responbilities:[],
+            fullName:'',
+            fields:[
+                'no',
+                'kategori',
+                'aksi'
+            ]
         }
     },
     methods:{
@@ -48,7 +56,8 @@ export default {
             }
             
             this.employee = dataEmployee.data
-            this.responbility = arrResponbility
+            this.fullName = this.employee.namaDepan+' '+this.employee.namaBelakang
+            this.responbilities = arrResponbility
             this.modalShow = !this.modalShow
         },
         async deleteData(isConfirm,id){
@@ -59,7 +68,12 @@ export default {
         },
         async refreshData(){
             const data = await this.$repositories.responbility.all(this.employee.username)
-            this.responbility = data.data
+            this.responbilities = data.data
+        },
+        handleSave(isConfirm){
+            if(isConfirm === true){
+                this.refreshData()
+            }
         }
     }
 }
