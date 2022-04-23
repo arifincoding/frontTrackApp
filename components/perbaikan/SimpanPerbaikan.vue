@@ -1,30 +1,23 @@
 <template>
     <div>
         <TitleHeading :text="title"/>
-        <div v-if="errorMessage !=='test'">
-        <div class="small bg-danger text-light rounded p-2">
-        <div v-for="item in errorMessage" :key="item">
-            {{ item }}
-        </div>
-        </div>
-        </div>
         <form class="my-3">
             <InputGroup title="Detail Pelanggan">
-                <InputText input-id="namaPelanggan" label="nama" v-model="namaCustomer" placeholder="masukkan nama pelanggan"/>
-                <InputText input-id="noHp" label="No Handphone" v-model="noHp" placeholder="masukkan nomor handphone pelanggan" />
+                <InputText input-id="namaPelanggan" label="nama" v-model="namaCustomer" placeholder="masukkan nama pelanggan" :invalid="invalid.namaCustomer"/>
+                <InputText input-id="noHp" label="No Handphone" v-model="noHp" placeholder="masukkan nomor handphone pelanggan" :invalid="invalid.noHp"/>
                 <InputCheckbox label="Mendukung Whatsapp" value="true" v-model="bisaWA"/>
             </InputGroup>
             
             <InputGroup title="Detail Produk" class="my-4">
                 <b-row>
                     <b-col lg="6">
-                        <InputText input-id="namaBarang" label="nama produk" v-model="namaBarang" placeholder="masukkan nama produk" />
+                        <InputText input-id="namaProduk" label="nama produk" v-model="namaProduk" placeholder="masukkan nama produk" :invalid="invalid.namaProduk"/>
                     </b-col>
                     <b-col lg="6">
-                        <InputSelect label="kategori" input-id="kategori" v-model="kategori" :options="listKategori"/>
+                        <InputSelect label="kategori" input-id="kategori" v-model="kategori" :options="listKategori" :invalid="invalid.kategori"/>
                     </b-col>
                 </b-row>
-                <InputText label="keluhan" input-id="keluhan" v-model="keluhan" placeholder="masukkan keluhan produk"/>
+                <InputText label="keluhan" input-id="keluhan" v-model="keluhan" placeholder="masukkan keluhan produk" :invalid="invalid.keluhan"/>
                 <InputCheckbox label="Membutuhkan Konfirmasi" value="true" v-model="butuhKonfirmasi"/>
                 <b-row>
                     <b-col lg="6">
@@ -65,7 +58,7 @@ export default {
             namaCustomer:'',
             noHp:'',
             bisaWA:false,
-            namaBarang:'',
+            namaProduk:'',
             kategori:null,
             keluhan:'',
             butuhKonfirmasi:false,
@@ -74,7 +67,7 @@ export default {
             uangMuka:'',
             estimasiBiaya:'',
             cacatProduk:'',
-            errorMessage:'test'
+            invalid:{}
         }
     },
     mounted(){
@@ -82,7 +75,7 @@ export default {
             this.namaCustomer = this.dataService.customer.nama
             this.noHp = this.dataService.customer.noHp
             this.bisaWA = this.dataService.customer.bisaWA
-            this.namaBarang = this.dataService.product.nama
+            this.namaProduk = this.dataService.product.nama
             this.kategori = this.dataService.product.kategori
             this.keluhan = this.dataService.product.keluhan
             this.butuhKonfirmasi = this.dataService.product.butuhKonfirmasi
@@ -100,7 +93,7 @@ export default {
                     namaCustomer:this.namaCustomer,
                     noHp:this.noHp,
                     bisaWA:this.bisaWA,
-                    namaBarang:this.namaBarang,
+                    namaProduk:this.namaProduk,
                     kategori:this.kategori,
                     keluhan:this.keluhan,
                     butuhKonfirmasi:this.butuhKonfirmasi,
@@ -118,9 +111,9 @@ export default {
                     await this.$router.push({path:'/perbaikan/nota?id='+data.data.idService})
                 }
             }catch({response}){
-                this.errorMessage=[]
+                this.invalid={}
                 for (const key in response.data.errors) {
-                        this.errorMessage.push(response.data.errors[key][0]);
+                        this.invalid[key] = response.data.errors[key][0]
                 }
             }
         }

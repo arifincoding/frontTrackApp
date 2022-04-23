@@ -27,16 +27,26 @@ export default {
         label:String,
         name:String,
         btnColor:String,
-        btnClass:String
+        btnClass:String,
+        invalid:{
+            type:Boolean,
+            default:true
+        }
     },
     data(){
         return {
             modalShow : false
         }
     },
+    watch:{
+        invalid(newVal){
+            if(newVal === false){
+                this.modalShow = false
+            }
+        }
+    },
     methods:{
         close(){
-            this.modalShow = false
             this.$emit('submit',true)
         },
         showModal(){

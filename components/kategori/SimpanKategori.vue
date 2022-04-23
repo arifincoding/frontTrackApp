@@ -1,7 +1,7 @@
 <template>
     <span>
-        <ModalInput :label="label" :name="name" :btnColor="btnColor" @show="handleShow" @hidden="resetModal" @submit="saveData">
-            <InputText input-id = 'nama' label="nama kategori" v-model="nama" placeholder="Masukkan nama kategori"/>
+        <ModalInput :label="label" :name="name" :btnColor="btnColor" :invalid="invalid.error" @show="handleShow" @hidden="resetModal" @submit="saveData">
+            <InputText input-id = 'nama' label="nama kategori" v-model="nama" placeholder="Masukkan nama kategori" :invalid="invalid.nama"/>
         </ModalInput>
     </span>
 </template>
@@ -23,21 +23,34 @@ export default {
     },
     data(){
         return {
-            nama:''
+            nama:'',
+            invalid:{}
         }
     },
     methods:{
         async saveData(event){
             if(event === true){
-                const payload = {
-                    nama:this.nama
+                try{
+                    const payload = {
+                        nama:this.nama
+                    }
+                    if(this.dataId === 0){
+                        await this.$repositories.category.create(payload)
+                    }else{
+                        await this.$repositories.category.update(this.dataId,payload)
+                    }
+                    this.invalid = {
+                        error:false
+                    }
+                    this.$emit('save',true)
+                }catch({response}){
+                    this.invalid={
+                        error:true
+                    }
+                    for (const key in response.data.errors) {
+                            this.invalid[key] = response.data.errors[key][0]
+                    }
                 }
-                if(this.dataId === 0){
-                    await this.$repositories.category.create(payload)
-                }else{
-                    await this.$repositories.category.update(this.dataId,payload)
-                }
-                this.$emit('save',true)
             }
         },
         resetModal(event){
@@ -45,6 +58,7 @@ export default {
             if(this.dataId === 0){
                 this.nama = ''
             }
+            this.invalid = {}
             }
         },
         handleShow(event){

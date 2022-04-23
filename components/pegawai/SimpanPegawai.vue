@@ -1,37 +1,30 @@
 <template>
     <div>
         <TitleHeading :text="title"/>
-        <div v-if="errorMessage !=='test' ">
-        <div class="small bg-danger text-light rounded p-2">
-        <div v-for="item in errorMessage" :key="item">
-            {{ item }}
-        </div>
-        </div>
-        </div>
         <form>
             <b-row>
                 <b-col lg="6">
-                    <InputText input-id="namaDepan" label="nama depan" v-model="namaDepan" placeholder="masukkan nama depan"/>
+                    <InputText input-id="namaDepan" label="nama depan" v-model="namaDepan" placeholder="masukkan nama depan" :invalid="invalid.namaDepan"/>
                 </b-col>
                 <b-col lg="6">
-                    <InputText input-id="namaBelakang" label="nama belakang" v-model="namaBelakang" placeholder="masukkan nama belakang"/>
+                    <InputText input-id="namaBelakang" label="nama belakang" v-model="namaBelakang" placeholder="masukkan nama belakang" :invalid="invalid.namaBelakang"/>
                 </b-col>
             </b-row>
             <b-row>
                 <b-col lg="6">
-                    <InputText input-id="noHp" label="no hp" v-model="noHp" placeholder="masukkan nomor handphone aktif"/>
+                    <InputText input-id="noHp" label="no hp" v-model="noHp" placeholder="masukkan nomor handphone aktif" :invalid="invalid.noHp"/>
                 </b-col>
                 <b-col lg="6">
-                    <InputSelect label="jenis kelamin" input-id="jenisKelamin" v-model="jenisKelamin" :options="genders"/>
+                    <InputSelect label="jenis kelamin" input-id="jenisKelamin" v-model="jenisKelamin" :options="genders" :invalid="invalid.jenisKelamin"/>
                 </b-col>
             </b-row>
             <InputText input-id="alamat" label="alamat" v-model="alamat" placeholder="masukkan alamat rumah"/>
             <b-row>
                 <b-col lg="6">
-                    <InputSelect label="peran" input-id="peran" v-model="peran" :options="roles"/>
+                    <InputSelect label="peran" input-id="peran" v-model="peran" :options="roles" :invalid="invalid.peran"/>
                 </b-col>
                 <b-col lg="6">
-                    <InputText input-id="email" label="email" v-model="email" placeholder="masukkan email aktif"/>
+                    <InputText input-id="email" label="email" v-model="email" placeholder="masukkan email aktif" :invalid="invalid.email"/>
                 </b-col>
             </b-row>
             <div v-if="peran === 'teknisi' && pegawaiId === 0">
@@ -78,7 +71,7 @@ export default {
             peran:null,
             email:'',
             idKategori:[],
-            errorMessage:'test',
+            invalid:{},
             genders:['pria','wanita'],
             roles:['customer service', 'teknisi', 'pemilik']
         }
@@ -116,11 +109,11 @@ export default {
                         })
                     }
                 }
-                // this.$router.push({path:'/pegawai'})
+                this.$router.push({path:'/pegawai'})
             }catch({response}){
-                this.errorMessage=[]
+                this.invalid={}
                 for (const key in response.data.errors) {
-                        this.errorMessage.push(response.data.errors[key][0]);
+                        this.invalid[key] = response.data.errors[key][0]
                 }
             }
         }

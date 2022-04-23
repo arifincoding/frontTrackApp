@@ -1,7 +1,7 @@
 <template>
     <span>
-        <ModalInput name="update garansi" label="update garansi service" btn-color="primary" btn-class="mt-3" @show="handleShow" @submit="saveData">
-            <InputText input-id="garansi" label="Lama Garansi" placeholder="Masukkan lama garansi service" v-model="garansi"/>
+        <ModalInput name="update garansi" label="update garansi service" btn-color="primary" btn-class="mt-3" :invalid="invalid.error" @hidden="handleHidden" @show="handleShow" @submit="saveData">
+            <InputText input-id="garansi" label="Lama Garansi" placeholder="Masukkan lama garansi service" v-model="garansi" :invalid="invalid.garansi"/>
         </ModalInput>
     </span>
 </template>
@@ -20,19 +20,37 @@ export default {
     },
     data(){
         return{
-            garansi:this.valueGaransi
+            garansi:'',
+            invalid:{}
         }
     },
     methods:{
         async saveData(event){
             if(event === true){
-                await this.$repositories.service.updateWarranty(this.dataId,{garansi:this.garansi})
-                this.$emit('save',true)
+                try{
+                    await this.$repositories.service.updateWarranty(this.dataId,{garansi:this.garansi})
+                    this.invalid = {
+                        error:false
+                    }
+                    this.$emit('save',true)
+                }catch({response}){
+                    this.invalid = {
+                        error:true
+                    }
+                    for (const key in response.data.errors) {
+                        this.invalid[key] = response.data.errors[key][0]
+                    }
+                }
             }
         },
         handleShow(isConfirm){
             if(isConfirm === true){
                 this.garansi = this.valueGaransi
+            }
+        },
+        handleHidden(isConfirm){
+            if(isConfirm === true){
+                this.invalid = {}
             }
         }
     }

@@ -1,6 +1,6 @@
 <template>
     <span>
-        <ModalInput label="Tambah Tanggung Jawab" name="Tambah Tanggung Jawab" btnColor="primary" @show="handleShow($event,username)" @hidden="handleHidden" @submit="saveData($event,dataId)">
+        <ModalInput label="Tambah Tanggung Jawab" name="Tambah Tanggung Jawab" btnColor="primary" :invalid="this.invalid.error" @show="handleShow($event,username)" @hidden="handleHidden" @submit="saveData($event,dataId)">
             <div v-for="item in categories" :key="item" class="form-check mx-2">
                 <input :id="item.idKategori" class="form-check-input" v-model="idKategori" type="checkbox" :value="item.idKategori">
                 <label :for="item.idKategori" class="form-check-label">
@@ -23,7 +23,8 @@ export default {
     data(){
         return{
             categories:[],
-            idKategori:[]
+            idKategori:[],
+            invalid :{}
         }
     },
     methods:{
@@ -32,6 +33,7 @@ export default {
                 await this.$repositories.responbility.create(id,{
                     idKategori : this.idKategori
                 })
+                this.invalid = {error:false}
                 this.$emit('save',true)
             }
         },
@@ -44,6 +46,7 @@ export default {
         handleHidden(isConfirm){
             if(isConfirm === true){
                 this.idKategori = []
+                this.invalid = {}
             }
         }
     }

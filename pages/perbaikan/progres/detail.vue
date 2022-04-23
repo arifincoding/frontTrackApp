@@ -6,6 +6,14 @@
                     <div class="col-lg-5 col-12 text-center border border-success text-white font-weight-bold p-2 bg-success">Status Pengerjaan</div>
                     <div class="col-lg-7 col-12 text-center border border-success font-weight-bold p-2">{{ product.status }}</div>
                 </h6>
+                <h6 class="row mx-0">
+                    <div class="col-lg-5 col-12 text-center border border-success text-white font-weight-bold p-2 bg-success">Status Persetujuan</div>
+                    <div class="col-lg-7 col-12 text-center border border-success font-weight-bold p-2">
+                        <span v-if="product.sudahdikonfirmasi === true" class="text-success"> Disetujui </span>
+                        <span v-else-if="product.sudahdikonfirmasi === false" class="text-danger">Dibatalkan</span>
+                        <span v-else-if="product.sudahdikonfirmasi === null" >Menunggu Konfirmasi</span>
+                    </div>
+                </h6>
                 <DetailKlien :nama="customer.nama" :no-hp="customer.noHp"/>
                 <DetailProduk :product="product">
                     <DetailText label="catatan" :value-one="product.catatan"/>
@@ -32,14 +40,16 @@
                         </template>
                     </BorderedTable>
                     <!-- tambah kerusakan -->
+                    <div class="m-2">
                     <SimpanKerusakan v-if="product.status === 'mulai diagnosa'" name="tambah kerusakan" label="tambah kerusakan" btn-color="success" :data-id="product.id" @save="handleSave"/>
+                    </div>
                 </div>
                 <!-- mulai diagnosa -->
                 <ModalConfirm v-if="product.status === 'antri'" btn-class="mt-3" message="yakin ingin memulai diagnosa" label="Mulai Diagnosa" color="primary" @clicked-value="updateStatus($event,{id:product.id,value:'mulai diagnosa'})"/>
                 <!-- selesai diagnosa -->
                 <ModalConfirm v-if="product.status === 'mulai diagnosa' && brokens.length > 0" btn-class="mt-3" message="yakin ingin menyelesaikan diagnosa" label="selesai diagnosa" color="primary" @clicked-value="updateStatus($event,{id:product.id,value:'selesai diagnosa'})"/>
                 <!-- proses -->
-                <ModalConfirm v-else-if="product.status === 'selesai diagnosa' || (product.sudahdikonfirmasi === 1 && product.status === 'tunggu')" btn-class="mt-3" message="yakin ingin memproses kerusakan" label="proses" color="warning" @clicked-value="updateStatus($event,{id:product.id,value:'proses'})"/>
+                <ModalConfirm v-else-if="product.status === 'selesai diagnosa' || (product.sudahdikonfirmasi === true && product.status === 'tunggu')" btn-class="mt-3" message="yakin ingin memproses kerusakan" label="proses" color="warning" @clicked-value="updateStatus($event,{id:product.id,value:'proses'})"/>
                 <!-- selesai -->
                 <ModalConfirm v-else-if="product.status === 'proses'" btn-class="mt-3" message="yakin ingin menyelesaikan perbaikan?" label="Selesai" @clicked-value="updateStatus($event,{id:product.id,value:'selesai'})"/>
             </div>

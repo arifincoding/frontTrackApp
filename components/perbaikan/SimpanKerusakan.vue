@@ -1,8 +1,8 @@
 <template>
     <span>
-        <ModalInput :label="label" :name="name" :btnColor="btnColor" @show="handleShow" @hidden="resetModal" @submit="saveData">
-            <InputText input-id="judul" label="Judul Kerusakan" v-model="judul" placeholder="Masukkan judul kerusakan"/>
-            <InputTextarea input-id="deskripsi" label="deskripsi" v-model="deskripsi" placeholder="masukkan deskripsi mengenai kerusakan"/>
+        <ModalInput :label="label" :name="name" :btnColor="btnColor" :invalid="invalid.error" @show="handleShow" @hidden="resetModal" @submit="saveData">
+            <InputText input-id="judul" label="Judul Kerusakan" v-model="judul" placeholder="Masukkan judul kerusakan" :invalid="invalid.judul"/>
+            <InputTextarea input-id="deskripsi" label="deskripsi" v-model="deskripsi" placeholder="masukkan deskripsi mengenai kerusakan" :invalid="invalid.deskripsi"/>
         </ModalInput>
     </span>
 </template>
@@ -30,18 +30,23 @@ export default {
     data(){
         return {
             judul:'',
-            deskripsi:''
+            deskripsi:'',
+            invalid:{}
         }
     },
     methods:{
         resetModal(event){
-            if(event === true && this.value.judul === ''){
+            if(event === true){
+                if(this.value.judul === ''){
                 this.judul = ''
                 this.deskripsi = ''
+                }
+                this.invalid = {}
             }
         },
         async saveData(event){
             if(event === true){
+                try{
                 const payload = {
                     judul: this.judul,
                     deskripsi: this.deskripsi
@@ -51,7 +56,18 @@ export default {
                 }else{
                     await this.$repositories.broken.update(this.dataId,payload)
                 }
+                this.invalid = {
+                    error:false
+                }
                 this.$emit('save',true)
+                }catch({response}){
+                    this.invalid={
+                        error:true
+                    }
+                    for (const key in response.data.errors) {
+                            this.invalid[key] = response.data.errors[key][0]
+                    }
+                }
             }
         },
         handleShow(event){
