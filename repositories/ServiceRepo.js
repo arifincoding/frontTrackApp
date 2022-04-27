@@ -32,6 +32,9 @@ export default ($axios,store) => ({
             params: filters
         })
     },
+    track(code){
+        return $axios.$get(`${resource}/${code}/track`)
+    },
     create(payload){
         return $axios.$post(`${resource}`,payload,{
             headers:{

@@ -8,7 +8,7 @@
                 <DetailText label="judul" :value-one="broken.judul"/>
                 <DetailText v-if="broken.dikonfirmasi === true" label="disetujui" value-one="ya" class-value="text-success"/>
                 <DetailText v-if="broken.dikonfirmasi === false" label="disetujui" value-one="tidak" class-value="text-danger"/>
-                <DetailText v-if="noBiaya === false" label="Biaya" value-one="broken.biaya"/>
+                <DetailText v-if="noBiaya === false" label="Biaya" :value-one="broken.biaya"/>
                 <DetailText label="deskripsi" :value-one="broken.deskripsi"/>
             </div>
         </b-modal>
