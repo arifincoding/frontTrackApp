@@ -85,7 +85,7 @@
                     <tr>
                         <td class="text-right pr-1" style="width:200px">Uang Muka</td>
                         <td class="text-center" style="width:25px">:</td>
-                        <td class="text-left pl-1" colspan="5" style="width:400px">{{product.uangMuka}}</td>
+                        <td class="text-left pl-1" colspan="5" style="width:400px">{{product.uangMukaString}}</td>
                     </tr>
                 </table>
                 <table class="nota-table" border="1">

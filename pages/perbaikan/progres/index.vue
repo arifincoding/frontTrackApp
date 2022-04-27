@@ -15,10 +15,14 @@
                     <b-dd-item-btn class="float-right" button-class="bg-primary text-white btn-sm" @click="onFilter()">Ok</b-dd-item-btn>
             </template>
             <template #cell(status)="data">
-                <td v-if="data.value === 'mulai diagnosa' || data.value === 'selesai diagnosa'" class="text-primary"> {{ data.value }} </td>
-                <td v-else-if="data.value === 'tunggu'" class="text-secondary"> {{ data.value }} </td>
-                <td v-else-if="data.value === 'proses'" class="text-warning"> {{ data.value }} </td>
-                <td v-else-if="data.value === 'selesai'" class="text-success"> {{ data.value }} </td>
+                <span v-if="data.value === 'mulai diagnosa' || data.value === 'selesai diagnosa'" class="text-primary"> {{ data.value }} </span>
+                <span v-else-if="data.value === 'tunggu'" class="text-secondary"> {{ data.value }} </span>
+                <span v-else-if="data.value === 'proses'" class="text-warning"> {{ data.value }} </span>
+                <span v-else-if="data.value === 'selesai'" class="text-success"> {{ data.value }} </span>
+            </template>
+            <template #cell(disetujui)="data">
+                <span v-if="data.item.dikonfirmasi === true">Ya</span>
+                <span v-if="data.item.dikonfirmasi === false">Tidak</span>
             </template>
             
             <template #cell(menu)="data">
@@ -42,6 +46,7 @@ export default {
                 {key:'kategori', sortable:true},
                 {key:'keluhan', sortable:true},
                 {key:'status', sortable:true},
+                'disetujui',
                 {key:'menu'}
             ],
             filterCategory:null,

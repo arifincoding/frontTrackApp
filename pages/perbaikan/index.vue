@@ -26,7 +26,11 @@
                 {{data.item.product.nama}} [{{ data.item.product.kategori }}]
             </template>
             <template #cell(totalBiaya)="data">
-                <span v-if="data.item.product.totalBiaya">Rp.{{data.item.product.totalBiaya}}</span>
+                <span v-if="data.item.product.totalBiaya">{{data.item.product.totalBiayaString}}</span>
+            </template>
+            <template #cell(disetujui)="data">
+                <span v-if="data.item.product.sudahdikonfirmasi === true">Ya</span>
+                <span v-if="data.item.product.sudahdikonfirmasi === false">Tidak</span>
             </template>
             <template #cell(menu)="data">
                 <NuxtLink class="btn btn-sm btn-outline-success" :to="{path:'/perbaikan/detail',query:{id:data.item.product.id}}">Detail</NuxtLink>
@@ -50,6 +54,7 @@ export default {
                 'produk',
                 {key:'product.keluhan', label:'keluhan'},
                 {key:'product.status', label:'status'},
+                'disetujui',
                 {key:'totalBiaya', label:'total biaya'},
                 'menu'
             ],

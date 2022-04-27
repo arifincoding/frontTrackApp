@@ -48,8 +48,10 @@
                 <ModalConfirm v-if="product.status === 'antri'" btn-class="mt-3" message="yakin ingin memulai diagnosa" label="Mulai Diagnosa" color="primary" @clicked-value="updateStatus($event,{id:product.id,value:'mulai diagnosa'})"/>
                 <!-- selesai diagnosa -->
                 <ModalConfirm v-if="product.status === 'mulai diagnosa' && brokens.length > 0" btn-class="mt-3" message="yakin ingin menyelesaikan diagnosa" label="selesai diagnosa" color="primary" @clicked-value="updateStatus($event,{id:product.id,value:'selesai diagnosa'})"/>
-                <!-- proses -->
-                <ModalConfirm v-else-if="product.status === 'selesai diagnosa' || (product.sudahdikonfirmasi === true && product.status === 'tunggu')" btn-class="mt-3" message="yakin ingin memproses kerusakan" label="proses" color="warning" @clicked-value="updateStatus($event,{id:product.id,value:'proses'})"/>
+                <!-- proses perbaikan-->
+                <ModalConfirm v-else-if="product.status === 'selesai diagnosa' || (product.sudahdikonfirmasi === true && product.status === 'tunggu')" btn-class="mt-3" message="yakin ingin memproses perbaikan kerusakan" label="proses perbaikan" color="warning" @clicked-value="updateStatus($event,{id:product.id,value:'proses perbaikan'})"/>
+                <!-- proses pembatalan -->
+                <ModalConfirm v-else-if="product.sudahdikonfirmasi === false && product.status === 'tunggu'" btn-class="mt-3" message="yakin ingin memproses pembatalan perbaikan" label="proses pembatalan" color="warning" @clicked-value="updateStatus($event,{id:product.id,value:'proses pembatalan'})"/>
                 <!-- selesai -->
                 <ModalConfirm v-else-if="product.status === 'proses'" btn-class="mt-3" message="yakin ingin menyelesaikan perbaikan?" label="Selesai" @clicked-value="updateStatus($event,{id:product.id,value:'selesai'})"/>
             </div>

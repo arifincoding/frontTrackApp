@@ -18,7 +18,7 @@
                 <DetailProduk :product="product">
                     <DetailText label="Uang Muka" :value-one="product.uangMuka"/>
                     <DetailText label="Estimasi Harga" :value-one="product.estimasiBiaya"/>
-                    <DetailText label="Total Harga" :value-one="product.totalBiaya"/>
+                    <DetailText label="Total Harga" :value-one="product.totalBiayaString"/>
                     <DetailText label="Catatan" :value-one="product.catatan"/>
                     <DetailText label="Lama Garansi" :value-one="product.garansi"/>
                     <DetailText label="Tanggal Masuk" :value-one="product.tanggalMasuk" :value-two="product.jamMasuk"/>
@@ -122,7 +122,7 @@ export default {
             fields:[
                 'no',
                 'judul',
-                'biaya',
+                {key:'biayaString',label:'biaya'},
                 'disetujui',
                 'aksi'
             ]

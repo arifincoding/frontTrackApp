@@ -48,6 +48,9 @@
         </template>
     </BorderedTable>
 </div>
+<div v-if="track.length === 0">
+    <h3 class="h3 text-center mt-5 font-weight-bold">Data Tidak Ditemukan</h3>
+</div>
 </div>
 </div>
 </template>

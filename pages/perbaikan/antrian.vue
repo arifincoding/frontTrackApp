@@ -10,6 +10,10 @@
             <template v-slot:filterBtn>
                 <b-dd-item-btn class="float-right" button-class="bg-primary text-white btn-sm" @click="onFilter()">Ok</b-dd-item-btn>
             </template>
+            <template #cell(disetujui)="data">
+                <span v-if="data.item.dikonfirmasi === true">Ya</span>
+                <span v-if="data.item.dikonfirmasi === false">Tidak</span>
+            </template>
             <template #cell(menu)="data">
                 <NuxtLink class="btn btn-sm btn-outline-success" :to="{path:'/perbaikan/progres/detail',query:{id:data.item.idService}}">detail</NuxtLink>
                 <ModalConfirm message="yakin ingin mulai mendiagnosa produk ini?" label="mulai diagnosa" color="primary" @clicked-value="updateStatus($event,data.item.idService)"/>
@@ -31,6 +35,7 @@ export default {
                 {key:'kategori', sortable:true},
                 {key:'keluhan', sortable:true},
                 {key:'status', tdClass:'text-danger'},
+                'disetujui',
                 {key:'menu'}
             ],
             queues:[],

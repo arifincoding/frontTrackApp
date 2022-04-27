@@ -1,40 +1,33 @@
 <template>
-  <div v-if="!this.$store.state.token">
-    <div class="container mt-4">
-    <div v-if="errorMessage !=='test'">
-      <div class="small bg-danger text-light rounded p-2">
-      <div>
-          {{ errorMessage }}
-      </div>
-      </div>
-      </div>
-    <TitleHeading class="mt-3" text="Login Admin"/>
-    <InputText input-id="username" label="username" v-model="username" placeholder="masukkan username akun anda"/>
-    <InputText input-id="password" label="password" input-type="password" v-model="password" placeholder="masukkan password akun anda"/>
-    <div class="btn btn-success" @click="login()">Login</div>
+    <div class="d-flex justify-content-center mt-4">
+      <div class="col-4 border rounded p-3 shadow-sm">
+    <TitleHeading class="text-center" text="Login Admin"/>
+    <InputText input-id="username" label="username" v-model="username" placeholder="masukkan username akun anda" :invalid="invalid.username"/>
+    <InputText input-id="password" label="password" input-type="password" v-model="password" placeholder="masukkan password akun anda" :invalid="invalid.password"/>
+    <div class="btn btn-success float-right" @click="login()">Masuk</div>
+    <div class="clearfix"></div>
     </div>
-  </div>
+    </div>
 </template>
 
 <script>
 import decode from 'jwt-decode'
 
 export default {
-  // layout: 'admin',
+  middleware({store,redirect}){
+    if(store.state.token){
+      if(store.state.role === 'teknisi'){
+        return redirect('/perbaikan/antrian')
+      }else{
+        return redirect('/perbaikan')
+      }
+    }
+  },
   data(){
     return {
       username:'',
       password:'',
-      errorMessage:'test',
-    }
-  },
-  mounted(){
-    if(this.$store.state.token){
-      if(this.$store.state.role === 'teknisi'){
-        this.$router.push({path:'/perbaikan/antrian'})
-      }else{
-        this.$router.push({path:'/perbaikan'})
-      }
+      invalid:[],
     }
   },
   methods:{
@@ -59,7 +52,10 @@ export default {
         }
 
     }catch({response}){
-      this.errorMessage = response.data.message
+      this.invalid={}
+      for (const key in response.data.errors) {
+        this.invalid[key] = response.data.errors[key][0]
+      }
     }
   }
 }

@@ -49,7 +49,7 @@
                     <td class="ue"> {{ index+1 }} </td>
                     <td> {{ product.nama }} </td>
                     <td> {{ item.judul }} </td>
-                    <td>Rp.{{ item.biaya }} </td>
+                    <td>Rp.{{ item.biayaString }} </td>
                 </tr>
                 <tr>
                     <td></td>
@@ -61,8 +61,14 @@
         </table>
     </div>
     <div class="mt-1">
+        <div class="font-weight-bold float-left">JUMLAH</div>
+        <div class="font-weight-bold float-right harga">Rp.{{product.totalBiayaString}}</div>
+        <div class="clearfix"></div>
+        <div class="font-weight-bold float-left">UANG MUKA</div>
+        <div class="font-weight-bold float-right harga">Rp.{{product.uangMukaString}}</div>
+        <div class="clearfix"></div>
         <div class="font-weight-bold float-left">TOTAL</div>
-        <div class="font-weight-bold float-right harga">Rp.{{product.totalBiaya}}</div>
+        <div class="font-weight-bold float-right harga">Rp.{{product.yangHarusDibayar}}</div>
         <div class="clearfix"></div>
     </div>
     <div class="">

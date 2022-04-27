@@ -1,7 +1,7 @@
 <template>
     <span>
         <b-button class="text-capitalize" :class="btnClass" @click="showModal" size="sm" :variant="btnColor">{{name}}</b-button>
-        <b-modal v-model="modalShow" centered :title="label" @hidden="$emit('hidden',true)">
+        <b-modal v-model="modalShow" centered scrollable :title="label" @hidden="$emit('hidden',true)">
             <div>
                 <slot></slot>
             </div>
