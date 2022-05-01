@@ -23,6 +23,7 @@
         <div class="col-8">
             <div class="h4 text-center font-weight-bold">Cek Kode Service</div>
             <input v-model="code" type="text" class="form-control rounded-pill shadow-sm" placeholder="Tolong masukkan kode service anda disini"/>
+            <small class="text-danger">{{ track.invalid }}</small>
             <div class="d-flex justify-content-center mt-3">
                 <b-button variant="success" @click="tracking">Lacak</b-button>
             </div>
@@ -32,10 +33,19 @@
     <h3 class="h3 text-center mt-5 font-weight-bold">Detail Hasil Pelacakan</h3>
     <h6 class="bg-success font-weight-bold w-100 text-white text-center p-1">Informasi Dasar</h6>
     <BorderedTable :items="infoItems" :fields="infoField">
-
+        <template #cell(persetujuan)="data">
+            <span v-if="data.item.persetujuan === true" class="text-success">Disetujui</span>
+            <span v-else-if="data.item.persetujuan === false" class="text-danger">Dibatalkan</span>
+            <span v-else>Tunggu</span>
+        </template>
     </BorderedTable>
-    <h6 class="bg-success font-weight-bold w-100 text-white mt-4 text-center p-1">Kerusakan Gadget</h6>
-    <BorderedTable :items="brokenItems" :fields="brokenFIeld">
+    <h6 v-if="brokenItems.length > 0" class="bg-success font-weight-bold w-100 text-white mt-4 text-center p-1">Kerusakan Gadget</h6>
+    <BorderedTable v-if="brokenItems.length > 0" :items="brokenItems" :fields="brokenFIeld">
+        <template #cell(persetujuan)="data">
+            <span v-if="data.item.dikonfirmasi === true" class="text-success">Disetujui</span>
+            <span v-else-if="data.item.dikonfirmasi === false" class="text-danger">Dibatalkan</span>
+            <span v-else>Tunggu</span>
+        </template>
         <template #cell(aksi)="data">
             <ModalBroken :data="data.item"/>
         </template>
@@ -59,7 +69,16 @@
 export default {
     data(){
         return {
-            track:{},
+            track:{
+                kode:null,
+                nama:null,
+                kategori:null,
+                status:null,
+                dikonfirmasi:null,
+                totalBiaya:null,
+                kerusakan:[],
+                riwayat:[]
+            },
             code:'',
             infoItems:[],
             infoField:[
@@ -74,7 +93,7 @@ export default {
             brokenFIeld:[
                 'no',
                 {key:'judul',label:'kerusakan'},
-                {key:'dikonfirmasi',label:'persetujuan'},
+                'persetujuan',
                 'biaya',
                 'aksi'
             ],
@@ -84,20 +103,28 @@ export default {
     },
     methods:{
         async tracking(){
-            const data = await this.$repositories.service.track(this.code)
-            this.track = data.data
-            this.infoItems = [
-                {
-                    kode:this.track.kode,
-                    nama:this.track.nama,
-                    kategori:this.track.kategori,
-                    status:this.track.status,
-                    persetujuan:this.track.dikonfirmasi,
-                    totalBiaya:this.track.totalBiaya
+            if(this.code.length > 0){
+                const data = await this.$repositories.service.track(this.code)
+                this.track = data.data
+                if(this.track.kode){
+                    this.infoItems = [
+                        {
+                            kode:this.track.kode,
+                            nama:this.track.nama,
+                            kategori:this.track.kategori,
+                            status:this.track.status,
+                            persetujuan:this.track.dikonfirmasi,
+                            totalBiaya:this.track.totalBiaya
+                        }
+                    ]
+                    this.brokenItems = this.track.kerusakan
+                    this.historyItems = this.track.riwayat
                 }
-            ]
-            this.brokenItems = this.track.kerusakan
-            this.historyItems = this.track.riwayat
+            } else {
+                this.track = {
+                    invalid : 'kode service tidak boleh kosong'
+                }
+            }
         }
     }
 }
