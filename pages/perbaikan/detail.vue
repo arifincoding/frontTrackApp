@@ -39,7 +39,7 @@
                             <DetailKerusakan :data-id="data.item.idKerusakan"/>
                             <div v-if="role === 'pemilik'">
                                 <!-- update harga perbaikan -->
-                                <UpdateBiaya v-if="(product.status === 'selesai diagnosa' || product.status === 'tunggu') && product.sudahKonfirmasiBiaya === false" :data-id="data.item.idKerusakan" :value-biaya="data.item.biaya" @save="handleSave"/>
+                                <UpdateBiaya v-if="(product.status === 'selesai diagnosa' || product.status === 'tunggu') && product.sudahKonfirmasiBiaya === false" :data-id="data.item.idKerusakan" @save="handleSave"/>
                                 <div v-if="product.sudahKonfirmasiBiaya === true && product.sudahdikonfirmasi === null">
                                     <!-- menyetujui perbaikan -->
                                     <ModalConfirm v-if="data.item.dikonfirmasi === false || data.item.dikonfirmasi === null" message="yakin ingin menyetujui perbaikan?" label="Setujui" @clicked-value="setBrokenConfirmation($event,{id:data.item.idKerusakan,value:true})"/>
@@ -53,12 +53,14 @@
                 </div>
                 
                 <div v-if="role === 'pemilik'">
+                    <ModalInvalid v-if="product.sudahKonfirmasiBiaya === false && (product.status === 'selesai diagnosa' || product.status === 'tunggu')&&isAllBrokenPrice === false" label="Konfirmasi Biaya" message="data kerusakan masih ada yang belum diberi biaya" color="success"/>
                     <!-- konfirmasi biaya -->
-                    <ModalConfirm v-if="product.sudahKonfirmasiBiaya === false && (product.status === 'selesai diagnosa' || product.status === 'tunggu')" btn-class="mt-2" message="yakin ingin melakukan konfirmasi biaya kepada customer?" label="Konfirmasi Biaya" @clicked-value="confirmCost($event,product.id)"/>
+                    <ModalConfirm v-if="product.sudahKonfirmasiBiaya === false && (product.status === 'selesai diagnosa' || product.status === 'tunggu') && isAllBrokenPrice === true" btn-class="mt-2" message="yakin ingin melakukan konfirmasi biaya kepada customer?" label="Konfirmasi Biaya" @clicked-value="confirmCost($event,product.id)"/>
+                    <!-- konfirmasi persetujuan -->
                     <div v-if="product.sudahKonfirmasiBiaya === true && product.butuhKonfirmasi === true && product.sudahdikonfirmasi === null">
-                        <!-- konfirmasi persetujuan perbaikan -->
+                        <!-- konfirmasi setuju -->
                         <ModalConfirm v-if="isBrokenAgree === true" btn-class="mt-2" message="yakin ingin menyetujui perbaikan?" label="konfirmasi persetujuan" @clicked-value="confirmService($event,{id:product.id,value:true})"/>
-                        <!-- konfirmasi pembatalan perbaikan -->
+                        <!-- konfirmasi batal -->
                         <ModalConfirm v-if="isBrokenAgree === false" btn-class="mt-2" message="yakin ingin membatalkan perbaikan?" label="konfirmasi pembatalan" color="danger" @clicked-value="confirmService($event,{id:product.id,value:false})"/>
                     </div>
                     <!-- update garansi -->
@@ -80,16 +82,26 @@ export default {
 
             let broken = []
             let setBrokenAgree = null
+            let isBrokenPrice = false
+            let isBrokenConfirmed = null
             try{
                 const data = await app.$repositories.broken.all(query.id)
-                const isAllBrokenConfirmed = data.data.every((item)=>{
+                // cek apakah semuah kerusakan sudah dikonfirmasi
+                isBrokenConfirmed = (data.data).every((item)=>{
                     if(item.dikonfirmasi === null){
                         return false
                     }
                     return true
                 })
                 
-                if(isAllBrokenConfirmed === true){
+                isBrokenPrice = data.data.every((item)=>{
+                    if(item.biaya === null){
+                        return false
+                    }
+                    return true
+                })
+
+                if(isBrokenConfirmed === true){
                     setBrokenAgree = false
                     data.data.some((item)=>{
                         if(item.dikonfirmasi === true){
@@ -109,7 +121,9 @@ export default {
                 product : service.data.product,
                 brokens : broken,
                 role : store.state.role,
-                isBrokenAgree : setBrokenAgree
+                isAllBrokenConfirmed:isBrokenConfirmed,
+                isBrokenAgree : setBrokenAgree,
+                isAllBrokenPrice : isBrokenPrice
             }
         }catch{}
     },
@@ -122,10 +136,12 @@ export default {
             fields:[
                 'no',
                 'judul',
-                {key:'biayaString',label:'biaya'},
+                {key:'biaya',label:'biaya'},
                 'disetujui',
                 'aksi'
-            ]
+            ],
+            isAllBrokenPrice:false,
+            isAllBrokenConfirmed:false
         }
     },
     methods:{
@@ -162,17 +178,26 @@ export default {
                     dikonfirmasi:item.value
                 })
                 await this.refreshBroken()
+                await this.refreshData()
             }
         },
         async refreshBroken(){
             const data = await this.$repositories.broken.all(this.$route.query.id)
-            const isAllBrokenConfirmed = data.data.every((item)=>{
+            const isBrokenConfirmed = data.data.every((item)=>{
                 if(item.dikonfirmasi === null){
                     return false
                 }
                 return true
             })
-            if(isAllBrokenConfirmed === true){
+            
+            this.isAllBrokenPrice = data.data.every((item)=>{
+                if(item.biaya === null){
+                    return false
+                }
+                return true
+            })
+
+            if(isBrokenConfirmed === true){
                 this.isBrokenAgree = false
                 data.data.some((item)=>{
                     if(item.dikonfirmasi === true){
@@ -182,6 +207,7 @@ export default {
                     return false
                 })
             }
+            this.isAllBrokenConfirmed = isBrokenConfirmed
             this.brokens = await data.data
         },
         handleSave(event){

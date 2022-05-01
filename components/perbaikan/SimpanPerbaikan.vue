@@ -55,18 +55,18 @@ export default {
     },
     data(){
         return{
-            namaCustomer:'',
-            noHp:'',
+            namaCustomer:null,
+            noHp:null,
             bisaWA:false,
-            namaProduk:'',
+            namaProduk:null,
             kategori:null,
-            keluhan:'',
+            keluhan:null,
             butuhKonfirmasi:false,
-            kelengkapan:'',
-            catatan:'',
-            uangMuka:'',
-            estimasiBiaya:'',
-            cacatProduk:'',
+            kelengkapan:null,
+            catatan:null,
+            uangMuka:null,
+            estimasiBiaya:null,
+            cacatProduk:null,
             invalid:{}
         }
     },

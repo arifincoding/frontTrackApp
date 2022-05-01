@@ -53,7 +53,7 @@
                 <!-- proses pembatalan -->
                 <ModalConfirm v-else-if="product.sudahdikonfirmasi === false && product.status === 'tunggu'" btn-class="mt-3" message="yakin ingin memproses pembatalan perbaikan" label="proses pembatalan" color="warning" @clicked-value="updateStatus($event,{id:product.id,value:'proses pembatalan'})"/>
                 <!-- selesai -->
-                <ModalConfirm v-else-if="product.status === 'proses'" btn-class="mt-3" message="yakin ingin menyelesaikan perbaikan?" label="Selesai" @clicked-value="updateStatus($event,{id:product.id,value:'selesai'})"/>
+                <ModalConfirm v-else-if="product.status === 'proses perbaikan' || product.status === 'proses pembatalan'" btn-class="mt-3" message="yakin ingin menyelesaikan perbaikan?" label="Selesai" @clicked-value="updateStatus($event,{id:product.id,value:'selesai'})"/>
             </div>
         </div>
     </div>

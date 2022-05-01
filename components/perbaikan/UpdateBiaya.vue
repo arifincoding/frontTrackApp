@@ -9,8 +9,7 @@
 <script>
 export default {
     props:{
-        dataId:Number,
-        valueBiaya:String
+        dataId:Number
     },
     data(){
         return {
@@ -35,9 +34,10 @@ export default {
                 }
             }
         },
-        handleShow(isConfirm){
+        async handleShow(isConfirm){
             if(isConfirm === true){
-                this.biaya = this.valueBiaya
+                const data = await this.$repositories.broken.show(this.dataId)
+                this.biaya = data.data.biaya
             }
         },
         handleHidden(isConfirm){
