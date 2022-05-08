@@ -113,6 +113,13 @@ export default {
                     status:item.value
                 })
                 await this.refreshData()
+                if(item.value === 'selesai'){
+                    let chatMessage = `*perbaikan selesai* ${this.product.kategori} anda sudah *dapat diambil*`
+                    if (this.product.sudahdikonfirmasi === false){
+                        chatMessage = `*pembatalan selesai* ${this.product.kategori} anda sudah *dapat diambil*`;
+                    }
+                    await this.$repositories.chat.sendMessage(item.id,chatMessage)
+                }
             }
         },
         async refreshData(){

@@ -39,7 +39,7 @@
                             <DetailKerusakan :data-id="data.item.idKerusakan"/>
                             <div v-if="role === 'pemilik'">
                                 <!-- update harga perbaikan -->
-                                <UpdateBiaya v-if="(product.status === 'selesai diagnosa' || product.status === 'tunggu') && product.sudahKonfirmasiBiaya === false" :data-id="data.item.idKerusakan" @save="handleSave"/>
+                                <UpdateBiaya v-if="(product.status === 'selesai diagnosa' || product.status === 'tunggu' || product.status === 'proses perbaikan' || product.status === 'selesai') && product.sudahKonfirmasiBiaya === false" :data-id="data.item.idKerusakan" @save="handleSave"/>
                                 <div v-if="product.sudahKonfirmasiBiaya === true && product.sudahdikonfirmasi === null">
                                     <!-- menyetujui perbaikan -->
                                     <ModalConfirm v-if="data.item.dikonfirmasi === false || data.item.dikonfirmasi === null" message="yakin ingin menyetujui perbaikan?" label="Setujui" @clicked-value="setBrokenConfirmation($event,{id:data.item.idKerusakan,value:true})"/>
@@ -53,9 +53,9 @@
                 </div>
                 
                 <div v-if="role === 'pemilik'">
-                    <ModalInvalid v-if="product.sudahKonfirmasiBiaya === false && (product.status === 'selesai diagnosa' || product.status === 'tunggu')&&isAllBrokenPrice === false" label="Konfirmasi Biaya" message="data kerusakan masih ada yang belum diberi biaya" color="success"/>
+                    <ModalInvalid v-if="product.sudahKonfirmasiBiaya === false && (product.status === 'selesai diagnosa' || product.status === 'tunggu' || product.status === 'proses perbaikan' || product.status === 'selesai')&&isAllBrokenPrice === false" label="Konfirmasi Biaya" message="data kerusakan masih ada yang belum diberi biaya" color="success"/>
                     <!-- konfirmasi biaya -->
-                    <ModalConfirm v-if="product.sudahKonfirmasiBiaya === false && (product.status === 'selesai diagnosa' || product.status === 'tunggu') && isAllBrokenPrice === true" btn-class="mt-2" message="yakin ingin melakukan konfirmasi biaya kepada customer?" label="Konfirmasi Biaya" @clicked-value="confirmCost($event,product.id)"/>
+                    <ModalConfirm v-if="product.sudahKonfirmasiBiaya === false && (product.status === 'selesai diagnosa' || product.status === 'tunggu' || product.status === 'proses perbaikan' || product.status === 'selesai') && isAllBrokenPrice === true" btn-class="mt-2" message="yakin ingin melakukan konfirmasi biaya kepada customer?" label="Konfirmasi Biaya" @clicked-value="confirmCost($event,product.id)"/>
                     <!-- konfirmasi persetujuan -->
                     <div v-if="product.sudahKonfirmasiBiaya === true && product.butuhKonfirmasi === true && product.sudahdikonfirmasi === null">
                         <!-- konfirmasi setuju -->
@@ -67,7 +67,9 @@
                     <UpdateGaransi v-if="product.sudahKonfirmasiBiaya === true && product.diambil === false" :data-id="product.id" :value-garansi="product.garansi" @save="handleSaveWarranty"/>
                 </div>
                 <!-- ambil barang -->
-                <ModalConfirm v-if="product.status === 'selesai' && product.sudahKonfirmasiBiaya === true && product.diambil === false" btn-class="mt-2" message="yakin ingin mengambil produk?" label="Ambil Produk" @clicked-value="take($event,product.id)"/>
+                <ModalInvalid v-if="product.status === 'selesai' && product.sudahKonfirmasiBiaya === true && product.diambil === false && product.garansi === null" label="Ambil Produk" message="garansi perbaikan belum di tentukan" color="success"/>
+
+                <ModalConfirm v-if="product.status === 'selesai' && product.sudahKonfirmasiBiaya === true && product.diambil === false && product.garansi !== null" btn-class="mt-2" message="yakin ingin mengambil produk?" label="Ambil Produk" @clicked-value="take($event,product.id)"/>
             </div>
         </div>
     </div>
@@ -151,6 +153,17 @@ export default {
                 await this.$repositories.service.setConfirmCost(id)
                 
                 await this.refreshData()
+                // send chat
+                let chatMessage = '*PEMBERITAHUAN*%0aBerikut rincian biaya perbaikan:'
+                const arrBroken = this.brokens
+                arrBroken.forEach((item)=>{
+                    chatMessage += `%0a -${item.judul} : ${item.biaya}`
+                })
+                chatMessage += `%0a%0a*Total Biaya : ${this.product.totalBiayaString}*`
+                if(this.product.butuhKonfirmasi === true){
+                    chatMessage += '%0a%0aApakah anda setuju untuk melakukan perbaikan?'
+                }
+                await this.$repositories.chat.sendMessage(id,chatMessage)
             }
         },
         async refreshData(){

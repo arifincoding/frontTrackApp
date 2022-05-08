@@ -108,7 +108,13 @@ export default {
                     this.$router.push({path:'/perbaikan'})
                 }else{
                     const data = await this.$repositories.service.create(payload)
-                    await this.$router.push({path:'/perbaikan/nota?id='+data.data.idService})
+                    
+                    const findService = await this.$repositories.service.show(data.data.idService)
+                    
+                    const message = `terima kasih telah melakukan perbaikan ${findService.data.product.kategori} anda di trackApp untuk memantau perkembangan proses perbaikan ${findService.data.product.kategori} anda, dapat dilihat melalui link berikut http://127.0.0.1:3000/track?kode=${findService.data.product.kode}`
+                    
+                    await this.$repositories.chat.sendMessage(data.data.idService,message)
+                    this.$router.push({path:'/perbaikan/nota?id='+data.data.idService})
                 }
             }catch({response}){
                 this.invalid={}
