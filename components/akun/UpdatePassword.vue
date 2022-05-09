@@ -1,7 +1,7 @@
 <template>
-    <ModalInput name="update password" label="update password akun" btn-color="primary" btn-class="ml-1" :invalid="invalid.error" @hidden="handleHidden" @submit="saveData">
-        <InputText input-id="passwordLama" label="password lama" placeholder="Masukkan password lama anda" v-model="sandiLama" :invalid="invalid.sandiLama"/>
-        <InputText input-id="passwordBaru" label="password baru" placeholder="masukkan password baru anda" v-model="sandiBaru" :invalid="invalid.sandiBaru"/>
+    <ModalInput name="update sandi" label="update sandi akun" btn-color="primary" btn-class="ml-1" :invalid="invalid.error" @hidden="handleHidden" @submit="saveData">
+        <InputText input-id="sandiLama" label="sandi lama" input-type="password" placeholder="Masukkan sandi lama anda" v-model="sandiLama" :invalid="invalid.sandiLama"/>
+        <InputText input-id="sandiBaru" label="sandi baru" input-type="password" placeholder="masukkan sandi baru anda" v-model="sandiBaru" :invalid="invalid.sandiBaru"/>
     </ModalInput>
 </template>
 
@@ -39,6 +39,8 @@ export default {
         handleHidden(isConfirm){
             if(isConfirm === true){
                 this.invalid = {}
+                this.sandiLama = null
+                this.sandiBaru = null
             }
         }
     }
