@@ -40,6 +40,7 @@ export default {
       '~/components/pegawai',
       '~/components/perbaikan',
       '~/components/table',
+      '~/components/akun',
     ]
   },
 

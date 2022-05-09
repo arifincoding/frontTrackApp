@@ -13,9 +13,7 @@
                 <NavItem v-if="role === 'pemilik'" link="/pegawai" text="data pegawai"/>
                 <NavItem v-if="role === 'pemilik'" link="/kategori" text="data kategori"/>
             </ul>
-            <span @click="logout()" class="navbar-text">
-                logout
-            </span>
+            <DetailAkun/>
         </div>
     </nav>
 </template>
@@ -25,15 +23,6 @@ export default {
     data(){
         return {
             role:this.$store.state.role
-        }
-    },
-    methods:{
-        async logout(){
-            await this.$repositories.auth.logout()
-            this.$store.commit('setToken',null),
-            this.$store.commit('setUserInfo',null);
-            this.$router.push({path:'/'})
-            this.$cookies.remove('token')
         }
     }
 }
