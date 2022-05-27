@@ -6,6 +6,8 @@ import ServiceRepo from '~/repositories/ServiceRepo'
 import AuthRepo from '~/repositories/AuthRepo'
 import ChatRepo from '~/repositories/ChatRepo'
 import UserRepo from '~/repositories/UserRepo'
+import HistoryRepo from '~/repositories/HistoryRepo'
+import CustomerRepo from '~/repositories/CustomerRepo'
 
 export default ($axios,store) => ({
     auth: AuthRepo($axios, store),
@@ -15,5 +17,7 @@ export default ($axios,store) => ({
     responbility: ResponbilityRepo($axios, store),
     service: ServiceRepo($axios, store),
     chat: ChatRepo($axios, store),
-    user: UserRepo($axios, store)
+    user: UserRepo($axios, store),
+    history: HistoryRepo($axios, store),
+    customer: CustomerRepo($axios,store)
 })

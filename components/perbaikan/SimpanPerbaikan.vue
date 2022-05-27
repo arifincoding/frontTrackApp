@@ -48,80 +48,70 @@
 export default {
     layout:'admin',
     props:{
-        dataService: Object,
-        serviceId: String,
+        dataService: {
+            type:Object,
+            default:()=>({
+                customer:{
+                    nama:null,
+                    noHp:null,
+                    bisaWA:false,
+                },
+                product:{
+                    nama:null,
+                    kategori:null,
+                    keluhan:null,
+                    butuhKonfirmasi:false,
+                    kelengkapan:null,
+                    catatan:null,
+                    uangMuka:null,
+                    estimasiBiaya:null,
+                    cacatProduk:null,
+                }
+            })
+        },
         title: String,
-        listKategori:Array
+        listKategori:Array,
+        error:Object
     },
     data(){
         return{
-            namaCustomer:null,
-            noHp:null,
-            bisaWA:false,
-            namaProduk:null,
-            kategori:null,
-            keluhan:null,
-            butuhKonfirmasi:false,
-            kelengkapan:null,
-            catatan:null,
-            uangMuka:null,
-            estimasiBiaya:null,
-            cacatProduk:null,
+            namaCustomer : this.dataService.customer.nama,
+            noHp : this.dataService.customer.noHp,
+            bisaWA : this.dataService.customer.bisaWA,
+            namaProduk : this.dataService.product.nama,
+            kategori : this.dataService.product.kategori,
+            keluhan : this.dataService.product.keluhan,
+            butuhKonfirmasi : this.dataService.product.butuhKonfirmasi,
+            kelengkapan : this.dataService.product.kelengkapan,
+            catatan : this.dataService.product.catatan,
+            uangMuka : this.dataService.product.uangMuka,
+            estimasiBiaya : this.dataService.product.estimasiBiaya,
+            cacatProduk : this.dataService.product.cacatProduk,
             invalid:{}
         }
     },
-    mounted(){
-        if(this.serviceId){
-            this.namaCustomer = this.dataService.customer.nama
-            this.noHp = this.dataService.customer.noHp
-            this.bisaWA = this.dataService.customer.bisaWA
-            this.namaProduk = this.dataService.product.nama
-            this.kategori = this.dataService.product.kategori
-            this.keluhan = this.dataService.product.keluhan
-            this.butuhKonfirmasi = this.dataService.product.butuhKonfirmasi
-            this.kelengkapan = this.dataService.product.kelengkapan
-            this.catatan = this.dataService.product.catatan
-            this.uangMuka = this.dataService.product.uangMuka
-            this.estimasiBiaya = this.dataService.product.estimasiBiaya
-            this.cacatProduk = this.dataService.product.cacatProduk
+    watch:{
+        error(newVal){
+            this.invalid = newVal
         }
     },
     methods:{
-        async saveInput(){
-            try{
-                const payload = {
-                    namaCustomer:this.namaCustomer,
-                    noHp:this.noHp,
-                    bisaWA:this.bisaWA,
-                    namaProduk:this.namaProduk,
-                    kategori:this.kategori,
-                    keluhan:this.keluhan,
-                    butuhKonfirmasi:this.butuhKonfirmasi,
-                    kelengkapan:this.kelengkapan,
-                    catatan:this.catatan,
-                    uangMuka:this.uangMuka,
-                    estimasiBiaya:this.estimasiBiaya,
-                    cacatProduk:this.cacatProduk
-                }
-                if(this.serviceId){
-                    await this.$repositories.service.update(this.serviceId, payload)
-                    this.$router.push({path:'/perbaikan'})
-                }else{
-                    const data = await this.$repositories.service.create(payload)
-                    
-                    const findService = await this.$repositories.service.show(data.data.idService)
-                    
-                    const message = `terima kasih telah melakukan perbaikan ${findService.data.product.kategori} anda di trackApp untuk memantau perkembangan proses perbaikan ${findService.data.product.kategori} anda, dapat dilihat melalui link berikut http://127.0.0.1:3000/track?kode=${findService.data.product.kode}`
-                    
-                    await this.$repositories.chat.sendMessage(data.data.idService,message)
-                    this.$router.push({path:'/perbaikan/nota?id='+data.data.idService})
-                }
-            }catch({response}){
-                this.invalid={}
-                for (const key in response.data.errors) {
-                        this.invalid[key] = response.data.errors[key][0]
-                }
+        saveInput(){
+            const payload = {
+                namaCustomer:this.namaCustomer,
+                noHp:this.noHp,
+                bisaWA:this.bisaWA,
+                namaProduk:this.namaProduk,
+                kategori:this.kategori,
+                keluhan:this.keluhan,
+                butuhKonfirmasi:this.butuhKonfirmasi,
+                kelengkapan:this.kelengkapan,
+                catatan:this.catatan,
+                uangMuka:this.uangMuka,
+                estimasiBiaya:this.estimasiBiaya,
+                cacatProduk:this.cacatProduk
             }
+            this.$emit('submit',{save:true,data:payload})
         }
     }
 }

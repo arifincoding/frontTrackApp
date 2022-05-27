@@ -80,7 +80,7 @@
                         <td class="text-center" style="width:25px"></td>
                         <td class="text-right pr-1" style="width:200px">Estimasi Biaya</td>
                         <td class="text-center" style="width:25px">:</td>
-                        <td class="text-left pl-1 harga" style="width:400px">{{product.estimasiBiaya}}</td>
+                        <td class="text-left pl-1 harga" style="width:400px">{{product.estimasiBiayaString}}</td>
                     </tr>
                     <tr>
                         <td class="text-right pr-1" style="width:200px">Uang Muka</td>

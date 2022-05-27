@@ -16,8 +16,8 @@
                 </h6>
                 <DetailKlien :nama="customer.nama" :no-hp="customer.noHp"/>
                 <DetailProduk :product="product">
-                    <DetailText label="Uang Muka" :value-one="product.uangMuka"/>
-                    <DetailText label="Estimasi Harga" :value-one="product.estimasiBiaya"/>
+                    <DetailText label="Uang Muka" :value-one="product.uangMukaString"/>
+                    <DetailText label="Estimasi Harga" :value-one="product.estimasiBiayaString"/>
                     <DetailText label="Total Harga" :value-one="product.totalBiayaString"/>
                     <DetailText label="Catatan" :value-one="product.catatan"/>
                     <DetailText label="Lama Garansi" :value-one="product.garansi"/>
@@ -59,9 +59,9 @@
                     <!-- konfirmasi persetujuan -->
                     <div v-if="product.sudahKonfirmasiBiaya === true && product.butuhKonfirmasi === true && product.sudahdikonfirmasi === null">
                         <!-- konfirmasi setuju -->
-                        <ModalConfirm v-if="isBrokenAgree === true" btn-class="mt-2" message="yakin ingin menyetujui perbaikan?" label="konfirmasi persetujuan" @clicked-value="confirmService($event,{id:product.id,value:true})"/>
+                        <ModalConfirm v-if="isBrokenAgree === true" btn-class="mt-2" message="yakin ingin menyetujui perbaikan?" label="konfirmasi persetujuan" @clicked-value="confirmService($event,{id:product.id,value:true,status:'setuju', pesan:'anda telah menyetujui proses perbaikan'})"/>
                         <!-- konfirmasi batal -->
-                        <ModalConfirm v-if="isBrokenAgree === false" btn-class="mt-2" message="yakin ingin membatalkan perbaikan?" label="konfirmasi pembatalan" color="danger" @clicked-value="confirmService($event,{id:product.id,value:false})"/>
+                        <ModalConfirm v-if="isBrokenAgree === false" btn-class="mt-2" message="yakin ingin membatalkan perbaikan?" label="konfirmasi pembatalan" color="danger" @clicked-value="confirmService($event,{id:product.id,value:false,status:'batal',pesan:'anda telah membatalkan proses perbaikan'})"/>
                     </div>
                     <!-- update garansi -->
                     <UpdateGaransi v-if="product.sudahKonfirmasiBiaya === true && product.diambil === false" :data-id="product.id" :value-garansi="product.garansi" @save="handleSaveWarranty"/>
@@ -173,7 +173,12 @@ export default {
         },
         async take(isConfirm,id){
             if(isConfirm === true){
+                const historyPayload = {
+                    status:'diambil',
+                    pesan:`${this.product.kategori} anda telah diambil`
+                }
                 await this.$repositories.service.setTake(id)
+                await this.$repositories.history.create(historyPayload,id)
                 await this.$router.push({path:`/perbaikan/nota-ambil?id=${id}`})
         }
         },
@@ -182,6 +187,11 @@ export default {
                 await this.$repositories.service.updateConfirmation(item.id,{
                     dikonfirmasi:item.value
                 })
+                const historyPayload = {
+                    status: item.status,
+                    pesan: item.pesan
+                }
+                await this.$repositories.history.create(historyPayload,item.id)
                 await this.refreshData()
             }
         },

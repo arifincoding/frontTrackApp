@@ -1,6 +1,6 @@
 <template>
     <label>
-        <input  type="checkbox" :value="value"  v-model="model" />
+        <input v-model="model" type="checkbox" :value="value"/>
         <span>{{ label }}</span>
     </label>
 </template>
@@ -8,8 +8,11 @@
 <script>
 export default {
     props: {
-        label: String,
-        value: String,
+        label: {
+            type:String,
+            default:''
+            },
+        value: Boolean,
     },
     computed: {
         model: {
