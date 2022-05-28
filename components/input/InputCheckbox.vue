@@ -12,7 +12,7 @@ export default {
             type:String,
             default:''
             },
-        value: Boolean,
+        value: [Boolean,Number,String],
     },
     computed: {
         model: {

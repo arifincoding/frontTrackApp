@@ -27,7 +27,7 @@
                     <InputText input-id="email" label="email" v-model="email" placeholder="masukkan email aktif" :invalid="invalid.email"/>
                 </b-col>
             </b-row>
-            <div v-if="peran === 'teknisi' && pegawaiId === 0">
+            <div v-if="peran === 'teknisi' && dataPegawai.namaDepan === null">
             <div class="my-1">Tanggung Jawab </div>
             <div class="d-flex no-wrap">
             <div v-for="item in categories" :key="item" class="form-check mx-2">
@@ -48,49 +48,50 @@
 export default {
     layout:'admin',
     props:{
-        dataPegawai: Object,
-        pegawaiId: {
-            type:Number,
-            default:0
+        dataPegawai: {
+            type:Object,
+            default:()=>({
+                namaDepan:null,
+                namaBelakang:null,
+                jenisKelamin:null,
+                noHp:null,
+                alamat:null,
+                peran:null,
+                email:null,
+            })
         },
         title: String,
         categories:{
             type:Array,
-            default:()=>{
-                return []
-            }
-        }
+            default:()=>([])
+        },
+        error: Object
     },
     data(){
         return {
-            namaDepan:'',
-            namaBelakang:'',
-            jenisKelamin:null,
-            noHp:'',
-            alamat:'',
-            peran:null,
-            email:'',
-            idKategori:[],
-            invalid:{},
-            genders:['pria','wanita'],
-            roles:['customer service', 'teknisi', 'pemilik']
+            namaDepan : this.dataPegawai.namaDepan,
+            namaBelakang : this.dataPegawai.namaBelakang,
+            jenisKelamin : this.dataPegawai.jenisKelamin,
+            noHp : this.dataPegawai.noHp,
+            alamat : this.dataPegawai.alamat,
+            peran : this.dataPegawai.peran,
+            email : this.dataPegawai.email,
+            idKategori : [],
+            invalid : {},
+            genders : ['pria','wanita'],
+            roles : ['customer service', 'teknisi', 'pemilik']
         }
     },
-    mounted(){
-        if(this.pegawaiId){
-            this.namaDepan = this.dataPegawai.namaDepan
-            this.namaBelakang = this.dataPegawai.namaBelakang
-            this.jenisKelamin = this.dataPegawai.jenisKelamin
-            this.noHp = this.dataPegawai.noHp
-            this.alamat = this.dataPegawai.alamat
-            this.peran = this.dataPegawai.peran
-            this.email = this.dataPegawai.email
+    watch:{
+        error(newVal){
+            this.invalid = newVal
         }
     },
     methods:{
-        async saveEmployee(){
-            try{
-                const payload = {
+        saveEmployee(){
+            const payload = {
+                save:true,
+                pegawai:{
                     namaDepan:this.namaDepan,
                     namaBelakang:this.namaBelakang,
                     jenisKelamin:this.jenisKelamin,
@@ -98,24 +99,12 @@ export default {
                     alamat:this.alamat,
                     peran:this.peran,
                     email:this.email
-                }
-                if(this.pegawaiId){
-                    await this.$repositories.employee.update(this.pegawaiId,payload)
-                } else {
-                    const data = await this.$repositories.employee.create(payload)
-                    if(this.peran === 'teknisi'){
-                        await this.$repositories.responbility.create(data.data.idPegawai,{
-                            idKategori : this.idKategori
-                        })
-                    }
-                }
-                this.$router.push({path:'/pegawai'})
-            }catch({response}){
-                this.invalid={}
-                for (const key in response.data.errors) {
-                        this.invalid[key] = response.data.errors[key][0]
+                },
+                responbility:{
+                    idKategori:this.idKategori
                 }
             }
+            this.$emit('submit',payload)
         }
     }
 }

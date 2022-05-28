@@ -1,6 +1,6 @@
 <template>
     <div>
-        <SimpanPerbaikan title="edit data perbaikan" :data-service="dataService"  :list-kategori="listKategori" :error="invalid" @submit="save"/>
+        <FormPerbaikan title="edit data perbaikan" :data-service="dataService"  :list-kategori="listKategori" :error="invalid" @submit="save"/>
     </div>
 </template>
 
@@ -10,7 +10,6 @@ export default {
     async asyncData({app, query}){
         const data = await app.$repositories.service.show(query.id)
         const dataKategori = await app.$repositories.category.all()
-
         const kategoriObj = dataKategori.data
         const kategoriArr = []
         kategoriObj.forEach((value)=>{

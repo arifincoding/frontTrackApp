@@ -33,7 +33,7 @@
                             <DetailKerusakan :data-id="data.item.idKerusakan" no-biaya/>
                             <div v-if="product.status === 'mulai diagnosa'">
                             <!-- update kerusakan -->
-                            <SimpanKerusakan name="update" label="Update Kerusakan" btn-color="primary" :data-id="data.item.idKerusakan" :value="{judul:data.item.judul,deskripsi:data.item.deskripsi}" @save="handleSave"/>
+                            <FormKerusakan name="update" label="Update Kerusakan" btn-color="primary" :data-id="data.item.idKerusakan" :error="invalid" @submit="updateKerusakan($event,data.item.idKerusakan)"/>
                             <!-- delete kerusakan -->
                             <ModalDelete @clicked-value="deleteKerusakan($event,data.item.idKerusakan)"/>
                             </div>
@@ -41,7 +41,7 @@
                     </BorderedTable>
                     <!-- tambah kerusakan -->
                     <div class="m-2">
-                    <SimpanKerusakan v-if="product.status === 'mulai diagnosa'" name="tambah kerusakan" label="tambah kerusakan" btn-color="success" :data-id="product.id" @save="handleSave"/>
+                    <FormKerusakan v-if="product.status === 'mulai diagnosa'" name="tambah kerusakan" label="tambah kerusakan" btn-color="success" :error="invalid" @submit="tambahKerusakan"/>
                     </div>
                 </div>
                 <!-- mulai diagnosa -->
@@ -91,7 +91,8 @@ export default {
                 'judul',
                 'disetujui',
                 'aksi'
-            ]
+            ],
+            invalid:{}
         }
     },
     methods:{
@@ -151,6 +152,42 @@ export default {
         handleSave(event){
             if(event === true){
                 this.refreshBroken()
+            }
+        },
+        async tambahKerusakan(item){
+            if(item.save === true){
+                try{
+                    await this.$repositories.broken.create(this.product.id,item.data)
+                    this.invalid = {
+                        error:false
+                    }
+                    this.refreshBroken()
+                }catch({response}){
+                    this.invalid={
+                        error:true
+                    }
+                    for (const key in response.data.errors) {
+                            this.invalid[key] = response.data.errors[key][0]
+                    }
+                }
+            }
+        },
+        async updateKerusakan(item,id){
+            if(item.save === true){
+                try{
+                    await this.$repositories.broken.update(id,item.data)
+                    this.invalid = {
+                        error:false
+                    }
+                    this.refreshBroken()
+                }catch({response}){
+                    this.invalid={
+                        error:true
+                    }
+                    for (const key in response.data.errors) {
+                            this.invalid[key] = response.data.errors[key][0]
+                    }
+                }
             }
         }
     }

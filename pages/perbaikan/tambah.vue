@@ -1,6 +1,6 @@
 <template>
     <div>
-        <SimpanPerbaikan title="tambah data perbaikan" :list-kategori="listKategori" :error="invalid" @submit="save"/>
+        <FormPerbaikan title="tambah data perbaikan" :list-kategori="listKategori" :error="invalid" @submit="save"/>
     </div>
 </template>
 
