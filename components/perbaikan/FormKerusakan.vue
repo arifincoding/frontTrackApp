@@ -39,6 +39,7 @@ export default {
                 this.deskripsi = null
                 }
                 this.invalid = {}
+                this.$emit('hidden',true)
             }
         },
         saveData(event){
@@ -54,13 +55,10 @@ export default {
             }
         },
         async handleShow(event){
-            if(event === true){
-                if(this.dataId !== 0){
-                    const data = await this.$repositories.broken.show(this.dataId)
-                    this.judul = data.data.judul
-                    this.deskripsi = data.data.deskripsi
-                }
-                this.invalid = {}
+            if(event === true && this.dataId !== 0){
+                const data = await this.$repositories.broken.show(this.dataId)
+                this.judul = data.data.judul
+                this.deskripsi = data.data.deskripsi
             }
         }
     }

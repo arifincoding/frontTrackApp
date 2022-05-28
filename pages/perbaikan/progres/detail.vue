@@ -33,7 +33,7 @@
                             <DetailKerusakan :data-id="data.item.idKerusakan" no-biaya/>
                             <div v-if="product.status === 'mulai diagnosa'">
                             <!-- update kerusakan -->
-                            <FormKerusakan name="update" label="Update Kerusakan" btn-color="primary" :data-id="data.item.idKerusakan" :error="invalid" @submit="updateKerusakan($event,data.item.idKerusakan)"/>
+                            <FormKerusakan name="update" label="Update Kerusakan" btn-color="primary" :data-id="data.item.idKerusakan" :error="invalid" @submit="updateKerusakan($event,data.item.idKerusakan)" @hidden="handleHidden"/>
                             <!-- delete kerusakan -->
                             <ModalDelete @clicked-value="deleteKerusakan($event,data.item.idKerusakan)"/>
                             </div>
@@ -41,7 +41,7 @@
                     </BorderedTable>
                     <!-- tambah kerusakan -->
                     <div class="m-2">
-                    <FormKerusakan v-if="product.status === 'mulai diagnosa'" name="tambah kerusakan" label="tambah kerusakan" btn-color="success" :error="invalid" @submit="tambahKerusakan"/>
+                    <FormKerusakan v-if="product.status === 'mulai diagnosa'" name="tambah kerusakan" label="tambah kerusakan" btn-color="success" :error="invalid" @submit="tambahKerusakan" @hidden="handleHidden"/>
                     </div>
                 </div>
                 <!-- mulai diagnosa -->
@@ -188,6 +188,11 @@ export default {
                             this.invalid[key] = response.data.errors[key][0]
                     }
                 }
+            }
+        },
+        handleHidden(isConfirm){
+            if(isConfirm === true){
+                this.invalid = {}
             }
         }
     }
