@@ -17,8 +17,10 @@
             <template #cell(status)="data">
                 <span v-if="data.value === 'mulai diagnosa' || data.value === 'selesai diagnosa'" class="text-primary"> {{ data.value }} </span>
                 <span v-else-if="data.value === 'tunggu'" class="text-secondary"> {{ data.value }} </span>
-                <span v-else-if="data.value === 'proses'" class="text-warning"> {{ data.value }} </span>
-                <span v-else-if="data.value === 'selesai'" class="text-success"> {{ data.value }} </span>
+                <span v-else-if="data.value === 'proses perbaikan'" class="text-warning"> {{ data.value }} </span>
+                <span v-else-if="data.value === 'proses pembatalan'" class="text-danger"> {{ data.value }} </span>
+                <span v-else-if="data.value === 'perbaikan selesai'" class="text-success"> {{ data.value }} </span>
+                <span v-else-if="data.value === 'pembatalan selesai'" class="text-success"> {{ data.value }} </span>
             </template>
             <template #cell(disetujui)="data">
                 <span v-if="data.item.dikonfirmasi === true">Ya</span>

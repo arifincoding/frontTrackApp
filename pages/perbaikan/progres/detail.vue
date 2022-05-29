@@ -44,18 +44,7 @@
                     <FormKerusakan v-if="product.status === 'mulai diagnosa'" name="tambah kerusakan" label="tambah kerusakan" btn-color="success" :error="invalid" @submit="tambahKerusakan" @hidden="handleHidden"/>
                     </div>
                 </div>
-                <!-- mulai diagnosa -->
-                <ModalConfirm v-if="product.status === 'antri'" btn-class="mt-3" message="yakin ingin memulai diagnosa" label="Mulai Diagnosa" color="primary" @clicked-value="updateStatus($event,{id:product.id,value:'mulai diagnosa',pesan:`${product.kategori} anda sedang dalam proses diagnosa`})"/>
-                <!-- selesai diagnosa -->
-                <ModalConfirm v-if="product.status === 'mulai diagnosa' && brokens.length > 0" btn-class="mt-3" message="yakin ingin menyelesaikan diagnosa" label="selesai diagnosa" color="primary" @clicked-value="updateStatus($event,{id:product.id,value:'selesai diagnosa',pesan:`${product.kategori} anda telah selesai di diagnosa`})"/>
-                <!-- proses perbaikan-->
-                <ModalConfirm v-else-if="product.status === 'selesai diagnosa' || (product.sudahdikonfirmasi === true && product.status === 'tunggu')" btn-class="mt-3" message="yakin ingin memproses perbaikan kerusakan" label="proses perbaikan" color="warning" @clicked-value="updateStatus($event,{id:product.id,value:'proses perbaikan',pesan:`${product.kategori} anda sedang dalam proses perbaikan`})"/>
-                <!-- proses pembatalan -->
-                <ModalConfirm v-else-if="product.sudahdikonfirmasi === false && product.status === 'tunggu'" btn-class="mt-3" message="yakin ingin memproses pembatalan perbaikan" label="proses pembatalan" color="warning" @clicked-value="updateStatus($event,{id:product.id,value:'proses pembatalan',pesan:`${product.kategori} anda sedang dalam proses pembatalan`})"/>
-                <!-- selesai perbaikan-->
-                <ModalConfirm v-else-if="product.status === 'proses perbaikan'" btn-class="mt-3" message="yakin ingin menyelesaikan perbaikan?" label="Selesai Perbaikan" @clicked-value="updateStatus($event,{id:product.id,value:'selesai',pesan:`proses perbaikan selesai, ${product.kategori} anda sudah bisa untuk diambil`})"/>
-                <!-- selesai pembatalan -->
-                <ModalConfirm v-else-if="product.status === 'proses pembatalan'" btn-class="mt-3" message="yakin ingin menyelesaikan pembatalan?" label="Selesai Pembatalan" color="danger" @clicked-value="updateStatus($event,{id:product.id,value:'selesai',pesan:`proses pembatalan selesai, ${product.kategori} anda sudah bisa untuk diambil`})"/>
+                <UpdateStatusService :items="{status:product.status,kategori:product.kategori,brokenLength:brokens.length}" @submit="updateStatus"/>
             </div>
         </div>
     </div>
@@ -110,38 +99,38 @@ export default {
                 this.brokens = []
             }
         },
-        async updateStatus(isConfirm,item){
-            if(isConfirm === true){
+        async updateStatus(item){
+            if(item.isConfirm === true){
                 
                 const historyPayload = {
-                    status:item.value,
-                    pesan:item.pesan
+                    status:item.data.status,
+                    pesan:item.data.pesan
                 }
                 
-                await this.$repositories.service.updateStatus(item.id,{
-                    status:item.value
+                await this.$repositories.service.updateStatus(this.product.id,{
+                    status:item.data.status
                 })
                 
-                await this.$repositories.history.create(historyPayload,item.id)
+                await this.$repositories.history.create(historyPayload,this.product.id)
                 
-                if(item.value === 'selesai diagnosa' && this.product.butuhKonfirmasi === true){
-                    await this.$repositories.service.updateStatus(item.id,{
+                if(item.data.status === 'selesai diagnosa' && this.product.butuhKonfirmasi === true){
+                    await this.$repositories.service.updateStatus(this.product.id,{
                         status:'tunggu'
                     })
                     await this.$repositories.history.create({
                         status:'tunggu',
                         pesan:`${this.product.kategori} anda sedang menunggu persetujuan dari anda`
-                    },item.id)
+                    },this.product.id)
                 }
                 
                 await this.refreshData()
                 
-                if(item.value === 'selesai'){
+                if(item.data.status === 'selesai'){
                     let chatMessage = `*perbaikan selesai* ${this.product.kategori} anda sudah *dapat diambil*`
                     if (this.product.sudahdikonfirmasi === false){
                         chatMessage = `*pembatalan selesai* ${this.product.kategori} anda sudah *dapat diambil*`;
                     }
-                    await this.$repositories.chat.sendMessage(item.id,chatMessage)
+                    await this.$repositories.chat.sendMessage(this.product.id,chatMessage)
                 }
             }
         },
