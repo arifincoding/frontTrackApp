@@ -85,7 +85,7 @@ export default {
         }
     },
     watch:{
-        items(newVal){
+        nextStatus(newVal){
             if(newVal === 'mulai diagnosa'){
                 this.label = 'Mulai Diagnosa'
                 this.message = 'yakin ingin memulai diagnosa'

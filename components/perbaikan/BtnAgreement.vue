@@ -15,13 +15,15 @@ export default {
             type:[Boolean,String]
         }
     },
-    data:()=>({
-        dikonfirmasi:null,
-        message:{
-            agree:'yakin ingin menyetujui perbaikan?',
-            cancel:'yakin ingin membatalkan perbaikan?'
+    data(){
+        return{
+            dikonfirmasi:null,
+            message:{
+                agree:'yakin ingin menyetujui perbaikan?',
+                cancel:'yakin ingin membatalkan perbaikan?'
+            }
         }
-    }),
+    },
     watch:{
         isConfirm(newVal){
             this.dikonfirmasi = newVal
@@ -35,7 +37,7 @@ export default {
             return false
         },
         showCancel(){
-            if(dikonfirmasi === true || data.item.dikonfirmasi === null){
+            if(this.dikonfirmasi === true || this.dikonfirmasi === null){
                 return true
             }
             return false

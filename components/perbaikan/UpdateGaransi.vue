@@ -12,7 +12,8 @@ export default {
         value:{
             type:String,
             default:null
-        }
+        },
+        error:Object
     },
     data(){
         return{
@@ -23,10 +24,13 @@ export default {
     watch:{
         value(newVal){
             this.garansi = newVal
+        },
+        error(newVal){
+            this.invalid = newVal
         }
     },
     methods:{
-        async submit(isConfirm){
+        submit(isConfirm){
             if(isConfirm === true){
                 const payload = {
                     isConfirm:true,

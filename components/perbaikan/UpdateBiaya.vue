@@ -37,7 +37,7 @@ export default {
         },
         async handleShow(isConfirm){
             if(isConfirm === true){
-                const data = await this.$repositories.brokens.show(this.dataId)
+                const data = await this.$repositories.broken.show(this.dataId)
                 this.biaya = data.data.biaya
             }
         },

@@ -9,9 +9,7 @@
                 <h6 class="row mx-0">
                     <div class="col-lg-5 col-12 text-center border border-success text-white font-weight-bold p-2 bg-success">Status Persetujuan</div>
                     <div class="col-lg-7 col-12 text-center border border-success font-weight-bold p-2">
-                        <span v-if="product.sudahdikonfirmasi === true" class="text-success"> Disetujui </span>
-                        <span v-else-if="product.sudahdikonfirmasi === false" class="text-danger">Dibatalkan</span>
-                        <span v-else-if="product.sudahdikonfirmasi === null" >Menunggu Konfirmasi</span>
+                        <span :class="textStatusAgreement.color"> {{textStatusAgreement.value}}</span>
                     </div>
                 </h6>
                 <DetailKlien :nama="customer.nama" :no-hp="customer.noHp"/>
@@ -89,7 +87,7 @@ export default {
             if(this.product.status === 'antri'){
                 return 'mulai diagnosa'
             }
-            else if(this.product.status === 'mulai diagnosa' && this.product.brokenLength > 0){
+            else if(this.product.status === 'mulai diagnosa' && this.brokens.length > 0){
                 return 'selesai diagnosa'
             }
             else if(this.product.status === 'selesai diagnosa' || (this.product.sudahdikonfirmasi === true && this.product.status === 'tunggu')){
@@ -102,9 +100,33 @@ export default {
                 return 'perbaikan selesai'
             }
             else if(this.product.status === 'proses pembatalan'){
-                return 'Pembatalan Selesai'
+                return 'pembatalan selesai'
             }
             return null
+        },
+        textStatusAgreement(){
+            if(this.product.sudahdikonfirmasi === true){
+                return {
+                    color:'text-success',
+                    value:'Disetujui'
+                }
+            }
+            else if(this.product.sudahdikonfirmasi === false){
+                return {
+                    color:'text-danger',
+                    value:'Dibatalkan'
+                }
+            }
+            else if(this.product.sudahdikonfirmasi === null){
+                return {
+                    color:'text-dark',
+                    value:'Menunggu Konfirmasi'
+                }
+            }
+            return {
+                    color:'text-dark',
+                    value:''
+            }
         }
     },
     methods:{
