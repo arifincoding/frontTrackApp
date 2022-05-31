@@ -1,6 +1,6 @@
 <template>
     <span>
-        <ModalInput label="update biaya perbaikan" name="Update Biaya" btnColor="primary" :invalid="invalid.error" @hidden="handleHidden" @show="handleShow" @submit="saveData">
+        <ModalInput label="update biaya perbaikan" name="Update Biaya" btnColor="primary" :invalid="invalid.error" @hidden="handleHidden" @show="handleShow" @submit="submit">
             <InputText input-id="biaya" label="Biaya Perbaikan" placeholder="Masukkan biaya perbaikan" v-model="biaya" :invalid="invalid.biaya"/>
         </ModalInput>
     </span>
@@ -9,40 +9,42 @@
 <script>
 export default {
     props:{
+        error:Object,
         dataId:Number
     },
     data(){
         return {
-            biaya:'',
+            biaya:null,
             invalid:{}
         }
     },
+    watch:{
+        error(newVal){
+            this.invalid = newVal
+        }
+    },
     methods:{
-        async saveData(){
-            try{
-            await this.$repositories.broken.updateCost(this.dataId,{biaya:this.biaya})
-            this.invalid = {
-                error:false
-            }
-            this.$emit('save',true)
-            }catch({response}){
-                this.invalid = {
-                    error:true
+        submit(isConfirm){
+            if(isConfirm === true){
+                const payload = {
+                    isConfirm:true,
+                    data:{
+                        biaya:this.biaya
+                    }
                 }
-                for (const key in response.data.errors) {
-                    this.invalid[key] = response.data.errors[key][0]
-                }
+                this.$emit('submit',payload)
             }
         },
         async handleShow(isConfirm){
             if(isConfirm === true){
-                const data = await this.$repositories.broken.show(this.dataId)
+                const data = await this.$repositories.brokens.show(this.dataId)
                 this.biaya = data.data.biaya
             }
         },
         handleHidden(isConfirm){
             if(isConfirm === true){
                 this.invalid = {}
+                this.$emit('hidden',true)
             }
         }
     }

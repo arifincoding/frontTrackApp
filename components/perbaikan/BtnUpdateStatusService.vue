@@ -7,10 +7,11 @@
 <script>
 export default {
     props:{
-        items:{
-            type:Object,
-            default:()=>({})
-        }
+        nextStatus:{
+            type:String,
+            default:null
+        },
+        category:String
     },
     data(){
         return {
@@ -22,68 +23,61 @@ export default {
         }
     },
     mounted(){
-        if(this.items.status === 'antri'){
+        if(this.nextStatus === 'mulai diagnosa'){
             this.label = 'Mulai Diagnosa'
             this.message = 'yakin ingin memulai diagnosa'
             this.color = 'primary'
             this.value = {
                 status:'mulai diagnosa',
-                pesan:`${this.items.kategori} anda sedang dalam proses diagnosa`
+                pesan:`${this.category} anda sedang dalam proses diagnosa`
             }
         }
-        else if(this.items.status === 'mulai diagnosa'){
-            if(this.items.brokenLength > 0){
-                this.label = 'Selesai Diagnosa'
-                this.message = 'yakin ingin menyelesaikan diagnosa'
-                this.color = 'primary'
-                this.value = {
-                    status:'selesai diagnosa',
-                    pesan:`${this.items.kategori} anda telah selesai di diagnosa`
-                }
-            }else{
-                this.label = null
-                this.message = null
-                this.color = null
-                this.value = {}
+        else if(this.nextStatus === 'selesai diagnosa'){
+            this.label = 'Selesai Diagnosa'
+            this.message = 'yakin ingin menyelesaikan diagnosa'
+            this.color = 'primary'
+            this.value = {
+                status:'selesai diagnosa',
+                pesan:`${this.category} anda telah selesai di diagnosa`
             }
         }
-        else if(this.items.status === 'selesai diagnosa' || (this.items.sudahdikonfirmasi === true && this.items.status === 'tunggu')){
+        else if(this.nextStatus === 'proses perbaikan'){
             this.label = 'Proses Perbaikan'
             this.message = 'yakin ingin memproses perbaikan kerusakan'
             this.color = 'warning'
             this.value = {
                 status:'proses perbaikan',
-                pesan:`${this.items.kategori} anda sedang dalam proses perbaikan`
+                pesan:`${this.category} anda sedang dalam proses perbaikan`
             }
         }
-        else if(this.items.sudahdikonfirmasi === false && this.items.status === 'tunggu'){
+        else if(this.nextStatus === 'proses pembatalan'){
             this.label = 'proses pembatalan'
             this.message = 'yakin ingin memproses pembatalan perbaikan'
             this.color = 'warning'
             this.value = {
                 status:'proses pembatalan',
-                pesan:`${this.items.kategori} anda sedang dalam proses pembatalan`
+                pesan:`${this.category} anda sedang dalam proses pembatalan`
             }
         }
-        else if(this.items.status === 'proses perbaikan'){
+        else if(this.nextStatus === 'perbaikan selesai'){
             this.label = 'Perbaikan Selesai'
             this.message = 'yakin ingin menyelesaikan perbaikan'
             this.color = 'success'
             this.value = {
                 status:'perbaikan selesai',
-                pesan:`proses perbaikan selesai, ${this.items.kategori} anda sudah bisa untuk diambil`
+                pesan:`proses perbaikan selesai, ${this.category} anda sudah bisa untuk diambil`
             }
         }
-        else if(this.items.status === 'proses pembatalan'){
+        else if(this.nextStatus === 'pembatalan selesai'){
             this.label = 'Pembatalan Selesai'
             this.message = 'yakin ingin menyelesaikan pembatalan'
             this.color = 'success'
             this.value = {
                 status:'pembatalan selesai',
-                pesan:`proses pembatalan selesai, ${this.items.kategori} anda sudah bisa untuk diambil`
+                pesan:`proses pembatalan selesai, ${this.category} anda sudah bisa untuk diambil`
             }
         }
-        else if(this.items.status === 'selesai'){
+        else{
             this.label = null
             this.message = null
             this.color = null
@@ -92,67 +86,61 @@ export default {
     },
     watch:{
         items(newVal){
-            if(newVal.status === 'antri'){
+            if(newVal === 'mulai diagnosa'){
                 this.label = 'Mulai Diagnosa'
                 this.message = 'yakin ingin memulai diagnosa'
                 this.color = 'primary'
                 this.value = {
                     status:'mulai diagnosa',
-                    pesan:`${newVal.kategori} anda sedang dalam proses diagnosa`
+                    pesan:`${this.category} anda sedang dalam proses diagnosa`
                 }
             }
-            else if(newVal.status === 'mulai diagnosa'){
-                if(newVal.brokenLength > 0){
-                    this.label = 'Selesai Diagnosa'
-                    this.message = 'yakin ingin menyelesaikan diagnosa'
-                    this.color = 'primary'
-                    this.value = {
-                        status:'selesai diagnosa',
-                        pesan:`${newVal.kategori} anda telah selesai di diagnosa`
-                    }
-                }else{
-                    this.label = null
-                    this.message = null
-                    this.color = null
-                    this.value = {}
+            else if(newVal === 'selesai diagnosa'){
+                this.label = 'Selesai Diagnosa'
+                this.message = 'yakin ingin menyelesaikan diagnosa'
+                this.color = 'primary'
+                this.value = {
+                    status:'selesai diagnosa',
+                    pesan:`${this.category} anda telah selesai di diagnosa`
                 }
             }
-            else if(newVal.status === 'selesai diagnosa' || (newVal.sudahdikonfirmasi === true && newVal.status === 'tunggu')){
+            else if(newVal === 'proses perbaikan'){
                 this.label = 'Proses Perbaikan'
                 this.message = 'yakin ingin memproses perbaikan kerusakan'
                 this.color = 'warning'
                 this.value = {
                     status:'proses perbaikan',
-                    pesan:`${newVal.kategori} anda sedang dalam proses perbaikan`
+                    pesan:`${this.category} anda sedang dalam proses perbaikan`
                 }
             }
-            else if(newVal.sudahdikonfirmasi === false && newVal.status === 'tunggu'){
+            else if(newVal === 'proses pembatalan'){
                 this.label = 'proses pembatalan'
                 this.message = 'yakin ingin memproses pembatalan perbaikan'
                 this.color = 'warning'
                 this.value = {
                     status:'proses pembatalan',
-                    pesan:`${newVal.kategori} anda sedang dalam proses pembatalan`
+                    pesan:`${this.category} anda sedang dalam proses pembatalan`
                 }
             }
-            else if(newVal.status === 'proses perbaikan'){
+            else if(newVal === 'perbaikan selesai'){
                 this.label = 'Perbaikan Selesai'
                 this.message = 'yakin ingin menyelesaikan perbaikan'
                 this.color = 'success'
                 this.value = {
                     status:'perbaikan selesai',
-                    pesan:`proses perbaikan selesai, ${newVal.kategori} anda sudah bisa untuk diambil`
+                    pesan:`proses perbaikan selesai, ${this.category} anda sudah bisa untuk diambil`
                 }
             }
-            else if(newVal.status === 'proses pembatalan'){
+            else if(newVal === 'pembatalan selesai'){
                 this.label = 'Pembatalan Selesai'
                 this.message = 'yakin ingin menyelesaikan pembatalan'
                 this.color = 'success'
                 this.value = {
                     status:'pembatalan selesai',
-                    pesan:`proses pembatalan selesai, ${newVal.kategori} anda sudah bisa untuk diambil`
+                    pesan:`proses pembatalan selesai, ${this.category} anda sudah bisa untuk diambil`
                 }
-            }else if(newVal.status === 'perbaikan selesai' || newVal.status === 'pembatalan selesai'){
+            }
+            else{
                 this.label = null
                 this.message = null
                 this.color = null

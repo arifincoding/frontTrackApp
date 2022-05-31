@@ -44,7 +44,7 @@
                     <FormKerusakan v-if="product.status === 'mulai diagnosa'" name="tambah kerusakan" label="tambah kerusakan" btn-color="success" :error="invalid" @submit="tambahKerusakan" @hidden="handleHidden"/>
                     </div>
                 </div>
-                <UpdateStatusService :items="{status:product.status,kategori:product.kategori,brokenLength:brokens.length}" @submit="updateStatus"/>
+                <BtnUpdateStatusService :next-status="nextStatus" :category="product.kategori" @submit="updateStatus"/>
             </div>
         </div>
     </div>
@@ -82,6 +82,29 @@ export default {
                 'aksi'
             ],
             invalid:{}
+        }
+    },
+    computed:{
+        nextStatus(){
+            if(this.product.status === 'antri'){
+                return 'mulai diagnosa'
+            }
+            else if(this.product.status === 'mulai diagnosa' && this.product.brokenLength > 0){
+                return 'selesai diagnosa'
+            }
+            else if(this.product.status === 'selesai diagnosa' || (this.product.sudahdikonfirmasi === true && this.product.status === 'tunggu')){
+                return 'proses perbaikan'
+            }
+            else if(this.product.sudahdikonfirmasi === false && this.product.status === 'tunggu'){
+                return 'proses pembatalan'
+            }
+            else if(this.product.status === 'proses perbaikan'){
+                return 'perbaikan selesai'
+            }
+            else if(this.product.status === 'proses pembatalan'){
+                return 'Pembatalan Selesai'
+            }
+            return null
         }
     },
     methods:{
@@ -137,11 +160,6 @@ export default {
         async refreshData(){
             const service = await this.$repositories.service.show(this.$route.query.id)
             this.product = service.data.product
-        },
-        handleSave(event){
-            if(event === true){
-                this.refreshBroken()
-            }
         },
         async tambahKerusakan(item){
             if(item.save === true){

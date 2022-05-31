@@ -1,6 +1,6 @@
 <template>
     <span>
-        <ModalInput name="update garansi" label="update garansi service" btn-color="primary" btn-class="mt-3" :invalid="invalid.error" @hidden="handleHidden" @show="handleShow" @submit="saveData">
+        <ModalInput name="update garansi" label="update garansi service" btn-color="primary" btn-class="mt-3" :invalid="invalid.error" @hidden="handleHidden" @submit="submit">
             <InputText input-id="garansi" label="Lama Garansi" placeholder="Masukkan lama garansi service" v-model="garansi" :invalid="invalid.garansi"/>
         </ModalInput>
     </span>
@@ -9,48 +9,38 @@
 <script>
 export default {
     props:{
-        dataId:{
-            type:Number,
-            default:0
-        },
-        valueGaransi:{
+        value:{
             type:String,
-            default:''
+            default:null
         }
     },
     data(){
         return{
-            garansi:'',
+            garansi:this.value,
             invalid:{}
         }
     },
+    watch:{
+        value(newVal){
+            this.garansi = newVal
+        }
+    },
     methods:{
-        async saveData(event){
-            if(event === true){
-                try{
-                    await this.$repositories.service.updateWarranty(this.dataId,{garansi:this.garansi})
-                    this.invalid = {
-                        error:false
-                    }
-                    this.$emit('save',true)
-                }catch({response}){
-                    this.invalid = {
-                        error:true
-                    }
-                    for (const key in response.data.errors) {
-                        this.invalid[key] = response.data.errors[key][0]
+        async submit(isConfirm){
+            if(isConfirm === true){
+                const payload = {
+                    isConfirm:true,
+                    data:{
+                        garansi:this.garansi
                     }
                 }
-            }
-        },
-        handleShow(isConfirm){
-            if(isConfirm === true){
-                this.garansi = this.valueGaransi
+                this.$emit('submit',payload)
             }
         },
         handleHidden(isConfirm){
             if(isConfirm === true){
                 this.invalid = {}
+                this.$emit('hidden',true)
             }
         }
     }

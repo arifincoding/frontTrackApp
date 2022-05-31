@@ -39,37 +39,24 @@
                             <DetailKerusakan :data-id="data.item.idKerusakan"/>
                             <div v-if="role === 'pemilik'">
                                 <!-- update harga perbaikan -->
-                                <UpdateBiaya v-if="(product.status === 'selesai diagnosa' || product.status === 'tunggu' || product.status === 'proses perbaikan' || product.status === 'selesai') && product.sudahKonfirmasiBiaya === false" :data-id="data.item.idKerusakan" @save="handleSave"/>
-                                <div v-if="product.sudahKonfirmasiBiaya === true && product.sudahdikonfirmasi === null">
-                                    <!-- menyetujui perbaikan -->
-                                    <ModalConfirm v-if="data.item.dikonfirmasi === false || data.item.dikonfirmasi === null" message="yakin ingin menyetujui perbaikan?" label="Setujui" @clicked-value="setBrokenConfirmation($event,{id:data.item.idKerusakan,value:true})"/>
-                                    
-                                    <!-- membatalkan perbaikan -->
-                                    <ModalConfirm v-if=" data.item.dikonfirmasi === true || data.item.dikonfirmasi === null" message="yakin ingin membatalkan perbaikan?" label="Batalkan" color="danger" @clicked-value="setBrokenConfirmation($event,{id:data.item.idKerusakan,value:false})"/>
-                                </div>
+                                <UpdateBiaya v-if="showBtnUpdateCost === true" :data-id="data.item.idKerusakan" @submit="updateBrokenCost($event,data.item.idKerusakan)" @hidden="resetInvalid"/>
+                                <BtnAgreement v-if="showBtnAgreement === true" :is-confirm="data.item.dikonfirmasi" @submit="setBrokenConfirmation($event,data.item.idKerusakan)"/>
                             </div>
                         </template>
                     </BorderedTable>
                 </div>
                 
                 <div v-if="role === 'pemilik'">
-                    <ModalInvalid v-if="product.sudahKonfirmasiBiaya === false && (product.status === 'selesai diagnosa' || product.status === 'tunggu' || product.status === 'proses perbaikan' || product.status === 'selesai')&&isAllBrokenPrice === false" label="Konfirmasi Biaya" message="data kerusakan masih ada yang belum diberi biaya" color="success"/>
                     <!-- konfirmasi biaya -->
-                    <ModalConfirm v-if="product.sudahKonfirmasiBiaya === false && (product.status === 'selesai diagnosa' || product.status === 'tunggu' || product.status === 'proses perbaikan' || product.status === 'selesai') && isAllBrokenPrice === true" btn-class="mt-2" message="yakin ingin melakukan konfirmasi biaya kepada customer?" label="Konfirmasi Biaya" @clicked-value="confirmCost($event,product.id)"/>
+                    <BtnConfirmCost v-if="showBtnConfirmCost === true" :confirm-invalid="isAllBrokenPrice" @submit="confirmCost($event,product.id)"/>
                     <!-- konfirmasi persetujuan -->
-                    <div v-if="product.sudahKonfirmasiBiaya === true && product.butuhKonfirmasi === true && product.sudahdikonfirmasi === null">
-                        <!-- konfirmasi setuju -->
-                        <ModalConfirm v-if="isBrokenAgree === true" btn-class="mt-2" message="yakin ingin menyetujui perbaikan?" label="konfirmasi persetujuan" @clicked-value="confirmService($event,{id:product.id,value:true,status:'setuju', pesan:'anda telah menyetujui proses perbaikan'})"/>
-                        <!-- konfirmasi batal -->
-                        <ModalConfirm v-if="isBrokenAgree === false" btn-class="mt-2" message="yakin ingin membatalkan perbaikan?" label="konfirmasi pembatalan" color="danger" @clicked-value="confirmService($event,{id:product.id,value:false,status:'batal',pesan:'anda telah membatalkan proses perbaikan'})"/>
-                    </div>
+                    <BtnConfirmAgreement v-if="showBtnConfirmAgreement === true" :is-broken-agree="isBrokenAgree" @submit="confirmService"/>
                     <!-- update garansi -->
-                    <UpdateGaransi v-if="product.sudahKonfirmasiBiaya === true && product.diambil === false" :data-id="product.id" :value-garansi="product.garansi" @save="handleSaveWarranty"/>
+                    <UpdateGaransi v-if="showBtnUpdateWarranty === true" :value="product.garansi" @submit="setWarranty" @hidden="resetInvalid"/>
                 </div>
                 <!-- ambil barang -->
-                <ModalInvalid v-if="product.status === 'selesai' && product.sudahKonfirmasiBiaya === true && product.diambil === false && product.garansi === null" label="Ambil Produk" message="garansi perbaikan belum di tentukan" color="success"/>
-
-                <ModalConfirm v-if="product.status === 'selesai' && product.sudahKonfirmasiBiaya === true && product.diambil === false && product.garansi !== null" btn-class="mt-2" message="yakin ingin mengambil produk?" label="Ambil Produk" @clicked-value="take($event,product.id)"/>
+                <ModalInvalid v-if="showBtnTakeService === true && product.garansi === null" label="Ambil Produk" message="garansi perbaikan belum di tentukan" color="success"/>
+                <ModalConfirm v-if="showBtnTakeService === true && product.garansi !== null" btn-class="mt-2" message="yakin ingin mengambil produk?" label="Ambil Produk" @clicked-value="take($event,product.id)"/>
             </div>
         </div>
     </div>
@@ -143,7 +130,46 @@ export default {
                 'aksi'
             ],
             isAllBrokenPrice:false,
-            isAllBrokenConfirmed:false
+            isAllBrokenConfirmed:false,
+            invalid:{}
+        }
+    },
+    computed:{
+        showBtnUpdateCost(){
+            if((this.product.status === 'selesai diagnosa' || this.product.status === 'tunggu' || this.product.status === 'proses perbaikan' || this.product.status === 'perbaikan selesai') && this.product.sudahKonfirmasiBiaya === false){
+                return true
+            }
+            return false
+        },
+        showBtnAgreement(){
+            if(product.sudahKonfirmasiBiaya === true && product.sudahdikonfirmasi === null){
+                return true
+            }
+            return false
+        },
+        showBtnConfirmAgreement(){
+            if(product.sudahKonfirmasiBiaya === true && product.butuhKonfirmasi === true && product.sudahdikonfirmasi === null){
+                return true
+            }
+            return false
+        },
+        showBtnUpdateWarranty(){
+            if(product.sudahKonfirmasiBiaya === true && product.diambil === false){
+                return true
+            }
+            return false
+        },
+        showBtnConfirmCost(){
+            if(product.sudahKonfirmasiBiaya === false && (product.status === 'selesai diagnosa' || product.status === 'tunggu' || product.status === 'proses perbaikan' || product.status === 'perbaikan selesai')){
+                return true
+            }
+            return false
+        },
+        showBtnTakeService(){
+            if((product.status === 'perbaikan selesai' || product.status === 'pembatalan selesai') && product.sudahKonfirmasiBiaya === true && product.diambil === false){
+                return true
+            }
+            return false
         }
     },
     methods:{
@@ -182,24 +208,22 @@ export default {
                 await this.$router.push({path:`/perbaikan/nota-ambil?id=${id}`})
         }
         },
-        async confirmService(isConfirm,item){
-            if(isConfirm === true){
-                await this.$repositories.service.updateConfirmation(item.id,{
-                    dikonfirmasi:item.value
+        async confirmService(item){
+            if(item.isConfirm === true){
+                await this.$repositories.service.updateConfirmation(this.product.id,{
+                    dikonfirmasi:item.data.dikonfirmasi
                 })
                 const historyPayload = {
-                    status: item.status,
-                    pesan: item.pesan
+                    status: item.data.status,
+                    pesan: item.data.pesan
                 }
-                await this.$repositories.history.create(historyPayload,item.id)
+                await this.$repositories.history.create(historyPayload,this.product.id)
                 await this.refreshData()
             }
         },
-        async setBrokenConfirmation(isConfirm,item){
-            if(isConfirm === true){
-                await this.$repositories.broken.updateConfirmation(item.id,{
-                    dikonfirmasi:item.value
-                })
+        async setBrokenConfirmation(item,id){
+            if(item.isConfirm === true){
+                await this.$repositories.broken.updateConfirmation(id,item.data)
                 await this.refreshBroken()
                 await this.refreshData()
             }
@@ -233,15 +257,46 @@ export default {
             this.isAllBrokenConfirmed = isBrokenConfirmed
             this.brokens = await data.data
         },
-        handleSave(event){
-            if(event === true){
+        updateBrokenCost(item,id){
+            if(item.isConfirm === true){
+                try{
+                    await this.$repositories.broken.updateCost(id,item.data)
+                    this.invalid = {
+                        error:false
+                    }
                 this.refreshBroken()
                 this.refreshData()
+                }catch({response}){
+                    this.invalid = {
+                        error:true
+                    }
+                    for (const key in response.data.errors) {
+                        this.invalid[key] = response.data.errors[key][0]
+                    }
+                }
             }
         },
-        handleSaveWarranty(event){
-            if(event === true){
-                this.refreshData()
+        setWarranty(item){
+            if(item.isConfirm === true){
+                try{
+                    await this.$repositories.service.updateWarranty(this.product.id,item.data)
+                    this.invalid = {
+                        error:false
+                    }
+                    this.refreshData()
+                }catch({response}){
+                    this.invalid = {
+                        error:true
+                    }
+                    for (const key in response.data.errors) {
+                        this.invalid[key] = response.data.errors[key][0]
+                    }
+                }
+            }
+        },
+        resetInvalid(isConfirm){
+            if(isConfirm === true){
+                this.invalid = {}
             }
         }
     }
