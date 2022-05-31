@@ -48,15 +48,14 @@
                 
                 <div v-if="role === 'pemilik'">
                     <!-- konfirmasi biaya -->
-                    <BtnConfirmCost v-if="showBtnConfirmCost === true" :confirm-invalid="isAllBrokenPrice" @submit="confirmCost($event,product.id)"/>
+                    <ModalConfirm v-if="showBtnConfirmCost === true" :with-invalid="true" :confirm-invalid="isAllBrokenPrice" :message="confirmCostMessage" @submit="confirmCost($event,product.id)"/>
                     <!-- konfirmasi persetujuan -->
                     <BtnConfirmAgreement v-if="showBtnConfirmAgreement === true" :is-broken-agree="isBrokenAgree" @submit="confirmService"/>
                     <!-- update garansi -->
                     <UpdateGaransi v-if="showBtnUpdateWarranty === true" :value="product.garansi" @submit="setWarranty" @hidden="resetInvalid"/>
                 </div>
                 <!-- ambil barang -->
-                <ModalInvalid v-if="showBtnTakeService === true && product.garansi === null" label="Ambil Produk" message="garansi perbaikan belum di tentukan" color="success"/>
-                <ModalConfirm v-if="showBtnTakeService === true && product.garansi !== null" btn-class="mt-2" message="yakin ingin mengambil produk?" label="Ambil Produk" @clicked-value="take($event,product.id)"/>
+                <ModalConfirm v-if="showBtnTakeService === true" :with-invalid="true" :confirm-invalid="product.garansi !== null" btn-class="mt-2" :message="takeMessage" label="Ambil Produk" @clicked-value="take($event,product.id)"/>
             </div>
         </div>
     </div>
@@ -131,7 +130,15 @@ export default {
             ],
             isAllBrokenPrice:false,
             isAllBrokenConfirmed:false,
-            invalid:{}
+            invalid:{},
+            confirmCostMessage:{
+                invalid:'data kerusakan masih ada yang belum diberi biaya',
+                valid:'yakin ingin melakukan konfirmasi biaya kepada customer?'
+            },
+            takeMessage:{
+                invalid:'garansi perbaikan belum di tentukan',
+                valid:'yakin ingin mengambil produk?'
+            }
         }
     },
     computed:{
