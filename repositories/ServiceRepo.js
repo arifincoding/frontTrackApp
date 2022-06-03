@@ -25,7 +25,7 @@ export default ($axios,store) => ({
         })
     },
     listProgress(filters){
-        return $axios.$get(`${resource}/progress`,{
+        return $axios.$get(`${resource}/${store.state.username}/progress`,{
             headers:{
                 'Authorization':`bearer ${store.state.token}`
             },

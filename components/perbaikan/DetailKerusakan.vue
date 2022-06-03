@@ -6,8 +6,7 @@
             
             <div v-if="broken !== []">
                 <DetailText label="judul" :value-one="broken.judul"/>
-                <DetailText v-if="broken.dikonfirmasi === true" label="disetujui" value-one="ya" class-value="text-success"/>
-                <DetailText v-if="broken.dikonfirmasi === false" label="disetujui" value-one="tidak" class-value="text-danger"/>
+                <DetailText label="disetujui" :value-one="textAgreement.value" :class-value="textAgreement.color"/>
                 <DetailText v-if="noBiaya === false" label="Biaya" :value-one="broken.biayaString"/>
                 <DetailText label="deskripsi" :value-one="broken.deskripsi"/>
             </div>
@@ -31,6 +30,25 @@ export default {
         return {
             modalShow:false,
             broken:[]
+        }
+    },
+    computed:{
+        textAgreement(){
+            if(this.broken.dikonfirmasi === true){
+                return {
+                    value:'ya',
+                    color:'text-success'
+                }
+            } else if(this.broken.dikonfirmasi === false){
+                return {
+                    value:'tidak',
+                    color:'text-danger'
+                }
+            }
+            return {
+                value:'-',
+                color:'text-dark'
+            }
         }
     },
     methods:{

@@ -30,10 +30,10 @@
                         <template #cell(aksi)="data">
                             <DetailKerusakan :data-id="data.item.idKerusakan" no-biaya/>
                             <div v-if="product.status === 'mulai diagnosa'">
-                            <!-- update kerusakan -->
-                            <FormKerusakan name="update" label="Update Kerusakan" btn-color="primary" :data-id="data.item.idKerusakan" :error="invalid" @submit="updateKerusakan($event,data.item.idKerusakan)" @hidden="handleHidden"/>
-                            <!-- delete kerusakan -->
-                            <ModalDelete @clicked-value="deleteKerusakan($event,data.item.idKerusakan)"/>
+                                <!-- update kerusakan -->
+                                <FormKerusakan name="update" label="Update Kerusakan" btn-color="primary" :data-id="data.item.idKerusakan" :error="invalid" @submit="updateKerusakan($event,data.item.idKerusakan)" @hidden="handleHidden"/>
+                                <!-- delete kerusakan -->
+                                <ModalDelete @clicked-value="deleteKerusakan($event,data.item.idKerusakan)"/>
                             </div>
                         </template>
                     </BorderedTable>

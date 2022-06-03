@@ -5,9 +5,7 @@
         <b-modal v-model="modalShow" hide-footer centered scrollable title="Detail Kerusakan">
             <div>
                 <DetailText label="judul" :value-one="data.judul"/>
-                <DetailText v-if="data.dikonfirmasi === true" label="Persetujuan" value-one="Setuju" class-value="text-success"/>
-                <DetailText v-else-if="data.dikonfirmasi === false" label="Persetujuan" value-one="Batal" class-value="text-danger"/>
-                <DetailText v-else label="Persetujuan" value-one="-"/>
+                <DetailText label="Persetujuan" :value-one="textAgreement.value" :class-value="textAgreement.color"/>
                 <DetailText label="Biaya" :value-one="data.biaya"/>
                 <DetailText label="deskripsi" :value-one="data.deskripsi"/>
             </div>
@@ -28,6 +26,25 @@ export default {
     data(){
         return {
             modalShow:false
+        }
+    },
+    computed:{
+        textAgreement(){
+            if(this.data.dikonfirmasi === true){
+                return {
+                    value:'Setuju',
+                    color:'text-success'
+                }
+            } else if(this.data.dikonfirmasi === false){
+                return {
+                    value:'batal',
+                    color:'text-danger'
+                }
+            }
+            return {
+                value:'-',
+                color:'text-dark'
+            }
         }
     },
     methods:{
