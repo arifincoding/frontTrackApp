@@ -12,7 +12,6 @@
                         <span :class="textStatusAgreement.color"> {{textStatusAgreement.value}}</span>
                     </div>
                 </h6>
-                <DetailKlien :nama="customer.nama" :no-hp="customer.noHp"/>
                 <DetailProduk :product="product">
                     <DetailText label="catatan" :value-one="product.catatan"/>
                     <DetailText label="tanggal masuk" :valueOne="product.tanggalMasuk" :value-two="product.jamMasuk"/>
