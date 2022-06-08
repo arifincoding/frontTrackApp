@@ -46,14 +46,14 @@
                 
                 <div v-if="role === 'pemilik'">
                     <!-- konfirmasi biaya -->
-                    <ModalConfirm v-if="showBtnConfirmCost === true" :with-invalid="true" :confirm-invalid="isAllBrokenPrice" label="Konfirmasi Biaya" :message="confirmCostMessage" @clicked-value="confirmCost($event,product.id)"/>
+                    <ModalConfirm v-if="showBtnConfirmCost === true" :with-invalid="true" :confirm-invalid="isAllBrokenPrice" label="Konfirmasi Biaya" :message="confirmCostMessage" @clicked-value="confirmCost($event,product.idService)"/>
                     <!-- konfirmasi persetujuan -->
                     <BtnConfirmAgreement v-if="showBtnConfirmAgreement === true" :is-broken-agree="isBrokenAgree" @submit="confirmService"/>
                     <!-- update garansi -->
                     <UpdateGaransi v-if="showBtnUpdateWarranty === true" :value="product.garansi" :error="invalid" @submit="setWarranty" @hidden="resetInvalid"/>
                 </div>
                 <!-- ambil barang -->
-                <ModalConfirm v-if="showBtnTakeService === true" :with-invalid="true" :confirm-invalid="product.garansi !== null" btn-class="mt-2" :message="takeMessage" label="Ambil Produk" @clicked-value="take($event,product.id)"/>
+                <ModalConfirm v-if="showBtnTakeService === true" :with-invalid="true" :confirm-invalid="product.garansi !== null" btn-class="mt-2" :message="takeMessage" label="Ambil Produk" @clicked-value="take($event,product.idService)"/>
             </div>
         </div>
     </div>
@@ -63,55 +63,50 @@
 export default {
     layout:'admin',
     async asyncData({app, query, store}){
-        try{
-            const service = await app.$repositories.service.show(query.id)
+        const service = await app.$repositories.service.show(query.id)
+        const customer = await app.$repositories.customer.show(service.data.idCustomer)
+        const broken = await app.$repositories.broken.all(query.id)
 
-            let broken = []
-            let setBrokenAgree = null
-            let isBrokenPrice = false
-            let isBrokenConfirmed = null
-            try{
-                const data = await app.$repositories.broken.all(query.id)
-                // cek apakah semuah kerusakan sudah dikonfirmasi
-                isBrokenConfirmed = (data.data).every((item)=>{
-                    if(item.dikonfirmasi === null){
-                        return false
-                    }
-                    return true
-                })
-                
-                isBrokenPrice = data.data.every((item)=>{
-                    if(item.biaya === null){
-                        return false
-                    }
-                    return true
-                })
-
-                if(isBrokenConfirmed === true){
-                    setBrokenAgree = false
-                    data.data.some((item)=>{
-                        if(item.dikonfirmasi === true){
-                            setBrokenAgree = true
-                            return true
-                        }
-                        return false
-                    })
+        let setBrokenAgree = null
+        let isBrokenPrice = false
+        let isBrokenConfirmed = null
+        if((broken.data).length > 0){
+            // cek apakah semuah kerusakan sudah dikonfirmasi
+            isBrokenConfirmed = (broken.data).every((item)=>{
+                if(item.dikonfirmasi === null){
+                    return false
                 }
-                broken = await data.data
-            }catch{
-                broken = []
-            }
+                return true
+            })
+            
+            isBrokenPrice = broken.data.every((item)=>{
+                if(item.biaya === null){
+                    return false
+                }
+                return true
+            })
 
-            return {
-                customer : service.data.customer,
-                product : service.data.product,
-                brokens : broken,
-                role : store.state.role,
-                isAllBrokenConfirmed:isBrokenConfirmed,
-                isBrokenAgree : setBrokenAgree,
-                isAllBrokenPrice : isBrokenPrice
+            if(isBrokenConfirmed === true){
+                setBrokenAgree = false
+                broken.data.some((item)=>{
+                    if(item.dikonfirmasi === true){
+                        setBrokenAgree = true
+                        return true
+                    }
+                    return false
+                })
             }
-        }catch{}
+        }
+
+        return {
+            customer : customer.data,
+            product : service.data,
+            brokens : broken.data,
+            role : store.state.role,
+            isAllBrokenConfirmed:isBrokenConfirmed,
+            isBrokenAgree : setBrokenAgree,
+            isAllBrokenPrice : isBrokenPrice
+        }
     },
     data(){
         return{
@@ -223,8 +218,7 @@ export default {
         },
         async refreshData(){
             const data = await this.$repositories.service.show(this.$route.query.id)
-            this.customer = data.data.customer
-            this.product = data.data.product
+            this.product = data.data
         },
         async take(isConfirm,id){
             if(isConfirm === true){
@@ -239,14 +233,14 @@ export default {
         },
         async confirmService(item){
             if(item.isConfirm === true){
-                await this.$repositories.service.updateConfirmation(this.product.id,{
+                await this.$repositories.service.updateConfirmation(this.product.idService,{
                     dikonfirmasi:item.data.dikonfirmasi
                 })
                 const historyPayload = {
                     status: item.data.status,
                     pesan: item.data.pesan
                 }
-                await this.$repositories.history.create(historyPayload,this.product.id)
+                await this.$repositories.history.create(historyPayload,this.product.idService)
                 await this.refreshData()
             }
         },
@@ -308,7 +302,7 @@ export default {
         async setWarranty(item){
             if(item.isConfirm === true){
                 try{
-                    await this.$repositories.service.updateWarranty(this.product.id,item.data)
+                    await this.$repositories.service.updateWarranty(this.product.idService,item.data)
                     this.invalid = {
                         error:false
                     }

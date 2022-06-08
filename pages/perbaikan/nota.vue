@@ -124,14 +124,13 @@
 <script>
 export default {
     async asyncData({app, query, store}){
-        try{
-            const data = await app.$repositories.service.show(query.id)
-            return {
-                user : store.state.user,
-                customer : data.data.customer,
-                product : data.data.product,
-            }
-        }catch{}
+        const dataService = await app.$repositories.service.show(query.id)
+        const dataCustomer = await app.$repositories.customer.show(dataService.data.idCustomer)
+        return {
+            user : store.state.user,
+            customer : dataCustomer.data,
+            product : dataService.data,
+        }
     },
     mounted(){
         window.print()

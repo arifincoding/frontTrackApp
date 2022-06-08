@@ -60,21 +60,19 @@ export default {
         }
     },
     async asyncData({app}){
-        try{
-            const data = await app.$repositories.service.listProgress()
-            
-            const dataCategory = await app.$repositories.responbility.all()
-            const arrCategory = [{text:'semua', value:null}];
+        const data = await app.$repositories.service.listProgress()
+        
+        const dataCategory = await app.$repositories.responbility.all()
+        const arrCategory = [{text:'semua', value:null}];
 
-            dataCategory.data.forEach((item)=>{
-                    arrCategory.push({text:item.kategori, value:item.kategori})
-            })
+        dataCategory.data.forEach((item)=>{
+                arrCategory.push({text:item.kategori, value:item.kategori})
+        })
 
-            return {
-                queues : data.data,
-                categoryOptions:arrCategory
-            }
-        }catch{}
+        return {
+            queues : data.data,
+            categoryOptions:arrCategory
+        }
     },
     methods:{
         async onFilter(){

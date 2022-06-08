@@ -51,23 +51,12 @@
 export default {
     layout:'admin',
     async asyncData({app,query}){
-        try{
-            const service = await app.$repositories.service.show(query.id)
-
-            let broken = []
-            try{
-                const data = await app.$repositories.broken.all(query.id)
-                
-                broken = await data.data
-            }catch{
-                broken = []
-            }
-            return {
-                customer : service.data.customer,
-                product : service.data.product,
-                brokens : broken
-            }
-        }catch{}
+        const service = await app.$repositories.service.show(query.id)
+        const broken = await app.$repositories.broken.all(query.id)
+        return {
+            product : service.data,
+            brokens : broken.data
+        }
     },
     data(){
         return{
@@ -180,7 +169,7 @@ export default {
         },
         async refreshData(){
             const service = await this.$repositories.service.show(this.$route.query.id)
-            this.product = service.data.product
+            this.product = service.data
         },
         async tambahKerusakan(item){
             if(item.save === true){

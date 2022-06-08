@@ -4,7 +4,7 @@
         <SimpanKategori label="Tambah Kategori" name="Tambah Kategori" btn-color="success" @save="handleSave"/>
         <DataTable :items="categories" :fields="fields">
             <template #cell(menu)="data">
-                <SimpanKategori :data-value="data.item.nama" :data-id="data.item.idKategori" label="Update Kategori" name="Update" btn-color="primary" @save="handleSave"/>
+                <SimpanKategori :data-id="data.item.idKategori" label="Update Kategori" name="Update" btn-color="primary" @save="handleSave"/>
                 <ModalDelete @clicked-value="deleteData($event,data.item.idKategori)"/>
             </template>
         </DataTable>
@@ -30,10 +30,8 @@ export default {
         }
     },
     async asyncData({app}){
-        try{
-            const data = await app.$repositories.category.all()
-            return {categories : data.data}
-        }catch{}
+        const data = await app.$repositories.category.all()
+        return {categories : data.data}
     },
     methods:{
         async deleteData(isConfirm,id){

@@ -13,12 +13,10 @@ export default {
         }
     },
     async asyncData({app,query}){
-        try{
-            const data = await app.$repositories.category.allNotInResponbilities(query.username)
-            return {
-                categories : data.data
-            }
-        }catch{}
+        const data = await app.$repositories.category.allNotInResponbilities(query.username)
+        return {
+            categories : data.data
+        }
     },
     methods:{
         async saveData(){

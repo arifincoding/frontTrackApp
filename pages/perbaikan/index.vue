@@ -26,7 +26,7 @@
                 {{data.item.product.nama}} [{{ data.item.product.kategori }}]
             </template>
             <template #cell(totalBiaya)="data">
-                <span v-if="data.item.product.totalBiaya">{{data.item.product.totalBiayaString}}</span>
+                <span v-if="data.item.product.totalBiaya">{{data.item.product.totalBiaya}}</span>
             </template>
             <template #cell(disetujui)="data">
                 <span v-if="data.item.product.sudahdikonfirmasi === true">Ya</span>

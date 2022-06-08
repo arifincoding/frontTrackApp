@@ -43,20 +43,18 @@ export default {
         }
     },
     async asyncData({app}){
-        try{
-            const dataQueue = await app.$repositories.service.listQueue()
-            const dataCategory = await app.$repositories.responbility.all()
-            const arrCategory = [{text:'semua', value:null}];
+        const dataQueue = await app.$repositories.service.listQueue()
+        const dataCategory = await app.$repositories.responbility.all()
+        const arrCategory = [{text:'semua', value:null}];
 
-            dataCategory.data.forEach((item)=>{
-                    arrCategory.push({text:item.kategori, value:item.kategori})
-            })
+        dataCategory.data.forEach((item)=>{
+                arrCategory.push({text:item.kategori, value:item.kategori})
+        })
 
-            return {
-                queues : dataQueue.data,
-                categoryOptions :arrCategory
-            }
-        }catch{}
+        return {
+            queues : dataQueue.data,
+            categoryOptions :arrCategory
+        }
     },
     methods:{
         async updateStatus(isConfirm,id){

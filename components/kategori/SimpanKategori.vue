@@ -9,10 +9,6 @@
 <script>
 export default {
     props:{
-        dataValue:{
-            type:String,
-            default:''
-        },
         dataId:{
             type:Number,
             default:0
@@ -61,9 +57,10 @@ export default {
             this.invalid = {}
             }
         },
-        handleShow(event){
+        async handleShow(event){
             if(event === true && this.dataId !== 0){
-                this.nama = this.dataValue
+                const data = await app.$repositories.category.show(this.dataId)
+                this.nama = data.data.nama
             }
         }
     }
