@@ -18,7 +18,7 @@
                     </b-col>
                 </b-row>
                 <InputText label="keluhan" input-id="keluhan" v-model="keluhan" placeholder="masukkan keluhan produk" :invalid="invalid.keluhan"/>
-                <InputCheckbox label="Membutuhkan Konfirmasi" value="true" v-model="butuhKonfirmasi"/>
+                <InputCheckbox label="Membutuhkan Persetujuan" value="true" v-model="butuhPersetujuan"/>
                 <b-row>
                     <b-col lg="6">
                         <InputText input-id="kelengkapan" label="kelengkapan" v-model="kelengkapan" placeholder="masukkan kelengkapan produk"/>
@@ -51,6 +51,12 @@ export default {
         dataService: {
             type:Object,
             default:()=>({
+                service:{
+                    keluhan:null,
+                    butuhPersetujuan:false,
+                    uangMuka:null,
+                    estimasiBiaya:null,
+                },
                 customer:{
                     nama:null,
                     noHp:null,
@@ -59,12 +65,8 @@ export default {
                 product:{
                     nama:null,
                     kategori:null,
-                    keluhan:null,
-                    butuhKonfirmasi:false,
                     kelengkapan:null,
                     catatan:null,
-                    uangMuka:null,
-                    estimasiBiaya:null,
                     cacatProduk:null,
                 }
             })
@@ -80,13 +82,14 @@ export default {
             bisaWA : this.dataService.customer.bisaWA,
             namaProduk : this.dataService.product.nama,
             kategori : this.dataService.product.kategori,
-            keluhan : this.dataService.product.keluhan,
-            butuhKonfirmasi : this.dataService.product.butuhKonfirmasi,
             kelengkapan : this.dataService.product.kelengkapan,
             catatan : this.dataService.product.catatan,
-            uangMuka : this.dataService.product.uangMuka,
-            estimasiBiaya : this.dataService.product.estimasiBiaya,
             cacatProduk : this.dataService.product.cacatProduk,
+            keluhan : this.dataService.service.keluhan,
+            butuhPersetujuan : this.dataService.service.butuhPersetujuan,
+            uangMuka : this.dataService.service.uangMuka,
+            estimasiBiaya : this.dataService.service.estimasiBiaya,
+            
             invalid:{}
         }
     },
@@ -104,7 +107,7 @@ export default {
                 namaProduk:this.namaProduk,
                 kategori:this.kategori,
                 keluhan:this.keluhan,
-                butuhKonfirmasi:this.butuhKonfirmasi,
+                butuhPersetujuan:this.butuhPersetujuan,
                 kelengkapan:this.kelengkapan,
                 catatan:this.catatan,
                 uangMuka:this.uangMuka,

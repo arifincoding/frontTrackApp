@@ -6,12 +6,12 @@
             <tr>
                 <td>Kode Service</td>
                 <td>:</td>
-                <td> {{ product.kode }} </td>
+                <td> {{ service.kode }} </td>
             </tr>
             <tr>
                 <td>Tanggal</td>
                 <td>:</td>
-                <td> {{ product.tanggalAmbil }} </td>
+                <td> {{ service.tanggalAmbil }} </td>
             </tr>
         </table>
         <div class="float-left">
@@ -47,7 +47,9 @@
             <tbody>
                 <tr v-for="(item,index) in brokens" :key="index">
                     <td class="ue"> {{ index+1 }} </td>
-                    <td>{{ product.nama }} </td>
+                    <td>
+                        <span v-if="index === 0">{{ product.nama }}</span>
+                    </td>
                     <td>{{ item.judul }} </td>
                     <td>{{ item.biaya }} </td>
                 </tr>
@@ -62,19 +64,18 @@
     </div>
     <div class="mt-1">
         <div class="font-weight-bold float-left">JUMLAH</div>
-        <div class="font-weight-bold float-right harga">{{product.totalBiayaString}}</div>
+        <div class="font-weight-bold float-right harga">{{service.totalBiayaString}}</div>
         <div class="clearfix"></div>
         <div class="font-weight-bold float-left">UANG MUKA</div>
-        <div v-if="product.uangMuka" class="font-weight-bold float-right harga">{{product.uangMukaString}}</div>
-        <div v-else class="font-weight-bold float-right harga">Rp. 0</div>
+        <div class="font-weight-bold float-right harga">{{textDP}}</div>
         <div class="clearfix"></div>
         <div class="font-weight-bold float-left">TOTAL</div>
-        <div class="font-weight-bold float-right harga">{{product.yangHarusDibayar}}</div>
+        <div class="font-weight-bold float-right harga">{{service.yangHarusDibayar}}</div>
         <div class="clearfix"></div>
     </div>
     <div class="">
         <div>*Barang yang sudah dibeli tidak bisa ditukar/dikembalikan</div>
-        <div>*Garansi {{ product.garansi }} tidak termasuk(terbakar/kena air)</div>
+        <div>*Garansi {{ service.garansi }} tidak termasuk(terbakar/kena air)</div>
         <div>*Garansi tidak berlaku jika barang sudah dipindah tangankan</div>
     </div>
     <div class="float-right" style="width:250px">
@@ -97,13 +98,24 @@ export default {
     async asyncData({app, query, store}){
         const service = await app.$repositories.service.show(query.id)
         const customer = await app.$repositories.customer.show(service.data.idCustomer)
+        const product = await app.$repositories.product.show(service.data.idProduk)
         const broken = await app.$repositories.broken.all(query.id)
 
         return {
             customer : customer.data,
-            product : service.data,
+            product :product.data,
+            service : service.data,
             brokens : broken.data,
             user : store.state.user
+        }
+    },
+    computed:{
+        textDP(){
+            if(this.service.uangMuka !== null){
+                return this.service.uangMukaString
+            }else{
+                return 'Rp. 0'
+            }
         }
     },
     mounted(){

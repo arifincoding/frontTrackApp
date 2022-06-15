@@ -30,6 +30,7 @@ export default {
                 try{
                     const data = await this.$repositories.service.create(item.data)
                     const findService = await this.$repositories.service.show(data.data.idService)
+                    const findProduct = await this.$repositories.product.show(findService.data.idProduk)
                     // save history
                     const historyPayload = {
                         status:'antri',
@@ -37,7 +38,7 @@ export default {
                     }
                     await this.$repositories.history.create(historyPayload,data.data.idService)
                     // whatsapp
-                    const message = `terima kasih telah melakukan perbaikan ${findService.data.product.kategori} anda di trackApp untuk memantau perkembangan proses perbaikan ${findService.data.product.kategori} anda, dapat dilihat melalui link berikut http://127.0.0.1:3000/track?kode=${findService.data.product.kode}`
+                    const message = `terima kasih telah melakukan perbaikan ${findProduct.data.kategori} anda di trackApp untuk memantau perkembangan proses perbaikan ${findProduct.data.kategori} anda, dapat dilihat melalui link berikut http://127.0.0.1:3000/track?kode=${findService.data.kode}`
                     
                     await this.$repositories.chat.sendMessage(data.data.idService,message)
                     this.$router.push({path:'/perbaikan/nota?id='+data.data.idService})

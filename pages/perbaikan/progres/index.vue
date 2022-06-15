@@ -23,12 +23,12 @@
                 <span v-else-if="data.value === 'pembatalan selesai'" class="text-success"> {{ data.value }} </span>
             </template>
             <template #cell(disetujui)="data">
-                <span v-if="data.item.dikonfirmasi === true">Ya</span>
-                <span v-if="data.item.dikonfirmasi === false">Tidak</span>
+                <span v-if="data.item.disetujui === true">Ya</span>
+                <span v-if="data.item.disetujui === false">Tidak</span>
             </template>
             
             <template #cell(menu)="data">
-                <NuxtLink class="btn btn-sm btn-outline-success" :to="{path:'/perbaikan/progres/detail',query:{id:data.item.idService}}">detail</NuxtLink>
+                <NuxtLink class="btn btn-sm btn-outline-success" :to="{path:'/perbaikan/progres/detail',query:{id:data.item.id}}">detail</NuxtLink>
             </template>
 
         </DataTable>
@@ -44,8 +44,8 @@ export default {
             fields:[
                 {key:'no'},
                 {key:'kode'},
-                {key:'nama', label:'produk', sortable:true},
-                {key:'kategori', sortable:true},
+                {key:'product.nama', label:'produk', sortable:true},
+                {key:'product.kategori', sortable:true},
                 {key:'keluhan', sortable:true},
                 {key:'status', sortable:true},
                 'disetujui',
@@ -66,7 +66,7 @@ export default {
         const arrCategory = [{text:'semua', value:null}];
 
         dataCategory.data.forEach((item)=>{
-                arrCategory.push({text:item.kategori, value:item.kategori})
+                arrCategory.push({text:item.kategori.nama, value:item.kategori.nama})
         })
 
         return {

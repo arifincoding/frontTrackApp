@@ -32,10 +32,10 @@
             <div class="nota-sub-body">
                 <div class="row">
                     <div class="col-6">
-                        KODESERVICE : {{ product.kode }}
+                        KODESERVICE : {{ service.kode }}
                     </div>
                     <div class="col ml-5">
-                        Tanggal Masuk : {{ product.tanggalMasuk }}
+                        Tanggal Masuk : {{ service.tanggalMasuk }}
                     </div>
                 </div>
                 <table class="nota-table" border="1">
@@ -64,7 +64,7 @@
                         <td class="text-center" style="width:25px"></td>
                         <td class="text-right pr-1" style="width:200px">Keluhan</td>
                         <td class="text-center" style="width:25px">:</td>
-                        <td class="text-left pl-1" rowspan="2" style="width:400px"> {{ product.keluhan }} </td>
+                        <td class="text-left pl-1" rowspan="2" style="width:400px"> {{ service.keluhan }} </td>
                     </tr>
                     <tr class="text-capitalize">
                         <td class="text-right pr-1" style="width:200px">Kelengkapan</td>
@@ -80,12 +80,12 @@
                         <td class="text-center" style="width:25px"></td>
                         <td class="text-right pr-1" style="width:200px">Estimasi Biaya</td>
                         <td class="text-center" style="width:25px">:</td>
-                        <td class="text-left pl-1 harga" style="width:400px">{{product.estimasiBiayaString}}</td>
+                        <td class="text-left pl-1 harga" style="width:400px">{{service.estimasiBiayaString}}</td>
                     </tr>
                     <tr>
                         <td class="text-right pr-1" style="width:200px">Uang Muka</td>
                         <td class="text-center" style="width:25px">:</td>
-                        <td class="text-left pl-1" colspan="5" style="width:400px">{{product.uangMukaString}}</td>
+                        <td class="text-left pl-1" colspan="5" style="width:400px">{{service.uangMukaString}}</td>
                     </tr>
                 </table>
                 <table class="nota-table" border="1">
@@ -124,12 +124,14 @@
 <script>
 export default {
     async asyncData({app, query, store}){
-        const dataService = await app.$repositories.service.show(query.id)
-        const dataCustomer = await app.$repositories.customer.show(dataService.data.idCustomer)
+        const service = await app.$repositories.service.show(query.id)
+        const customer = await app.$repositories.customer.show(service.data.idCustomer)
+        const product = await app.$repositories.product.show(service.data.idProduk)
         return {
             user : store.state.user,
-            customer : dataCustomer.data,
-            product : dataService.data,
+            customer : customer.data,
+            service : service.data,
+            product : product.data
         }
     },
     mounted(){

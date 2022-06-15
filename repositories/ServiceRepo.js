@@ -17,7 +17,7 @@ export default ($axios,store) => ({
         })
     },
     listQueue(filters){
-        return $axios.$get(`${resource}/queue`,{
+        return $axios.$get(`${resource}/${store.state.username}/queue`,{
             headers:{
                 'Authorization':`bearer ${store.state.token}`
             },

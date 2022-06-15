@@ -34,12 +34,12 @@ export default {
     },
     computed:{
         textAgreement(){
-            if(this.broken.dikonfirmasi === true){
+            if(this.broken.disetujui === true){
                 return {
                     value:'ya',
                     color:'text-success'
                 }
-            } else if(this.broken.dikonfirmasi === false){
+            } else if(this.broken.disetujui === false){
                 return {
                     value:'tidak',
                     color:'text-danger'

@@ -12,13 +12,13 @@
                 <DetailText label="email" :value-one="employee.email"/>
                 <DetailText label="alamat" :value-one="employee.alamat"/>
                 <div v-if="employee.peran === 'teknisi'">
-                <p class="mt-1 mb-0 font-weight-bold">Tanggung Jawab : </p>
-                <BorderedTable :items="responbilities" :fields="fields">
-                    <template #cell(aksi)="data">
-                        <ModalDelete @clicked-value="deleteData($event,data.item.idTanggungJawab)"/>
-                    </template>
-                </BorderedTable>
-                <SimpanTanggungJawab :data-id="employee.idPegawai" :username="employee.username" @save="handleSave"/>
+                    <p class="mt-1 mb-0 font-weight-bold">Tanggung Jawab : </p>
+                    <BorderedTable :items="responbilities" :fields="fields">
+                        <template #cell(aksi)="data">
+                            <ModalDelete @clicked-value="deleteData($event,data.item.id)"/>
+                        </template>
+                    </BorderedTable>
+                    <SimpanTanggungJawab :data-id="employee.idPegawai" :username="employee.username" @save="handleSave"/>
                 </div>
             </div>
         </b-modal>
@@ -36,12 +36,12 @@ export default {
     data(){
         return {
             modalShow:false,
-            employee:[],
+            employee:{},
             responbilities:[],
             fullName:'',
             fields:[
                 'no',
-                'kategori',
+                {key:'kategori.nama',label:'kategori'},
                 'aksi'
             ]
         }

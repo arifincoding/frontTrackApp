@@ -4,7 +4,7 @@
             <div class="col-5">
                 <h6 class="row mx-0">
                     <div class="col-lg-5 col-12 text-center border border-success text-white font-weight-bold p-2 bg-success">Status Pengerjaan</div>
-                    <div class="col-lg-7 col-12 text-center border border-success font-weight-bold p-2">{{ product.status }}</div>
+                    <div class="col-lg-7 col-12 text-center border border-success font-weight-bold p-2">{{ service.status }}</div>
                 </h6>
                 <h6 class="row mx-0">
                     <div class="col-lg-5 col-12 text-center border border-success text-white font-weight-bold p-2 bg-success">Status Persetujuan</div>
@@ -13,16 +13,16 @@
                     </div>
                 </h6>
                 <DetailKlien :nama="customer.nama" :no-hp="customer.noHp"/>
-                <DetailProduk :product="product">
-                    <DetailText label="Uang Muka" :value-one="product.uangMukaString"/>
-                    <DetailText label="Estimasi Harga" :value-one="product.estimasiBiayaString"/>
-                    <DetailText label="Total Harga" :value-one="product.totalBiayaString"/>
+                <DetailProduk :product="product" :service="service">
+                    <DetailText label="Uang Muka" :value-one="service.uangMukaString"/>
+                    <DetailText label="Estimasi Harga" :value-one="service.estimasiBiayaString"/>
+                    <DetailText label="Total Harga" :value-one="service.totalBiayaString"/>
                     <DetailText label="Catatan" :value-one="product.catatan"/>
-                    <DetailText label="Lama Garansi" :value-one="product.garansi"/>
-                    <DetailText label="Tanggal Masuk" :value-one="product.tanggalMasuk" :value-two="product.jamMasuk"/>
-                    <DetailText label="Tanggal Ambil" :value-one="product.tanggalAmbil" :value-two="product.jamAmbil"/>
-                    <DetailText label="Customer Service" :value-one="product.usernameCS"/>
-                    <DetailText label="Teknisi" :value-one="product.usernameTeknisi"/>
+                    <DetailText label="Lama Garansi" :value-one="service.garansi"/>
+                    <DetailText label="Tanggal Masuk" :value-one="service.tanggalMasuk" :value-two="service.jamMasuk"/>
+                    <DetailText label="Tanggal Ambil" :value-one="service.tanggalAmbil" :value-two="service.jamAmbil"/>
+                    <DetailText label="Customer Service" :value-one="service.usernameCS"/>
+                    <DetailText label="Teknisi" :value-one="service.usernameTeknisi"/>
                 </DetailProduk>
             </div>
             <div class="col">
@@ -30,15 +30,15 @@
                     <h6 class="bg-success text-white text-center p-2 font-weight-bold">Kerusakan</h6>
                     <BorderedTable class="px-2" :items="brokens" :fields="fields">
                         <template #cell(disetujui)="data">
-                            <span v-if="data.item.dikonfirmasi === true" class="text-success"> Ya </span>
-                            <span v-if="data.item.dikonfirmasi === false" class="text-danger"> Tidak </span> 
+                            <span v-if="data.item.disetujui === true" class="text-success"> Ya </span>
+                            <span v-if="data.item.disetujui === false" class="text-danger"> Tidak </span> 
                         </template>
                         <template #cell(aksi)="data">
-                            <DetailKerusakan :data-id="data.item.idKerusakan"/>
+                            <DetailKerusakan :data-id="data.item.id"/>
                             <div v-if="role === 'pemilik'">
                                 <!-- update harga perbaikan -->
-                                <UpdateBiaya v-if="showBtnUpdateCost === true" :data-id="data.item.idKerusakan" :error="invalid" @submit="updateBrokenCost($event,data.item.idKerusakan)" @hidden="resetInvalid"/>
-                                <BtnAgreement v-if="showBtnAgreement === true" :is-confirm="data.item.dikonfirmasi" @submit="setBrokenConfirmation($event,data.item.idKerusakan)"/>
+                                <UpdateBiaya v-if="showBtnUpdateCost === true" :data-id="data.item.id" :error="invalid" @submit="updateBrokenCost($event,data.item.id)" @hidden="resetInvalid"/>
+                                <BtnAgreement v-if="showBtnAgreement === true" :is-confirm="data.item.disetujui" @submit="setBrokenConfirmation($event,data.item.id)"/>
                             </div>
                         </template>
                     </BorderedTable>
@@ -46,14 +46,14 @@
                 
                 <div v-if="role === 'pemilik'">
                     <!-- konfirmasi biaya -->
-                    <ModalConfirm v-if="showBtnConfirmCost === true" :with-invalid="true" :confirm-invalid="isAllBrokenPrice" label="Konfirmasi Biaya" :message="confirmCostMessage" @clicked-value="confirmCost($event,product.idService)"/>
+                    <ModalConfirm v-if="showBtnConfirmCost === true" :with-invalid="true" :confirm-invalid="isAllBrokenPrice" label="Konfirmasi Biaya" :message="confirmCostMessage" @clicked-value="confirmCost($event,service.id)"/>
                     <!-- konfirmasi persetujuan -->
                     <BtnConfirmAgreement v-if="showBtnConfirmAgreement === true" :is-broken-agree="isBrokenAgree" @submit="confirmService"/>
                     <!-- update garansi -->
-                    <UpdateGaransi v-if="showBtnUpdateWarranty === true" :value="product.garansi" :error="invalid" @submit="setWarranty" @hidden="resetInvalid"/>
+                    <UpdateGaransi v-if="showBtnUpdateWarranty === true" :value="service.garansi" :error="invalid" @submit="setWarranty" @hidden="resetInvalid"/>
                 </div>
                 <!-- ambil barang -->
-                <ModalConfirm v-if="showBtnTakeService === true" :with-invalid="true" :confirm-invalid="product.garansi !== null" btn-class="mt-2" :message="takeMessage" label="Ambil Produk" @clicked-value="take($event,product.idService)"/>
+                <ModalConfirm v-if="showBtnTakeService === true" :with-invalid="true" :confirm-invalid="service.garansi !== null" btn-class="mt-2" :message="takeMessage" label="Ambil Produk" @clicked-value="take($event,service.id)"/>
             </div>
         </div>
     </div>
@@ -65,15 +65,16 @@ export default {
     async asyncData({app, query, store}){
         const service = await app.$repositories.service.show(query.id)
         const customer = await app.$repositories.customer.show(service.data.idCustomer)
+        const product = await app.$repositories.product.show(service.data.idProduk)
         const broken = await app.$repositories.broken.all(query.id)
 
         let setBrokenAgree = null
         let isBrokenPrice = false
         let isBrokenConfirmed = null
         if((broken.data).length > 0){
-            // cek apakah semuah kerusakan sudah dikonfirmasi
+            // cek apakah semuah kerusakan sudah disetujui
             isBrokenConfirmed = (broken.data).every((item)=>{
-                if(item.dikonfirmasi === null){
+                if(item.disetujui === null){
                     return false
                 }
                 return true
@@ -89,7 +90,7 @@ export default {
             if(isBrokenConfirmed === true){
                 setBrokenAgree = false
                 broken.data.some((item)=>{
-                    if(item.dikonfirmasi === true){
+                    if(item.disetujui === true){
                         setBrokenAgree = true
                         return true
                     }
@@ -100,7 +101,8 @@ export default {
 
         return {
             customer : customer.data,
-            product : service.data,
+            product : product.data,
+            service : service.data,
             brokens : broken.data,
             role : store.state.role,
             isAllBrokenConfirmed:isBrokenConfirmed,
@@ -110,8 +112,9 @@ export default {
     },
     data(){
         return{
-            customer:[],
-            product:[],
+            customer:{},
+            product:{},
+            service:{},
             brokens:[],
             isBrokenAgree:null,
             fields:[
@@ -136,55 +139,55 @@ export default {
     },
     computed:{
         showBtnUpdateCost(){
-            if((this.product.status === 'selesai diagnosa' || this.product.status === 'tunggu' || this.product.status === 'proses perbaikan' || this.product.status === 'perbaikan selesai') && this.product.sudahKonfirmasiBiaya === false){
+            if((this.service.status === 'selesai diagnosa' || this.service.status === 'tunggu' || this.service.status === 'proses perbaikan' || this.service.status === 'perbaikan selesai') && this.service.sudahKonfirmasiBiaya === false){
                 return true
             }
             return false
         },
         showBtnAgreement(){
-            if(this.product.sudahKonfirmasiBiaya === true && this.product.sudahdikonfirmasi === null){
+            if(this.service.sudahKonfirmasiBiaya === true && this.service.disetujui === null){
                 return true
             }
             return false
         },
         showBtnConfirmAgreement(){
-            if(this.product.sudahKonfirmasiBiaya === true && this.product.butuhKonfirmasi === true && this.product.sudahdikonfirmasi === null){
+            if(this.service.sudahKonfirmasiBiaya === true && this.service.butuhPersetujuan === true && this.service.disetujui === null){
                 return true
             }
             return false
         },
         showBtnUpdateWarranty(){
-            if(this.product.sudahKonfirmasiBiaya === true && this.product.diambil === false){
+            if(this.service.sudahKonfirmasiBiaya === true && this.service.diambil === false){
                 return true
             }
             return false
         },
         showBtnConfirmCost(){
-            if(this.product.sudahKonfirmasiBiaya === false && (this.product.status === 'selesai diagnosa' || this.product.status === 'tunggu' || this.product.status === 'proses perbaikan' || this.product.status === 'perbaikan selesai')){
+            if(this.service.sudahKonfirmasiBiaya === false && (this.service.status === 'selesai diagnosa' || this.service.status === 'tunggu' || this.service.status === 'proses perbaikan' || this.service.status === 'perbaikan selesai')){
                 return true
             }
             return false
         },
         showBtnTakeService(){
-            if((this.product.status === 'perbaikan selesai' || this.product.status === 'pembatalan selesai') && this.product.sudahKonfirmasiBiaya === true && this.product.diambil === false){
+            if((this.service.status === 'perbaikan selesai' || this.service.status === 'pembatalan selesai') && this.service.sudahKonfirmasiBiaya === true && this.service.diambil === false){
                 return true
             }
             return false
         },
         textStatusAgreement(){
-            if(this.product.sudahdikonfirmasi === true){
+            if(this.service.disetujui === true){
                 return {
                     color:'text-success',
                     value:'Disetujui'
                 }
             }
-            else if(this.product.sudahdikonfirmasi === false){
+            else if(this.service.disetujui === false){
                 return {
                     color:'text-danger',
                     value:'Dibatalkan'
                 }
             }
-            else if(this.product.sudahdikonfirmasi === null){
+            else if(this.service.disetujui === null){
                 return {
                     color:'text-dark',
                     value:'Menunggu Konfirmasi'
@@ -209,8 +212,8 @@ export default {
                 arrBroken.forEach((item)=>{
                     chatMessage += `%0a -${item.judul} : ${item.biaya}`
                 })
-                chatMessage += `%0a%0a*Total Biaya : ${this.product.totalBiayaString}*`
-                if(this.product.butuhKonfirmasi === true){
+                chatMessage += `%0a%0a*Total Biaya : ${this.service.totalBiayaString}*`
+                if(this.service.butuhPersetujuan === true){
                     chatMessage += '%0a%0aApakah anda setuju untuk melakukan perbaikan?'
                 }
                 await this.$repositories.chat.sendMessage(id,chatMessage)
@@ -218,7 +221,7 @@ export default {
         },
         async refreshData(){
             const data = await this.$repositories.service.show(this.$route.query.id)
-            this.product = data.data
+            this.service = data.data
         },
         async take(isConfirm,id){
             if(isConfirm === true){
@@ -233,14 +236,14 @@ export default {
         },
         async confirmService(item){
             if(item.isConfirm === true){
-                await this.$repositories.service.updateConfirmation(this.product.idService,{
-                    dikonfirmasi:item.data.dikonfirmasi
+                await this.$repositories.service.updateConfirmation(this.service.id,{
+                    disetujui:item.data.disetujui
                 })
                 const historyPayload = {
                     status: item.data.status,
                     pesan: item.data.pesan
                 }
-                await this.$repositories.history.create(historyPayload,this.product.idService)
+                await this.$repositories.history.create(historyPayload,this.service.id)
                 await this.refreshData()
             }
         },
@@ -254,7 +257,7 @@ export default {
         async refreshBroken(){
             const data = await this.$repositories.broken.all(this.$route.query.id)
             const isBrokenConfirmed = data.data.every((item)=>{
-                if(item.dikonfirmasi === null){
+                if(item.disetujui === null){
                     return false
                 }
                 return true
@@ -270,7 +273,7 @@ export default {
             if(isBrokenConfirmed === true){
                 this.isBrokenAgree = false
                 data.data.some((item)=>{
-                    if(item.dikonfirmasi === true){
+                    if(item.disetujui === true){
                         this.isBrokenAgree = true
                         return true
                     }
@@ -302,7 +305,7 @@ export default {
         async setWarranty(item){
             if(item.isConfirm === true){
                 try{
-                    await this.$repositories.service.updateWarranty(this.product.idService,item.data)
+                    await this.$repositories.service.updateWarranty(this.service.id,item.data)
                     this.invalid = {
                         error:false
                     }

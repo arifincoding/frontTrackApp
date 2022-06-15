@@ -17,7 +17,7 @@ export default {
     },
     data(){
         return{
-            dikonfirmasi:null,
+            disetujui:null,
             message:{
                 agree:'yakin ingin menyetujui perbaikan?',
                 cancel:'yakin ingin membatalkan perbaikan?'
@@ -26,18 +26,18 @@ export default {
     },
     watch:{
         isConfirm(newVal){
-            this.dikonfirmasi = newVal
+            this.disetujui = newVal
         }
     },
     computed:{
         showAgree(){
-            if(this.dikonfirmasi === false || this.dikonfirmasi === null){
+            if(this.disetujui === false || this.disetujui === null){
                 return true
             }
             return false
         },
         showCancel(){
-            if(this.dikonfirmasi === true || this.dikonfirmasi === null){
+            if(this.disetujui === true || this.disetujui === null){
                 return true
             }
             return false
@@ -49,7 +49,7 @@ export default {
                 const payload = {
                     isConfirm:true,
                     data:{
-                        dikonfirmasi:value
+                        disetujui:value
                     }
                 }
                 this.$emit('submit',payload)

@@ -27,7 +27,7 @@ export default {
                 color:'success'
             }
             this.value = {
-                dikonfirmasi:true,
+                disetujui:true,
                 status:'setuju',
                 pesan:'anda telah menyetujui proses perbaikan'
             }
@@ -38,7 +38,7 @@ export default {
                 color:'danger'
             }
             this.value = {
-                dikonfirmasi:false,
+                disetujui:false,
                 status:'batal',
                 pesan:'anda telah membatalkan proses perbaikan'
             }
@@ -60,7 +60,7 @@ export default {
                     color:'success'
                 }
                 this.value = {
-                    dikonfirmasi:true,
+                    disetujui:true,
                     status:'setuju',
                     pesan:'anda telah menyetujui proses perbaikan'
                 }
@@ -71,7 +71,7 @@ export default {
                     color:'danger'
                 }
                 this.value = {
-                    dikonfirmasi:false,
+                    disetujui:false,
                     status:'batal',
                     pesan:'anda telah membatalkan proses perbaikan'
                 }

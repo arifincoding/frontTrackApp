@@ -26,16 +26,16 @@
                 {{data.item.product.nama}} [{{ data.item.product.kategori }}]
             </template>
             <template #cell(totalBiaya)="data">
-                <span v-if="data.item.product.totalBiaya">{{data.item.product.totalBiaya}}</span>
+                <span v-if="data.item.totalBiaya">{{data.item.totalBiaya}}</span>
             </template>
             <template #cell(disetujui)="data">
-                <span v-if="data.item.product.sudahdikonfirmasi === true">Ya</span>
-                <span v-if="data.item.product.sudahdikonfirmasi === false">Tidak</span>
+                <span v-if="data.item.disetujui === true">Ya</span>
+                <span v-if="data.item.disetujui === false">Tidak</span>
             </template>
             <template #cell(menu)="data">
-                <NuxtLink class="btn btn-sm btn-outline-success" :to="{path:'/perbaikan/detail',query:{id:data.item.product.id}}">Detail</NuxtLink>
-                <NuxtLink class="btn btn-sm btn-primary" :to="{path:'/perbaikan/update',query:{id:data.item.product.id}}">Update</NuxtLink>
-                <ModalDelete @clicked-value="deleteData($event,data.item.product.id)"/>
+                <NuxtLink class="btn btn-sm btn-outline-success" :to="{path:'/perbaikan/detail',query:{id:data.item.id}}">Detail</NuxtLink>
+                <NuxtLink class="btn btn-sm btn-primary" :to="{path:'/perbaikan/update',query:{id:data.item.id}}">Update</NuxtLink>
+                <ModalDelete @clicked-value="deleteData($event,data.item.id)"/>
             </template>
         </DataTable>
     </div>
@@ -49,11 +49,11 @@ export default {
             services:[],
             fields:[
                 'no',
-                {key:'product.kode', label:'kode'},
+                {key:'kode', label:'kode'},
                 'klien',
                 'produk',
-                {key:'product.keluhan', label:'keluhan'},
-                {key:'product.status', label:'status'},
+                {key:'keluhan', label:'keluhan'},
+                {key:'status', label:'status'},
                 'disetujui',
                 {key:'totalBiaya', label:'total biaya'},
                 'menu'
