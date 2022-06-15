@@ -1,6 +1,6 @@
 <template>
     <span>
-        <ModalInput :label="label" :name="name" :btnColor="btnColor" :invalid="invalid.error" @show="handleShow" @hidden="resetModal" @submit="submit">
+        <ModalInput :label="label" :name="name" :btn-class="btnClass" :btn-color="btnColor" :invalid="invalid.error" @show="handleShow" @hidden="resetModal" @submit="submit">
             <InputText input-id = 'nama' label="nama kategori" v-model="nama" placeholder="Masukkan nama kategori" :invalid="invalid.nama"/>
         </ModalInput>
     </span>
@@ -16,6 +16,10 @@ export default {
         label:String,
         name:String,
         btnColor:String,
+        btnClass:{
+            type:String,
+            default:''
+        },
         error:Object
     },
     data(){
@@ -30,7 +34,7 @@ export default {
         }
     },
     methods:{
-        async submit(isConfirm){
+        submit(isConfirm){
             if(isConfirm === true){
                 const payload = {
                     isConfirm:true,
@@ -52,7 +56,7 @@ export default {
         },
         async handleShow(event){
             if(event === true && this.dataId !== 0){
-                const data = await app.$repositories.category.show(this.dataId)
+                const data = await this.$repositories.category.show(this.dataId)
                 this.nama = data.data.nama
             }
         }

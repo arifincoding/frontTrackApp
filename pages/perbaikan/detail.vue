@@ -245,6 +245,7 @@ export default {
                 }
                 await this.$repositories.history.create(historyPayload,this.service.id)
                 await this.refreshData()
+                await this.refreshBroken()
             }
         },
         async setBrokenConfirmation(item,id){

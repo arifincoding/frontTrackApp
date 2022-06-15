@@ -1,7 +1,7 @@
 <template>
     <div>
         <TitleHeading text="data kategori"/>
-        <FormKategori label="Tambah Kategori" name="Tambah Kategori" btn-color="success" :error="invalid" @submit="tambahData" @hidden="handleHidden"/>
+        <FormKategori label="Tambah Kategori" name="Tambah Kategori" btn-color="success" btn-class="mb-2" :error="invalid" @submit="tambahData" @hidden="handleHidden"/>
         <DataTable :items="categories" :fields="fields">
             <template #cell(menu)="data">
                 <FormKategori :data-id="data.item.idKategori" label="Update Kategori" name="Update" btn-color="primary" :error="invalid" @submit="updateData($event,data.item.idKategori)" @hidden="handleHidden"/>
