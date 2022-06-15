@@ -56,7 +56,7 @@
                 </template>
             </BorderedTable>
         </div>
-        <div v-if="track.length === 0">
+        <div v-if="track.length === 0 && $route.query.kode">
             <h3 class="h3 text-center mt-5 font-weight-bold">Data Tidak Ditemukan</h3>
         </div>
     </div>
@@ -65,19 +65,36 @@
 
 <script>
 export default {
+    async asyncData({app,query}){
+        const data = await app.$repositories.service.track(query.kode)
+        const trackData = data.data
+        let infoData = []
+        let brokenData = []
+        let historyData = []
+        if(data.data.kode){
+            infoData = [{
+                kode:data.data.kode,
+                nama:data.data.product.nama,
+                kategori:data.data.product.kategori,
+                status:data.data.status,
+                persetujuan:data.data.disetujui,
+                totalBiaya:data.data.totalBiaya
+            }]
+            brokenData = data.data.kerusakan
+            historyData = data.data.riwayat
+        }
+        return {
+            code : query.kode,
+            track : trackData,
+            infoItems : infoData,
+            brokenItems : brokenData,
+            historyItems : historyData
+        }
+    },
     data(){
         return {
-            track:{
-                kode:null,
-                nama:null,
-                kategori:null,
-                status:null,
-                disetujui:null,
-                totalBiaya:null,
-                kerusakan:[],
-                riwayat:[]
-            },
-            code:'',
+            track:{},
+            code:null,
             infoItems:[],
             infoField:[
                 'kode',
@@ -96,28 +113,34 @@ export default {
                 'aksi'
             ],
             historyItems:[],
-            historyField:['waktu','status',{key:'judul',label:'riwayat'}]
+            historyField:['waktu','status',{key:'pesan',label:'riwayat'}]
+        }
+    },
+    watch:{
+        async '$route.query.kode'(newVal){
+            this.code = newVal
+            const data = await this.$repositories.service.track(newVal)
+            this.track = data.data
+            
+            if(data.data.kode){
+                this.infoItems = [{
+                    kode:data.data.kode,
+                    nama:data.data.product.nama,
+                    kategori:data.data.product.kategori,
+                    status:data.data.status,
+                    persetujuan:data.data.disetujui,
+                    totalBiaya:data.data.totalBiaya
+                }]
+                this.brokenItems = data.data.kerusakan
+                this.historyItems = data.data.riwayat
+            }
         }
     },
     methods:{
-        async tracking(){
-            if(this.code.length > 0){
-                const data = await this.$repositories.service.track(this.code)
-                this.track = data.data
-                if(this.track.kode){
-                    this.infoItems = [
-                        {
-                            kode:this.track.kode,
-                            nama:this.track.product.nama,
-                            kategori:this.track.product.kategori,
-                            status:this.track.status,
-                            persetujuan:this.track.disetujui,
-                            totalBiaya:this.track.totalBiaya
-                        }
-                    ]
-                    this.brokenItems = this.track.kerusakan
-                    this.historyItems = this.track.riwayat
-                }
+        tracking(){
+            if(this.code !== null){
+                this.$router.push({path:`/home?kode=${this.code}`})
+                this.$forceUpdate()
             } else {
                 this.track = {
                     invalid : 'kode service tidak boleh kosong'
