@@ -6,7 +6,6 @@
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
         <b-collapse id="nav-collapse" is-nav>
-            <!-- Right aligned nav items -->
             <b-navbar-nav class="ml-auto">
                 <div class="text-white font-weight-bold nav-item">Tentang</div>
             </b-navbar-nav>
@@ -41,8 +40,8 @@
             <h6 v-if="brokenItems.length > 0" class="bg-success font-weight-bold w-100 text-white mt-4 text-center p-1">Kerusakan Gadget</h6>
             <BorderedTable v-if="brokenItems.length > 0" :items="brokenItems" :fields="brokenFIeld">
                 <template #cell(persetujuan)="data">
-                    <span v-if="data.item.dikonfirmasi === true" class="text-success">Disetujui</span>
-                    <span v-else-if="data.item.dikonfirmasi === false" class="text-danger">Dibatalkan</span>
+                    <span v-if="data.item.disetujui === true" class="text-success">Disetujui</span>
+                    <span v-else-if="data.item.disetujui === false" class="text-danger">Dibatalkan</span>
                     <span v-else>Tunggu</span>
                 </template>
                 <template #cell(aksi)="data">
@@ -73,7 +72,7 @@ export default {
                 nama:null,
                 kategori:null,
                 status:null,
-                dikonfirmasi:null,
+                disetujui:null,
                 totalBiaya:null,
                 kerusakan:[],
                 riwayat:[]
@@ -109,10 +108,10 @@ export default {
                     this.infoItems = [
                         {
                             kode:this.track.kode,
-                            nama:this.track.nama,
-                            kategori:this.track.kategori,
+                            nama:this.track.product.nama,
+                            kategori:this.track.product.kategori,
                             status:this.track.status,
-                            persetujuan:this.track.dikonfirmasi,
+                            persetujuan:this.track.disetujui,
                             totalBiaya:this.track.totalBiaya
                         }
                     ]

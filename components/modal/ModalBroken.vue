@@ -30,14 +30,14 @@ export default {
     },
     computed:{
         textAgreement(){
-            if(this.data.dikonfirmasi === true){
+            if(this.data.disetujui === true){
                 return {
-                    value:'Setuju',
+                    value:'Disetujui',
                     color:'text-success'
                 }
-            } else if(this.data.dikonfirmasi === false){
+            } else if(this.data.disetujui === false){
                 return {
-                    value:'batal',
+                    value:'Dibatalkan',
                     color:'text-danger'
                 }
             }
