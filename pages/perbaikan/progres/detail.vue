@@ -20,7 +20,7 @@
             </div>
             <div class="col">
                 <div class="border rounded">
-                    <h6 class="bg-success text-white text-center p-2 font-weight-bold">Kerusakan</h6>
+                    <h6 class="bg-success text-white text-center p-2 font-weight-bold">Daftar Kerusakan</h6>
                     <BorderedTable class="px-2" :items="brokens" :fields="fields">
                         <template #cell(disetujui)="data">
                             <span v-if="data.item.disetujui === true" class="text-success"> Ya </span>

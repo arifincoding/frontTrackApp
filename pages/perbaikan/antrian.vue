@@ -1,6 +1,6 @@
 <template>
     <div>
-        <TitleHeading text="antrian perbaikan"/>
+        <TitleHeading text="antrian service"/>
         <DataTable :fields="fields" :items="queues" with-filter>
             <template v-slot:filterItems>
                 <DropdownFormGroup title="Kategori">
@@ -31,7 +31,7 @@ export default {
                 {key:'no'},
                 {key:'kode'},
                 {key:'product.nama', label:'produk', sortable:true},
-                {key:'product.kategori', sortable:true},
+                {key:'product.kategori', label:'kategori', sortable:true},
                 {key:'keluhan', sortable:true},
                 {key:'status', tdClass:'text-danger'},
                 'disetujui',

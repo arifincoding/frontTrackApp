@@ -37,7 +37,7 @@
                     <span v-else>Tunggu</span>
                 </template>
             </BorderedTable>
-            <h6 v-if="brokenItems.length > 0" class="bg-success font-weight-bold w-100 text-white mt-4 text-center p-1">Kerusakan Gadget</h6>
+            <h6 v-if="brokenItems.length > 0" class="bg-success font-weight-bold w-100 text-white mt-4 text-center p-1">Daftar Kerusakan</h6>
             <BorderedTable v-if="brokenItems.length > 0" :items="brokenItems" :fields="brokenFIeld">
                 <template #cell(persetujuan)="data">
                     <span v-if="data.item.disetujui === true" class="text-success">Disetujui</span>
@@ -48,7 +48,7 @@
                     <ModalBroken :data="data.item"/>
                 </template>
             </BorderedTable>
-            <h6 class="bg-success font-weight-bold w-100 text-white mt-4 text-center p-1">Riwayat Gadget</h6>
+            <h6 class="bg-success font-weight-bold w-100 text-white mt-4 text-center p-1">Riwayat Pengerjaan</h6>
             <BorderedTable :items="historyItems" :fields="historyField">
                 <template #cell(waktu)="data">
                     <span>{{data.item.tanggal}}</span>
@@ -138,13 +138,12 @@ export default {
     },
     methods:{
         tracking(){
-            if(this.code !== null){
-                this.$router.push({path:`/home?kode=${this.code}`})
-                this.$forceUpdate()
-            } else {
+            if(this.code === null || this.code === ''){
                 this.track = {
                     invalid : 'kode service tidak boleh kosong'
                 }
+            } else {
+                this.$router.push({path:`/home?kode=${this.code}`})
             }
         }
     }

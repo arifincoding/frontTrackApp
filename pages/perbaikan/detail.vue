@@ -15,8 +15,8 @@
                 <DetailKlien :nama="customer.nama" :no-hp="customer.noHp"/>
                 <DetailProduk :product="product" :service="service">
                     <DetailText label="Uang Muka" :value-one="service.uangMukaString"/>
-                    <DetailText label="Estimasi Harga" :value-one="service.estimasiBiayaString"/>
-                    <DetailText label="Total Harga" :value-one="service.totalBiayaString"/>
+                    <DetailText label="Estimasi Biaya" :value-one="service.estimasiBiayaString"/>
+                    <DetailText label="Total Biaya" :value-one="service.totalBiayaString"/>
                     <DetailText label="Catatan" :value-one="product.catatan"/>
                     <DetailText label="Lama Garansi" :value-one="service.garansi"/>
                     <DetailText label="Tanggal Masuk" :value-one="service.tanggalMasuk" :value-two="service.jamMasuk"/>
@@ -27,7 +27,7 @@
             </div>
             <div class="col">
                 <div class="border rounded">
-                    <h6 class="bg-success text-white text-center p-2 font-weight-bold">Kerusakan</h6>
+                    <h6 class="bg-success text-white text-center p-2 font-weight-bold">Daftar Kerusakan</h6>
                     <BorderedTable class="px-2" :items="brokens" :fields="fields">
                         <template #cell(disetujui)="data">
                             <span v-if="data.item.disetujui === true" class="text-success"> Ya </span>

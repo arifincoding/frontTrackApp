@@ -1,6 +1,6 @@
 <template>
     <div>
-        <TitleHeading text="progres perbaikan anda"/>
+        <TitleHeading text="progres service anda"/>
         <DataTable :fields="fields" :items="queues" with-filter>
             
             <template v-slot:filterItems>
@@ -45,7 +45,7 @@ export default {
                 {key:'no'},
                 {key:'kode'},
                 {key:'product.nama', label:'produk', sortable:true},
-                {key:'product.kategori', sortable:true},
+                {key:'product.kategori', label:'kategori', sortable:true},
                 {key:'keluhan', sortable:true},
                 {key:'status', sortable:true},
                 'disetujui',

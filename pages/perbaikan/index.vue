@@ -1,8 +1,8 @@
 <template>
     <div>
-        <TitleHeading text="Data Perbaikan"/>
+        <TitleHeading text="Data Service"/>
         <NuxtLink to="/perbaikan/tambah">
-            <ButtonAdd text="tambah perbaikan"/>
+            <ButtonAdd text="tambah service"/>
         </NuxtLink>
         <DataTable :fields="fields" :items="services" with-filter>
 
