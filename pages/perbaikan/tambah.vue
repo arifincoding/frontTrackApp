@@ -1,6 +1,6 @@
 <template>
     <div>
-        <FormPerbaikan title="tambah data perbaikan" :list-kategori="listKategori" :error="invalid" @submit="save"/>
+        <FormPerbaikan title="registrasi data service klien" :list-kategori="listKategori" :error="invalid" @submit="save"/>
     </div>
 </template>
 
@@ -34,11 +34,11 @@ export default {
                     // save history
                     const historyPayload = {
                         status:'antri',
-                        pesan:`anda telah di terima oleh ${this.$store.state.name} dan sedang menunggu untuk di diagnosa`
+                        pesan:`${findProduct.data.kategori} anda telah di terima oleh ${this.$store.state.user} dan sedang menunggu untuk di diagnosa`
                     }
                     await this.$repositories.history.create(historyPayload,data.data.idService)
                     // whatsapp
-                    const message = `terima kasih telah melakukan perbaikan ${findProduct.data.kategori} anda di trackApp untuk memantau perkembangan proses perbaikan ${findProduct.data.kategori} anda, dapat dilihat melalui link berikut http://127.0.0.1:3000/track?kode=${findService.data.kode}`
+                    const message = `terima kasih telah melakukan perbaikan ${findProduct.data.kategori} anda di MASKOM untuk memantau perkembangan progres perbaikan ${findProduct.data.kategori} anda, dapat dilihat melalui link berikut http://127.0.0.1:3000/home?kode=${findService.data.kode}`
                     
                     await this.$repositories.chat.sendMessage(data.data.idService,message)
                     this.$router.push({path:'/perbaikan/nota?id='+data.data.idService})

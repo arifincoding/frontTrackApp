@@ -30,7 +30,7 @@
                             <DetailKerusakan :data-id="data.item.id" no-biaya/>
                             <div v-if="service.status === 'mulai diagnosa'">
                                 <!-- update kerusakan -->
-                                <FormKerusakan name="update" label="Update Kerusakan" btn-color="primary" :data-id="data.item.id" :error="invalid" @submit="updateKerusakan($event,data.item.id)" @hidden="handleHidden"/>
+                                <FormKerusakan name="update" label="Update Data Kerusakan" btn-color="primary" :data-id="data.item.id" :error="invalid" @submit="updateKerusakan($event,data.item.id)" @hidden="handleHidden"/>
                                 <!-- delete kerusakan -->
                                 <ModalDelete @clicked-value="deleteKerusakan($event,data.item.id)"/>
                             </div>
@@ -38,7 +38,7 @@
                     </BorderedTable>
                     <!-- tambah kerusakan -->
                     <div class="m-2">
-                    <FormKerusakan v-if="service.status === 'mulai diagnosa'" name="tambah kerusakan" label="tambah kerusakan" btn-color="success" :error="invalid" @submit="tambahKerusakan" @hidden="handleHidden"/>
+                    <FormKerusakan v-if="service.status === 'mulai diagnosa'" name="tambah kerusakan" label="Tambah Data Kerusakan" btn-color="success" :error="invalid" @submit="tambahKerusakan" @hidden="handleHidden"/>
                     </div>
                 </div>
                 <BtnUpdateStatusService :next-status="nextStatus" :category="product.kategori" @submit="updateStatus"/>

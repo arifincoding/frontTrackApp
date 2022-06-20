@@ -1,6 +1,6 @@
 <template>
     <div>
-        <FormPegawai title="tambah data pegawai" :categories="categories" :error="invalid" @submit="save"/>
+        <FormPegawai title="registrasi data pegawai" :categories="categories" :error="invalid" @submit="save"/>
     </div>
 </template>
 

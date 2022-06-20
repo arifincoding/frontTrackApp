@@ -1,7 +1,7 @@
 <template>
     <span>
-        <ModalInput label="update biaya perbaikan" name="Update Biaya" btnColor="primary" :invalid="invalid.error" @hidden="handleHidden" @show="handleShow" @submit="submit">
-            <InputText input-id="biaya" label="Biaya Perbaikan" placeholder="Masukkan biaya perbaikan" v-model="biaya" :invalid="invalid.biaya"/>
+        <ModalInput label="Update Biaya Service" name="Update Biaya" btnColor="primary" :invalid="invalid.error" @hidden="handleHidden" @show="handleShow" @submit="submit">
+            <InputText input-id="biaya" label="Biaya" placeholder="Masukkan biaya service" v-model="biaya" :invalid="invalid.biaya"/>
         </ModalInput>
     </span>
 </template>

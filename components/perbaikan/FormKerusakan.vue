@@ -1,7 +1,7 @@
 <template>
     <span>
         <ModalInput :label="label" :name="name" :btnColor="btnColor" :invalid="invalid.error" @show="handleShow" @hidden="resetModal" @submit="saveData">
-            <InputText input-id="judul" label="Judul Kerusakan" v-model="judul" placeholder="Masukkan judul kerusakan" :invalid="invalid.judul"/>
+            <InputText input-id="judul" label="Judul" v-model="judul" placeholder="Masukkan judul kerusakan" :invalid="invalid.judul"/>
             <InputTextarea input-id="deskripsi" label="deskripsi" v-model="deskripsi" placeholder="masukkan deskripsi mengenai kerusakan" :invalid="invalid.deskripsi"/>
         </ModalInput>
     </span>

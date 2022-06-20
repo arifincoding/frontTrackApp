@@ -46,11 +46,11 @@
                 
                 <div v-if="role === 'pemilik'">
                     <!-- konfirmasi biaya -->
-                    <ModalConfirm v-if="showBtnConfirmCost === true" :with-invalid="true" :confirm-invalid="isAllBrokenPrice" label="Konfirmasi Biaya" :message="confirmCostMessage" @clicked-value="confirmCost($event,service.id)"/>
+                    <ModalConfirm v-if="showBtnConfirmCost === true" :with-invalid="true" :confirm-invalid="isAllBrokenPrice" label="Konfirmasi Biaya" :message="confirmCostMessage" btn-class="mt-2" @clicked-value="confirmCost($event,service.id)"/>
                     <!-- konfirmasi persetujuan -->
                     <BtnConfirmAgreement v-if="showBtnConfirmAgreement === true" :is-broken-agree="isBrokenAgree" @submit="confirmService"/>
                     <!-- update garansi -->
-                    <UpdateGaransi v-if="showBtnUpdateWarranty === true" :value="service.garansi" :error="invalid" @submit="setWarranty" @hidden="resetInvalid"/>
+                    <UpdateGaransi v-if="showBtnUpdateWarranty === true" :value="service.garansi" :error="invalid" @submit="setWarranty" btn-class="mt-2" @hidden="resetInvalid"/>
                 </div>
                 <!-- ambil barang -->
                 <ModalConfirm v-if="showBtnTakeService === true" :with-invalid="true" :confirm-invalid="service.garansi !== null" btn-class="mt-2" :message="takeMessage" label="Ambil Produk" @clicked-value="take($event,service.id)"/>
