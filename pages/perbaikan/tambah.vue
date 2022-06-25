@@ -6,7 +6,7 @@
 
 <script>
 export default {
-    layout:'admin',
+    layout:'detail',
     async asyncData(app){
         const dataKategori = await app.$repositories.category.all()
 

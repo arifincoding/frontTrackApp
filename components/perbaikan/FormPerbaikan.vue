@@ -38,7 +38,7 @@
                 </b-row>                
             </InputGroup>
 
-            <b-button type="button" variant="success" class="float-right" @click="saveInput()">Simpan</b-button>
+            <b-button type="button" variant="success" class="float-right font-weight-bold" @click="saveInput()">Simpan</b-button>
             <div class="clearfix"></div>
         </form>
     </div>

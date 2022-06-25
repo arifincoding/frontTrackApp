@@ -28,7 +28,7 @@
             </template>
             
             <template #cell(menu)="data">
-                <NuxtLink class="btn btn-sm btn-outline-success" :to="{path:'/perbaikan/progres/detail',query:{id:data.item.id}}">detail</NuxtLink>
+                <NuxtLink class="btn btn-sm btn-outline-success font-weight-bold" :to="{path:'/perbaikan/progres/detail',query:{id:data.item.id}}">detail</NuxtLink>
             </template>
 
         </DataTable>

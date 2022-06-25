@@ -35,23 +35,23 @@
                         </template>
                         <template #cell(aksi)="data">
                             <DetailKerusakan :data-id="data.item.id"/>
-                            <div v-if="role === 'pemilik'">
+                            <span v-if="role === 'pemilik'">
                                 <!-- update harga perbaikan -->
                                 <UpdateBiaya v-if="showBtnUpdateCost === true" :data-id="data.item.id" :error="invalid" @submit="updateBrokenCost($event,data.item.id)" @hidden="resetInvalid"/>
                                 <BtnAgreement v-if="showBtnAgreement === true" :is-confirm="data.item.disetujui" @submit="setBrokenConfirmation($event,data.item.id)"/>
-                            </div>
+                            </span>
                         </template>
                     </BorderedTable>
                 </div>
                 
-                <div v-if="role === 'pemilik'">
+                <span v-if="role === 'pemilik'">
                     <!-- konfirmasi biaya -->
                     <ModalConfirm v-if="showBtnConfirmCost === true" :with-invalid="true" :confirm-invalid="isAllBrokenPrice" label="Konfirmasi Biaya" :message="confirmCostMessage" btn-class="mt-2" @clicked-value="confirmCost($event,service.id)"/>
                     <!-- konfirmasi persetujuan -->
                     <BtnConfirmAgreement v-if="showBtnConfirmAgreement === true" :is-broken-agree="isBrokenAgree" @submit="confirmService"/>
                     <!-- update garansi -->
-                    <UpdateGaransi v-if="showBtnUpdateWarranty === true" :value="service.garansi" :error="invalid" @submit="setWarranty" btn-class="mt-2" @hidden="resetInvalid"/>
-                </div>
+                    <UpdateGaransi v-if="showBtnUpdateWarranty === true" :value="service.garansi" :error="invalid" @submit="setWarranty" @hidden="resetInvalid"/>
+                </span>
                 <!-- ambil barang -->
                 <ModalConfirm v-if="showBtnTakeService === true" :with-invalid="true" :confirm-invalid="service.garansi !== null" btn-class="mt-2" :message="takeMessage" label="Ambil Produk" @clicked-value="take($event,service.id)"/>
             </div>
@@ -61,7 +61,7 @@
 
 <script>
 export default {
-    layout:'admin',
+    layout:'detail',
     async asyncData({app, query, store}){
         const service = await app.$repositories.service.show(query.id)
         const customer = await app.$repositories.customer.show(service.data.idCustomer)

@@ -23,7 +23,7 @@ export default {
         if(this.isBrokenAgree === true){
             this.properties = {
                 label:'konfirmasi persetujuan',
-                message:'yakin ingin menyetujui perbaikan?',
+                message:'yakin ingin menyetujui proses perbaikan?',
                 color:'success'
             }
             this.value = {
@@ -34,7 +34,7 @@ export default {
         }else if(this.isBrokenAgree === false){
             this.properties = {
                 label:'konfirmasi pembatalan',
-                message:'yakin ingin membatalkan perbaikan?',
+                message:'yakin ingin membatalkan proses perbaikan?',
                 color:'danger'
             }
             this.value = {
@@ -56,7 +56,7 @@ export default {
             if(newVal === true){
                 this.properties = {
                     label:'konfirmasi persetujuan',
-                    message:'yakin ingin menyetujui perbaikan?',
+                    message:'yakin ingin menyetujui proses perbaikan?',
                     color:'success'
                 }
                 this.value = {
@@ -67,7 +67,7 @@ export default {
             }else if(newVal === false){
                 this.properties = {
                     label:'konfirmasi pembatalan',
-                    message:'yakin ingin membatalkan perbaikan?',
+                    message:'yakin ingin membatalkan proses perbaikan?',
                     color:'danger'
                 }
                 this.value = {

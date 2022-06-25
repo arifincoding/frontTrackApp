@@ -1,6 +1,6 @@
 <template>
     <span>
-        <b-button class="text-capitalize" :class="btnClass" @click="showModal" size="sm" :variant="btnColor">{{name}}</b-button>
+        <b-button class="text-capitalize font-weight-bold" :class="btnClass" @click="showModal" size="sm" :variant="btnColor">{{name}}</b-button>
         <b-modal v-model="modalShow" centered scrollable :title="label" @hidden="$emit('hidden',true)">
             <div>
                 <slot></slot>
@@ -10,7 +10,7 @@
             <b-button
             variant="success"
             size="sm"
-            class="float-right"
+            class="float-right font-weight-bold"
             @click="close"
             >
             Simpan

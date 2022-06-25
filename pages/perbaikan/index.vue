@@ -33,8 +33,8 @@
                 <span v-if="data.item.disetujui === false">Tidak</span>
             </template>
             <template #cell(menu)="data">
-                <NuxtLink class="btn btn-sm btn-outline-success" :to="{path:'/perbaikan/detail',query:{id:data.item.id}}">Detail</NuxtLink>
-                <NuxtLink class="btn btn-sm btn-primary" :to="{path:'/perbaikan/update',query:{id:data.item.id}}">Update</NuxtLink>
+                <NuxtLink class="btn btn-sm btn-outline-success font-weight-bold" :to="{path:'/perbaikan/detail',query:{id:data.item.id}}">Detail</NuxtLink>
+                <NuxtLink class="btn btn-sm btn-primary font-weight-bold" :to="{path:'/perbaikan/update',query:{id:data.item.id}}">Update</NuxtLink>
                 <ModalDelete @clicked-value="deleteData($event,data.item.id)"/>
             </template>
         </DataTable>

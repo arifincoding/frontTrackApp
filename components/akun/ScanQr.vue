@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-button id="show-btn" variant="outline-primary" size="sm" class="ml-1" @click="showModal">Scan QR</b-button>
+        <b-button id="show-btn" variant="outline-primary" size="sm" class="ml-1 font-weight-bold" @click="showModal">Scan QR</b-button>
         <b-modal v-model="modalShow" hide-footer centered scrollable title="Scan Kode Dengan Whatsapp">
             <div v-if="modalShow === true">
                 <img :src="codeQR"/>

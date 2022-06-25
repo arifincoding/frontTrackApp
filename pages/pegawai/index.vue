@@ -1,7 +1,7 @@
 <template>
     <div>
         <TitleHeading text="data pegawai"/>
-        <NuxtLink to="/pegawai/tambah" class="btn btn-success btn-sm mb-2"> Tambah Pegawai </NuxtLink>
+        <NuxtLink to="/pegawai/tambah" class="btn btn-success btn-sm mb-2 font-weight-bold"> Tambah Pegawai </NuxtLink>
         <DataTable :fields="fields" :items="employes" with-filter>
 
             <template v-slot:filterItems>
@@ -16,7 +16,7 @@
             <template #cell(menu)="data">
                 <DetailEmployee :id-pegawai="data.item.idPegawai"/>
                 <!-- <NuxtLink class="btn btn-sm btn-outline-success" :to="{path:'/pegawai/detail',query:{id:data.item.idPegawai}}">detail</NuxtLink> -->
-                <NuxtLink class="btn btn-sm btn-primary" :to="{path:'/pegawai/update',query:{id:data.item.idPegawai}}">update</NuxtLink>
+                <NuxtLink class="btn btn-sm btn-primary font-weight-bold" :to="{path:'/pegawai/update',query:{id:data.item.idPegawai}}">update</NuxtLink>
                 <!-- <div class="btn btn-sm btn-danger" @click="deleteData(data.item.idPegawai)">Delete</div> -->
                 <ModalDelete @clicked-value="deleteData($event,data.item.idPegawai)"/>
             </template>

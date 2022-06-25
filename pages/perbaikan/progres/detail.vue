@@ -28,12 +28,12 @@
                         </template>
                         <template #cell(aksi)="data">
                             <DetailKerusakan :data-id="data.item.id" no-biaya/>
-                            <div v-if="service.status === 'mulai diagnosa'">
+                            <span v-if="service.status === 'mulai diagnosa'">
                                 <!-- update kerusakan -->
                                 <FormKerusakan name="update" label="Update Data Kerusakan" btn-color="primary" :data-id="data.item.id" :error="invalid" @submit="updateKerusakan($event,data.item.id)" @hidden="handleHidden"/>
                                 <!-- delete kerusakan -->
                                 <ModalDelete @clicked-value="deleteKerusakan($event,data.item.id)"/>
-                            </div>
+                            </span>
                         </template>
                     </BorderedTable>
                     <!-- tambah kerusakan -->
@@ -49,7 +49,7 @@
 
 <script>
 export default {
-    layout:'admin',
+    layout:'detail',
     async asyncData({app,query}){
         const service = await app.$repositories.service.show(query.id)
         const product = await app.$repositories.product.show(service.data.idProduk)

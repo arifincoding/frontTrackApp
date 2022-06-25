@@ -1,6 +1,6 @@
 <template>
     <span>
-        <ModalInput name="update garansi" label="Update Garansi Service" btn-color="primary" btn-class="mt-3" :invalid="invalid.error" @hidden="handleHidden" @submit="submit">
+        <ModalInput name="update garansi" label="Update Garansi Service" btn-color="primary" btn-class="mt-2" :invalid="invalid.error" @hidden="handleHidden" @submit="submit">
             <InputText input-id="garansi" label="Lama Garansi" placeholder="Masukkan lama garansi service" v-model="garansi" :invalid="invalid.garansi"/>
         </ModalInput>
     </span>

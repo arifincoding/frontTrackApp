@@ -25,7 +25,7 @@ export default {
     mounted(){
         if(this.nextStatus === 'mulai diagnosa'){
             this.label = 'Mulai Diagnosa'
-            this.message = 'yakin ingin memulai diagnosa'
+            this.message = 'yakin ingin memulai proses diagnosa?'
             this.color = 'primary'
             this.value = {
                 status:'mulai diagnosa',
@@ -34,7 +34,7 @@ export default {
         }
         else if(this.nextStatus === 'selesai diagnosa'){
             this.label = 'Selesai Diagnosa'
-            this.message = 'yakin ingin menyelesaikan diagnosa'
+            this.message = 'yakin ingin menyelesaikan proses diagnosa?'
             this.color = 'primary'
             this.value = {
                 status:'selesai diagnosa',
@@ -43,7 +43,7 @@ export default {
         }
         else if(this.nextStatus === 'proses perbaikan'){
             this.label = 'Proses Perbaikan'
-            this.message = 'yakin ingin memproses perbaikan kerusakan'
+            this.message = 'yakin ingin memproses perbaikan kerusakan?'
             this.color = 'warning'
             this.value = {
                 status:'proses perbaikan',
@@ -52,7 +52,7 @@ export default {
         }
         else if(this.nextStatus === 'proses pembatalan'){
             this.label = 'proses pembatalan'
-            this.message = 'yakin ingin memproses pembatalan perbaikan'
+            this.message = 'yakin ingin memproses pembatalan perbaikan?'
             this.color = 'warning'
             this.value = {
                 status:'proses pembatalan',
@@ -60,8 +60,8 @@ export default {
             }
         }
         else if(this.nextStatus === 'perbaikan selesai'){
-            this.label = 'Perbaikan Selesai'
-            this.message = 'yakin ingin menyelesaikan perbaikan'
+            this.label = 'Selesai Perbaikan'
+            this.message = 'yakin ingin menyelesaikan proses perbaikan?'
             this.color = 'success'
             this.value = {
                 status:'perbaikan selesai',
@@ -69,8 +69,8 @@ export default {
             }
         }
         else if(this.nextStatus === 'pembatalan selesai'){
-            this.label = 'Pembatalan Selesai'
-            this.message = 'yakin ingin menyelesaikan pembatalan'
+            this.label = 'Selesai Pembatalan'
+            this.message = 'yakin ingin menyelesaikan proses pembatalan?'
             this.color = 'success'
             this.value = {
                 status:'pembatalan selesai',
@@ -88,7 +88,7 @@ export default {
         nextStatus(newVal){
             if(newVal === 'mulai diagnosa'){
                 this.label = 'Mulai Diagnosa'
-                this.message = 'yakin ingin memulai diagnosa'
+                this.message = 'yakin ingin memulai proses diagnosa?'
                 this.color = 'primary'
                 this.value = {
                     status:'mulai diagnosa',
@@ -97,7 +97,7 @@ export default {
             }
             else if(newVal === 'selesai diagnosa'){
                 this.label = 'Selesai Diagnosa'
-                this.message = 'yakin ingin menyelesaikan diagnosa'
+                this.message = 'yakin ingin menyelesaikan proses diagnosa?'
                 this.color = 'primary'
                 this.value = {
                     status:'selesai diagnosa',
@@ -106,7 +106,7 @@ export default {
             }
             else if(newVal === 'proses perbaikan'){
                 this.label = 'Proses Perbaikan'
-                this.message = 'yakin ingin memproses perbaikan kerusakan'
+                this.message = 'yakin ingin memproses perbaikan kerusakan?'
                 this.color = 'warning'
                 this.value = {
                     status:'proses perbaikan',
@@ -115,7 +115,7 @@ export default {
             }
             else if(newVal === 'proses pembatalan'){
                 this.label = 'proses pembatalan'
-                this.message = 'yakin ingin memproses pembatalan perbaikan'
+                this.message = 'yakin ingin memproses pembatalan perbaikan?'
                 this.color = 'warning'
                 this.value = {
                     status:'proses pembatalan',
@@ -123,8 +123,8 @@ export default {
                 }
             }
             else if(newVal === 'perbaikan selesai'){
-                this.label = 'Perbaikan Selesai'
-                this.message = 'yakin ingin menyelesaikan perbaikan'
+                this.label = 'Selesai Perbaikan'
+                this.message = 'yakin ingin menyelesaikan proses perbaikan?'
                 this.color = 'success'
                 this.value = {
                     status:'perbaikan selesai',
@@ -132,8 +132,8 @@ export default {
                 }
             }
             else if(newVal === 'pembatalan selesai'){
-                this.label = 'Pembatalan Selesai'
-                this.message = 'yakin ingin menyelesaikan pembatalan'
+                this.label = 'Selesai Pembatalan'
+                this.message = 'yakin ingin menyelesaikan proses pembatalan?'
                 this.color = 'success'
                 this.value = {
                     status:'pembatalan selesai',

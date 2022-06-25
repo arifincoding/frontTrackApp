@@ -38,7 +38,7 @@
             </div>
             </div>
             </div>
-            <b-button type="button" class="float-right mt-5" @click="saveEmployee()" variant="success">Simpan</b-button>
+            <b-button type="button" class="float-right font-weight-bold mt-5" @click="saveEmployee()" variant="success">Simpan</b-button>
             <div class="clearfix"></div>
         </form>
     </div>

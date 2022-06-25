@@ -6,7 +6,7 @@
 
 <script>
 export default {
-    layout:'admin',
+    layout:'detail',
     async asyncData({app, query}){
         const data = await app.$repositories.employee.show(query.id)
         return {

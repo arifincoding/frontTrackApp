@@ -1,6 +1,6 @@
 <template>
     <span>
-        <b-button class="btn btn-sm" variant="danger" @click="showMsgBoxTwo">Delete</b-button>
+        <b-button class="btn btn-sm font-weight-bold" variant="danger" @click="showMsgBoxTwo">Hapus</b-button>
     </span>
 </template>
 

@@ -6,7 +6,7 @@
 
 <script>
 export default {
-    layout:'admin',
+    layout:'detail',
     async asyncData({app, query}){
         const service = await app.$repositories.service.show(query.id)
         const customer = await app.$repositories.customer.show(service.data.idCustomer)

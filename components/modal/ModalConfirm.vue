@@ -1,11 +1,11 @@
 <template>
     <span>
         
-        <b-button v-if="withInvalid === false" :variant="color" class="text-capitalize" :class="btnClass" :size="size" @click="showMsgBox">{{label}}</b-button>
+        <b-button v-if="withInvalid === false" :variant="color" class="text-capitalize font-weight-bold" :class="btnClass" :size="size" @click="showMsgBox">{{label}}</b-button>
 
-        <b-button v-else-if="withInvalid === true && confirmInvalid === true" :variant="color" class="text-capitalize" :class="btnClass" :size="size" @click="showMsgBox2">{{label}}</b-button>
+        <b-button v-else-if="withInvalid === true && confirmInvalid === true" :variant="color" class="text-capitalize font-weight-bold" :class="btnClass" :size="size" @click="showMsgBox2">{{label}}</b-button>
 
-        <b-button v-else-if="withInvalid === true && confirmInvalid === false" :variant="color" class="text-capitalize" :class="btnClass" :size="size" @click="showMsgBox3">{{label}}</b-button>
+        <b-button v-else-if="withInvalid === true && confirmInvalid === false" :variant="color" class="text-capitalize font-weight-bold" :class="btnClass" :size="size" @click="showMsgBox3">{{label}}</b-button>
     </span>
 </template>
 

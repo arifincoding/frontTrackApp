@@ -1,6 +1,6 @@
 <template>
     <span>
-        <b-button id="show-btn" size="sm" variant="outline-success" @click="showModal(dataId)">Detail</b-button>
+        <b-button id="show-btn" class="font-weight-bold" size="sm" variant="outline-success" @click="showModal(dataId)">Detail</b-button>
 
         <b-modal v-model="modalShow" hide-footer centered scrollable title="Detail Kerusakan">
             

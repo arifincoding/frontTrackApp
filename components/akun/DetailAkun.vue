@@ -14,7 +14,7 @@
                     <ScanQr v-if="$store.state.role === 'pemilik'"/>
                     <UpdateAkun @save="refreshData"/>
                     <UpdatePassword/>
-                    <b-button variant="danger" class="ml-1" size="sm" @click="logout">Keluar</b-button>
+                    <b-button variant="danger" class="ml-1 font-weight-bold" size="sm" @click="logout">Keluar</b-button>
                 </div>
             </template>
         </b-modal>
