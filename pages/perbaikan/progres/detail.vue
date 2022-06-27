@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-5">
                 <h6 class="row mx-0">
-                    <div class="col-lg-5 col-12 text-center border border-success text-white font-weight-bold p-2 bg-success">Status Pengerjaan</div>
+                    <div class="col-lg-5 col-12 text-center border border-success text-white font-weight-bold p-2 bg-success">Status Service</div>
                     <div class="col-lg-7 col-12 text-center border border-success font-weight-bold p-2">{{ service.status }}</div>
                 </h6>
                 <h6 class="row mx-0">
