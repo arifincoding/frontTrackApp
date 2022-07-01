@@ -1,6 +1,6 @@
 <template>
     <span>
-        <div @click="showModal">Profil</div>
+        <div style="cursor:pointer" @click="showModal">Profil</div>
         <b-modal v-model="modalShow" centered scrollable title="Detail Akun">
             <div v-if="account !== {}">
                 <DetailText label="Nama" :value-one="account.namaDepan+' '+account.namaBelakang" :value-two="account.username"/>
@@ -39,7 +39,7 @@ export default {
             await this.$repositories.auth.logout()
             this.$store.commit('setToken',null)
             this.$store.commit('setUserInfo',null)
-            this.$router.push({path:'/'})
+            this.$router.push({path:'/login'})
             this.$cookies.remove('token')
         },
         async refreshData(){

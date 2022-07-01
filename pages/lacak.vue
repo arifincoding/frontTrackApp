@@ -1,15 +1,7 @@
 <template>
 <div>
     <b-navbar toggleable="lg" type="dark" variant="success">
-        <b-navbar-brand class="font-weight-bold" href="#">TRACK APP</b-navbar-brand>
-
-        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
-        <b-collapse id="nav-collapse" is-nav>
-            <b-navbar-nav class="ml-auto">
-                <div class="text-white font-weight-bold nav-item">Tentang</div>
-            </b-navbar-nav>
-        </b-collapse>
+        <b-navbar-brand class="font-weight-bold" href="#" @click="home">MASKOM</b-navbar-brand>
     </b-navbar>
 
     <div>
@@ -74,8 +66,8 @@ export default {
         if(data.data.kode){
             infoData = [{
                 kode:data.data.kode,
-                nama:data.data.product.nama,
-                kategori:data.data.product.kategori,
+                nama:data.data.produk.nama,
+                kategori:data.data.produk.kategori,
                 status:data.data.status,
                 persetujuan:data.data.disetujui,
                 totalBiaya:data.data.totalBiaya
@@ -125,8 +117,8 @@ export default {
             if(data.data.kode){
                 this.infoItems = [{
                     kode:data.data.kode,
-                    nama:data.data.product.nama,
-                    kategori:data.data.product.kategori,
+                    nama:data.data.produk.nama,
+                    kategori:data.data.produk.kategori,
                     status:data.data.status,
                     persetujuan:data.data.disetujui,
                     totalBiaya:data.data.totalBiaya
@@ -143,8 +135,11 @@ export default {
                     invalid : 'kode service tidak boleh kosong'
                 }
             } else {
-                this.$router.push({path:`/home?kode=${this.code}`})
+                this.$router.push({path:`/lacak?kode=${this.code}`})
             }
+        },
+        home(){
+            this.$router.push({path:'/'})
         }
     }
 }

@@ -1,63 +1,44 @@
 <template>
-    <div class="d-flex justify-content-center mt-4">
-      <div class="col-4 border rounded p-3 shadow-sm">
-    <TitleHeading class="text-center" text="Login Admin"/>
-    <InputText input-id="username" label="username" v-model="username" placeholder="masukkan username akun anda" :invalid="invalid.username"/>
-    <InputText input-id="password" label="password" input-type="password" v-model="password" placeholder="masukkan password akun anda" :invalid="invalid.password"/>
-    <div class="btn btn-success float-right" @click="login()">Masuk</div>
-    <div class="clearfix"></div>
+<div>
+    <b-navbar toggleable="lg" type="dark" variant="success">
+        <b-navbar-brand class="font-weight-bold" href="#">MASKOM</b-navbar-brand>
+    </b-navbar>
+
+    <div>
+        <b-jumbotron bg-variant="success" text-variant="white" header="PERIKSA STATUS PENGERJAAN GADGET ANDA" lead="Cara termudah untuk memantau pengerjaan gadget anda" header-level="4" fluid/>
     </div>
-    </div>
+
+    <div class="container">
+        <div class="d-flex justify-content-center">
+            <div class="col-8">
+                <div class="h4 text-center font-weight-bold">Cek Progress Service</div>
+                <input v-model="code" type="text" class="form-control rounded-pill shadow-sm" placeholder="Tolong masukkan kode service anda disini"/>
+                <small class="text-danger">{{ invalid }}</small>
+                <div class="d-flex justify-content-center mt-3">
+                    <b-button variant="success" @click="tracking">Lacak</b-button>
+                </div>
+            </div>
+        </div>
+  </div>
+</div>
 </template>
 
 <script>
-import decode from 'jwt-decode'
-
 export default {
-  middleware({store,redirect}){
-    if(store.state.token){
-      if(store.state.role === 'teknisi'){
-        return redirect('/perbaikan/antrian')
-      }else{
-        return redirect('/perbaikan')
-      }
-    }
-  },
   data(){
-    return {
-      username:'',
-      password:'',
-      invalid:[],
+    return{
+      code:null,
+      invalid:null
     }
   },
   methods:{
-    async login(){
-      try{
-        const data = await this.$repositories.auth.login({
-          username:this.username,
-          password:this.password
-        })
-        // decode token
-        const payload = decode(data.token)
-        // set store
-        this.$store.commit('setToken',data.token)
-        this.$store.commit('setUserInfo',payload)
-        // set cookies
-        this.$cookies.set("token", data.token)
-        
-        if(this.$store.state.role === 'teknisi'){
-          this.$router.push({path:'/perbaikan/antrian'})
-        }else{
-          this.$router.push({path:'/perbaikan'})
-        }
-
-    }catch({response}){
-      this.invalid={}
-      for (const key in response.data.errors) {
-        this.invalid[key] = response.data.errors[key][0]
+    tracking(){
+      if(this.code === null || this.code === ''){
+          this.invalid = 'kode service tidak boleh kosong'
+      } else {
+          this.$router.push({path:`/lacak?kode=${this.code}`})
       }
     }
   }
-}
 }
 </script>
