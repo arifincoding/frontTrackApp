@@ -9,11 +9,12 @@ export default ($axios,store) => ({
             params:filters
         })
     },
-    show(id){
+    show(id,filters={}){
         return $axios.$get(`${resource}/${id}/detail`,{
             headers:{
                 'Authorization':`bearer ${store.state.token}`
-            }
+            },
+            params:filters
         })
     },
     listQueue(filters){

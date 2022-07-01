@@ -124,14 +124,12 @@
 <script>
 export default {
     async asyncData({app, query, store}){
-        const service = await app.$repositories.service.show(query.id)
-        const customer = await app.$repositories.customer.show(service.data.idCustomer)
-        const product = await app.$repositories.product.show(service.data.idProduk)
+        const data = await app.$repositories.service.show(query.id,{include:'klien,produk'})
         return {
             user : store.state.user,
-            customer : customer.data,
-            service : service.data,
-            product : product.data
+            customer : data.data.klien,
+            service : data.data,
+            product : data.data.produk
         }
     },
     mounted(){

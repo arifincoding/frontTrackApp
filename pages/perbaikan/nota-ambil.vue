@@ -96,16 +96,13 @@
 <script>
 export default {
     async asyncData({app, query, store}){
-        const service = await app.$repositories.service.show(query.id)
-        const customer = await app.$repositories.customer.show(service.data.idCustomer)
-        const product = await app.$repositories.product.show(service.data.idProduk)
-        const broken = await app.$repositories.broken.all(query.id)
+        const data = await app.$repositories.service.show(query.id,{include:'klien,produk,kerusakan'})
 
         return {
-            customer : customer.data,
-            product :product.data,
-            service : service.data,
-            brokens : broken.data,
+            customer : data.data.klien,
+            product :data.data.produk,
+            service : data.data,
+            brokens : data.data.kerusakan,
             user : store.state.user
         }
     },

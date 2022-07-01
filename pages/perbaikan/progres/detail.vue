@@ -51,13 +51,11 @@
 export default {
     layout:'detail',
     async asyncData({app,query}){
-        const service = await app.$repositories.service.show(query.id)
-        const product = await app.$repositories.product.show(service.data.idProduk)
-        const broken = await app.$repositories.broken.all(query.id)
+        const data = await app.$repositories.service.show(query.id,{include:'produk,kerusakan'})
         return {
-            service : service.data,
-            product : product.data,
-            brokens : broken.data
+            service : data.data,
+            product : data.data.produk,
+            brokens : data.data.kerusakan
         }
     },
     data(){

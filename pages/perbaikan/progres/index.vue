@@ -44,8 +44,8 @@ export default {
             fields:[
                 {key:'no'},
                 {key:'kode'},
-                {key:'product.nama', label:'produk', sortable:true},
-                {key:'product.kategori', label:'kategori', sortable:true},
+                {key:'produk.nama', label:'produk', sortable:true},
+                {key:'produk.kategori', label:'kategori', sortable:true},
                 {key:'keluhan', sortable:true},
                 {key:'status', sortable:true},
                 'disetujui',

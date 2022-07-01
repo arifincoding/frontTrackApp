@@ -63,24 +63,22 @@
 export default {
     layout:'detail',
     async asyncData({app, query, store}){
-        const service = await app.$repositories.service.show(query.id)
-        const customer = await app.$repositories.customer.show(service.data.idCustomer)
-        const product = await app.$repositories.product.show(service.data.idProduk)
-        const broken = await app.$repositories.broken.all(query.id)
+        const service = await app.$repositories.service.show(query.id,{include:'klien,produk,kerusakan'})
+        const broken = service.data.kerusakan
 
         let setBrokenAgree = null
         let isBrokenPrice = false
         let isBrokenConfirmed = null
-        if((broken.data).length > 0){
+        if((broken).length > 0){
             // cek apakah semuah kerusakan sudah disetujui
-            isBrokenConfirmed = (broken.data).every((item)=>{
+            isBrokenConfirmed = (broken).every((item)=>{
                 if(item.disetujui === null){
                     return false
                 }
                 return true
             })
             
-            isBrokenPrice = broken.data.every((item)=>{
+            isBrokenPrice = broken.every((item)=>{
                 if(item.biaya === null){
                     return false
                 }
@@ -89,7 +87,7 @@ export default {
 
             if(isBrokenConfirmed === true){
                 setBrokenAgree = false
-                broken.data.some((item)=>{
+                broken.some((item)=>{
                     if(item.disetujui === true){
                         setBrokenAgree = true
                         return true
@@ -100,10 +98,10 @@ export default {
         }
 
         return {
-            customer : customer.data,
-            product : product.data,
+            customer : service.data.klien,
+            product : service.data.produk,
             service : service.data,
-            brokens : broken.data,
+            brokens : broken,
             role : store.state.role,
             isAllBrokenConfirmed:isBrokenConfirmed,
             isBrokenAgree : setBrokenAgree,

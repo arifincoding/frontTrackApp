@@ -8,9 +8,7 @@
 export default {
     layout:'detail',
     async asyncData({app, query}){
-        const service = await app.$repositories.service.show(query.id)
-        const customer = await app.$repositories.customer.show(service.data.idCustomer)
-        const product = await app.$repositories.product.show(service.data.idProduk)
+        const data = await app.$repositories.service.show(query.id,{include:'klien,produk'})
         const dataKategori = await app.$repositories.category.all()
         const kategoriObj = dataKategori.data
         const kategoriArr = []
@@ -19,9 +17,9 @@ export default {
         })
         return {
             dataService : {
-                service : service.data,
-                customer: customer.data,
-                product : product.data
+                service : data.data,
+                customer: data.data.klien,
+                product : data.data.produk
             },
             listKategori : kategoriArr
         }
