@@ -89,10 +89,10 @@ export default {
                 return 'proses pembatalan'
             }
             else if(this.service.status === 'proses perbaikan'){
-                return 'perbaikan selesai'
+                return 'selesai perbaikan'
             }
             else if(this.service.status === 'proses pembatalan'){
-                return 'pembatalan selesai'
+                return 'selesai pembatalan'
             }
             return null
         },
@@ -162,11 +162,11 @@ export default {
                 
                 await this.refreshData()
                 
-                if(item.data.status === 'selesai'){
-                    let chatMessage = `*perbaikan selesai* ${this.product.kategori} anda sudah *dapat diambil*`
-                    if (this.service.disetujui === false){
-                        chatMessage = `*pembatalan selesai* ${this.product.kategori} anda sudah *dapat diambil*`;
-                    }
+                if(item.data.status === 'selesai perbaikan'){
+                    const chatMessage = `*proses perbaikan telah selesai*, ${this.product.kategori} kakak sudah *bisa untuk diambil*`
+                    await this.$repositories.chat.sendMessage(this.service.id,chatMessage)
+                }else if(item.data.status === 'selesai pembatalan'){
+                    const chatMessage = `*proses pembatalan telah selesai,* ${this.product.kategori} kakak sudah *bisa untuk diambil*`;
                     await this.$repositories.chat.sendMessage(this.service.id,chatMessage)
                 }
             }

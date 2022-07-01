@@ -19,7 +19,7 @@
     <div class="container">
         <div class="d-flex justify-content-center">
             <div class="col-8">
-                <div class="h4 text-center font-weight-bold">Cek Kode Service</div>
+                <div class="h4 text-center font-weight-bold">Cek Progress Service</div>
                 <input v-model="code" type="text" class="form-control rounded-pill shadow-sm" placeholder="Tolong masukkan kode service anda disini"/>
                 <small class="text-danger">{{ track.invalid }}</small>
                 <div class="d-flex justify-content-center mt-3">

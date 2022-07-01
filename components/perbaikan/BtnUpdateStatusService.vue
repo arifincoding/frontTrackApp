@@ -59,21 +59,21 @@ export default {
                 pesan:`${this.category} anda sedang dalam proses pembatalan`
             }
         }
-        else if(this.nextStatus === 'perbaikan selesai'){
+        else if(this.nextStatus === 'selesai perbaikan'){
             this.label = 'Selesai Perbaikan'
             this.message = 'yakin ingin menyelesaikan proses perbaikan?'
             this.color = 'success'
             this.value = {
-                status:'perbaikan selesai',
+                status:'selesai perbaikan',
                 pesan:`proses perbaikan selesai, ${this.category} anda sudah bisa untuk diambil`
             }
         }
-        else if(this.nextStatus === 'pembatalan selesai'){
+        else if(this.nextStatus === 'selesai pembatalan'){
             this.label = 'Selesai Pembatalan'
             this.message = 'yakin ingin menyelesaikan proses pembatalan?'
             this.color = 'success'
             this.value = {
-                status:'pembatalan selesai',
+                status:'selesai pembatalan',
                 pesan:`proses pembatalan selesai, ${this.category} anda sudah bisa untuk diambil`
             }
         }
@@ -122,21 +122,21 @@ export default {
                     pesan:`${this.category} anda sedang dalam proses pembatalan`
                 }
             }
-            else if(newVal === 'perbaikan selesai'){
+            else if(newVal === 'selesai perbaikan'){
                 this.label = 'Selesai Perbaikan'
                 this.message = 'yakin ingin menyelesaikan proses perbaikan?'
                 this.color = 'success'
                 this.value = {
-                    status:'perbaikan selesai',
+                    status:'selesai perbaikan',
                     pesan:`proses perbaikan selesai, ${this.category} anda sudah bisa untuk diambil`
                 }
             }
-            else if(newVal === 'pembatalan selesai'){
+            else if(newVal === 'selesai pembatalan'){
                 this.label = 'Selesai Pembatalan'
                 this.message = 'yakin ingin menyelesaikan proses pembatalan?'
                 this.color = 'success'
                 this.value = {
-                    status:'pembatalan selesai',
+                    status:'selesai pembatalan',
                     pesan:`proses pembatalan selesai, ${this.category} anda sudah bisa untuk diambil`
                 }
             }
