@@ -167,7 +167,7 @@ export default {
             return false
         },
         showBtnTakeService(){
-            if((this.service.status === 'perbaikan selesai' || this.service.status === 'pembatalan selesai') && this.service.sudahKonfirmasiBiaya === true && this.service.diambil === false){
+            if((this.service.status === 'selesai perbaikan' || this.service.status === 'selesai pembatalan') && this.service.sudahKonfirmasiBiaya === true && this.service.diambil === false){
                 return true
             }
             return false

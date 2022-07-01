@@ -41,6 +41,7 @@
                     <td class="nota-w-no">No</td>
                     <td>Merk</td>
                     <td>Kerusakan</td>
+                    <td>Disetujui</td>
                     <td>Biaya</td>
                 </tr>
             </thead>
@@ -51,9 +52,14 @@
                         <span v-if="index === 0">{{ product.nama }}</span>
                     </td>
                     <td>{{ item.judul }} </td>
+                    <td>
+                        <span v-if="item.disetujui === true">Ya</span>
+                        <span v-else-if="item.disetujui === false">Tidak</span>
+                    </td>
                     <td>{{ item.biaya }} </td>
                 </tr>
                 <tr>
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>

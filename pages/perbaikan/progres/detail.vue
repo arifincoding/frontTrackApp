@@ -161,10 +161,10 @@ export default {
                 await this.refreshData()
                 
                 if(item.data.status === 'selesai perbaikan'){
-                    const chatMessage = `*proses perbaikan telah selesai*, ${this.product.kategori} kakak sudah *bisa untuk diambil*`
+                    const chatMessage = `*proses perbaikan telah selesai*, ${this.product.kategori} anda sudah *bisa untuk diambil*`
                     await this.$repositories.chat.sendMessage(this.service.id,chatMessage)
                 }else if(item.data.status === 'selesai pembatalan'){
-                    const chatMessage = `*proses pembatalan telah selesai,* ${this.product.kategori} kakak sudah *bisa untuk diambil*`;
+                    const chatMessage = `*proses pembatalan telah selesai,* ${this.product.kategori} anda sudah *bisa untuk diambil*`;
                     await this.$repositories.chat.sendMessage(this.service.id,chatMessage)
                 }
             }

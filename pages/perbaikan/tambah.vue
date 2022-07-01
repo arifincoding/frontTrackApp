@@ -29,16 +29,16 @@ export default {
             if(item.save === true){
                 try{
                     const data = await this.$repositories.service.create(item.data)
-                    const findService = await this.$repositories.service.show(data.data.idService)
-                    const findProduct = await this.$repositories.product.show(findService.data.idProduk)
+                    const findService = await this.$repositories.service.show(data.data.idService,{include:'klien,produk'})
+                    const findProduct = findService.data.produk
                     // save history
                     const historyPayload = {
                         status:'antri',
-                        pesan:`${findProduct.data.kategori} anda telah di terima oleh ${this.$store.state.user} dan sedang menunggu untuk di diagnosa`
+                        pesan:`${findProduct.kategori} anda telah di terima oleh ${this.$store.state.user} dan sedang menunggu untuk di diagnosa`
                     }
                     await this.$repositories.history.create(historyPayload,data.data.idService)
                     // whatsapp
-                    const message = `terima kasih telah melakukan perbaikan ${findProduct.data.kategori} anda di MASKOM untuk memantau perkembangan progres perbaikan ${findProduct.data.kategori} anda, dapat dilihat melalui link berikut http://127.0.0.1:3000/home?kode=${findService.data.kode}`
+                    const message = `*kepada ${findService.data.klien.nama}*, %0a %0aKami mengucapkan terima kasih telah mempercayakan pengerjaan ${findProduct.kategori} anda kepada kami, demi menjaga kenyamanan anda kami menyediakan sistem pengecekan progress pengerjaan yang dapat dilihat melalui : %0a %0a*link*: http://127.0.0.1:3000/lacak?kode=${findService.data.kode}`
                     
                     await this.$repositories.chat.sendMessage(data.data.idService,message)
                     this.$router.push({path:'/perbaikan/nota?id='+data.data.idService})
