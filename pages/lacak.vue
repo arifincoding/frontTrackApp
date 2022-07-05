@@ -1,17 +1,12 @@
 <template>
 <div>
-    <b-navbar toggleable="lg" type="dark" variant="success">
-        <b-navbar-brand class="font-weight-bold" href="#" @click="home">MASKOM</b-navbar-brand>
-    </b-navbar>
-
     <div>
-        <b-jumbotron bg-variant="success" text-variant="white" header="PERIKSA STATUS PENGERJAAN GADGET ANDA" lead="Cara termudah untuk memantau pengerjaan gadget anda" header-level="4" fluid/>
+        <b-jumbotron bg-variant="success" text-variant="white" header="Periksa status pengerjaan gadget anda" lead="Cara termudah untuk memantau pengerjaan gadget anda" header-level="4" fluid/>
     </div>
-
     <div class="container">
         <div class="d-flex justify-content-center">
             <div class="col-8">
-                <div class="h4 text-center font-weight-bold">Cek Progress Service</div>
+                <div class="h4 text-center font-weight-bold">Cek Progres Service</div>
                 <input v-model="code" type="text" class="form-control rounded-pill shadow-sm" placeholder="Tolong masukkan kode service anda disini"/>
                 <small class="text-danger">{{ track.invalid }}</small>
                 <div class="d-flex justify-content-center mt-3">
@@ -48,8 +43,17 @@
                 </template>
             </BorderedTable>
         </div>
-        <div v-if="track.length === 0 && $route.query.kode">
+        <div v-else-if="track.length === 0 && $route.query.kode">
             <h3 class="h3 text-center mt-5 font-weight-bold">Data Tidak Ditemukan</h3>
+            <br/>
+            <br/>
+        </div>
+        <div v-else-if="track.length === 0 || track.invalid === 'kode service tidak boleh kosong'">
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
         </div>
     </div>
 </div>
@@ -75,14 +79,19 @@ export default {
             brokenData = data.data.kerusakan
             historyData = data.data.riwayat
         }
+        let addCode = null
+        if(query.kode){
+            addCode = query.kode
+        }
         return {
-            code : query.kode,
+            code : addCode,
             track : trackData,
             infoItems : infoData,
             brokenItems : brokenData,
             historyItems : historyData
         }
     },
+    layout:'user',
     data(){
         return {
             track:{},

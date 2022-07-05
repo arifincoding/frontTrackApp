@@ -12,7 +12,7 @@
 
 <script>
 import decode from 'jwt-decode'
-
+import axios from 'axios';
 export default {
   middleware({store,redirect}){
     if(store.state.token){
@@ -23,7 +23,7 @@ export default {
     return {
       username:'',
       password:'',
-      invalid:[],
+      invalid:{}
     }
   },
   methods:{
@@ -48,6 +48,28 @@ export default {
         this.invalid[key] = response.data.errors[key][0]
       }
     }
+  },
+  login2(){
+    axios.post('http://localhost:8000/user/login',{
+      username : this.username,
+      password : this.password
+    }).then((response)=>{
+      if(response.status === 200){
+      this.$cookies.set("token",response.data.token)
+      const payload = decode(response.data.token)
+        // set store
+      this.$store.commit('setToken',response.data.token)
+      this.$store.commit('setUserInfo',payload)
+      this.$router.push({path:'/admin'})
+    }
+    }).catch((response)=>{
+      if(response.response.status === 422){
+        this.invalid={}
+        for (const key in response.response.data.errors) {
+          this.invalid[key] = response.response.data.errors[key][0]
+        }
+      }
+    })
   }
 }
 }

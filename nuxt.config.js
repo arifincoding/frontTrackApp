@@ -13,6 +13,9 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+    ],
+    script:[
+      { src:"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js" }
     ]
   },
 
@@ -41,6 +44,7 @@ export default {
       '~/components/perbaikan',
       '~/components/table',
       '~/components/akun',
+      '~/components/user',
     ]
   },
 
