@@ -55,7 +55,7 @@ export default {
             filterStatus:null,
             statusOptions:[
                 {text:'semua',value:null},
-                'diagnosa','tunggu','proses','selesai'
+                'diagnosa','tunggu','proses','selesai perbaikan','selesai pembatalan'
             ]
         }
     },

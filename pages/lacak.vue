@@ -62,27 +62,29 @@
 <script>
 export default {
     async asyncData({app,query}){
-        const data = await app.$repositories.service.track(query.kode)
-        const trackData = data.data
         let infoData = []
         let brokenData = []
         let historyData = []
-        if(data.data.kode){
-            infoData = [{
-                kode:data.data.kode,
-                nama:data.data.produk.nama,
-                kategori:data.data.produk.kategori,
-                status:data.data.status,
-                persetujuan:data.data.disetujui,
-                totalBiaya:data.data.totalBiaya
-            }]
-            brokenData = data.data.kerusakan
-            historyData = data.data.riwayat
-        }
+        let trackData=[]
         let addCode = null
         if(query.kode){
+            const data = await app.$repositories.service.track(query.kode)
+            trackData = data.data
+            if(data.data.kode){
+                infoData = [{
+                    kode:data.data.kode,
+                    nama:data.data.produk.nama,
+                    kategori:data.data.produk.kategori,
+                    status:data.data.status,
+                    persetujuan:data.data.disetujui,
+                    totalBiaya:data.data.totalBiaya
+                }]
+                brokenData = data.data.kerusakan
+                historyData = data.data.riwayat
+            }
             addCode = query.kode
         }
+        
         return {
             code : addCode,
             track : trackData,
@@ -117,34 +119,28 @@ export default {
             historyField:['waktu','status',{key:'pesan',label:'riwayat'}]
         }
     },
-    watch:{
-        async '$route.query.kode'(newVal){
-            this.code = newVal
-            const data = await this.$repositories.service.track(newVal)
-            this.track = data.data
-            
-            if(data.data.kode){
-                this.infoItems = [{
-                    kode:data.data.kode,
-                    nama:data.data.produk.nama,
-                    kategori:data.data.produk.kategori,
-                    status:data.data.status,
-                    persetujuan:data.data.disetujui,
-                    totalBiaya:data.data.totalBiaya
-                }]
-                this.brokenItems = data.data.kerusakan
-                this.historyItems = data.data.riwayat
-            }
-        }
-    },
     methods:{
-        tracking(){
+        async tracking(){
             if(this.code === null || this.code === ''){
                 this.track = {
                     invalid : 'kode service tidak boleh kosong'
                 }
             } else {
                 this.$router.push({path:`/lacak?kode=${this.code}`})
+                const data = await this.$repositories.service.track(this.code)
+                this.track = data.data
+                if(data.data.kode){
+                    this.infoItems = [{
+                        kode:data.data.kode,
+                        nama:data.data.produk.nama,
+                        kategori:data.data.produk.kategori,
+                        status:data.data.status,
+                        persetujuan:data.data.disetujui,
+                        totalBiaya:data.data.totalBiaya
+                    }]
+                    this.brokenItems = data.data.kerusakan
+                    this.historyItems = data.data.riwayat
+                }
             }
         },
         home(){

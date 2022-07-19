@@ -30,10 +30,10 @@
                 <InputText input-id="cacatProduk" label="cacat produk" v-model="cacatProduk" placeholder="masukkan cacat dari produk"/>
                 <b-row>
                     <b-col lg="6">
-                        <InputText input-id="uangMuka" label="uang muka" v-model="uangMuka" placeholder="masukkan uang muka perbaikan"/>
+                        <InputText input-id="uangMuka" label="uang muka" v-model="uangMuka" placeholder="masukkan uang muka perbaikan" :invalid="invalid.uangMuka"/>
                     </b-col>
                     <b-col lg="6">
-                        <InputText input-id="estimasiBiaya" label="estimasi biaya" v-model="estimasiBiaya" placeholder="masukkan estimasi harga perbaikan"/>
+                        <InputText input-id="estimasiBiaya" label="estimasi biaya" v-model="estimasiBiaya" placeholder="masukkan estimasi harga perbaikan" :invalid="invalid.estimasiBiaya"/>
                     </b-col>
                 </b-row>                
             </InputGroup>
