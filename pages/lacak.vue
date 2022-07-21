@@ -8,13 +8,13 @@
             <div class="col-8">
                 <div class="h4 text-center font-weight-bold">Cek Progres Service</div>
                 <input v-model="code" type="text" class="form-control rounded-pill shadow-sm" placeholder="Tolong masukkan kode service anda disini"/>
-                <small class="text-danger">{{ track.invalid }}</small>
+                <small class="text-danger">{{ invalid }}</small>
                 <div class="d-flex justify-content-center mt-3">
                     <b-button variant="success" @click="tracking">Lacak</b-button>
                 </div>
             </div>
         </div>
-        <div v-if="track.kode">
+        <div v-if="message === 'sukses'">
             <h3 class="h3 text-center mt-5 font-weight-bold">Detail Hasil Pelacakan</h3>
             <h6 class="bg-success font-weight-bold w-100 text-white text-center p-1">Informasi Dasar</h6>
             <BorderedTable :items="infoItems" :fields="infoField">
@@ -43,12 +43,10 @@
                 </template>
             </BorderedTable>
         </div>
-        <div v-else-if="track.length === 0 && $route.query.kode">
-            <h3 class="h3 text-center mt-5 font-weight-bold">Data Tidak Ditemukan</h3>
-            <br/>
-            <br/>
+        <div v-else-if="message === 'data tidak ditemukan'">
+            <p class="h3 text-center mt-5 mb-5 font-weight-bold text-capitalize">{{ message }}</p>
         </div>
-        <div v-else-if="track.length === 0 || track.invalid === 'kode service tidak boleh kosong'">
+        <div v-else-if="message === null">
             <br/>
             <br/>
             <br/>
@@ -62,16 +60,18 @@
 <script>
 export default {
     async asyncData({app,query}){
-        let infoData = []
-        let brokenData = []
-        let historyData = []
-        let trackData=[]
+        const datas = {
+            info : [],
+            brokens:[],
+            histories:[]
+        }
         let addCode = null
+        let msg = null
         if(query.kode){
             const data = await app.$repositories.service.track(query.kode)
-            trackData = data.data
-            if(data.data.kode){
-                infoData = [{
+            msg = data.message
+            if(data.message === 'sukses'){
+                datas.info = [{
                     kode:data.data.kode,
                     nama:data.data.produk.nama,
                     kategori:data.data.produk.kategori,
@@ -79,24 +79,25 @@ export default {
                     persetujuan:data.data.disetujui,
                     totalBiaya:data.data.totalBiaya
                 }]
-                brokenData = data.data.kerusakan
-                historyData = data.data.riwayat
+                datas.brokens = data.data.kerusakan
+                datas.histories = data.data.riwayat
             }
             addCode = query.kode
         }
         
         return {
             code : addCode,
-            track : trackData,
-            infoItems : infoData,
-            brokenItems : brokenData,
-            historyItems : historyData
+            message : msg,
+            infoItems : datas.info,
+            brokenItems : datas.brokens,
+            historyItems : datas.histories
         }
     },
     layout:'user',
     data(){
         return {
-            track:{},
+            invalid:null,
+            message:null,
             code:null,
             infoItems:[],
             infoField:[
@@ -122,14 +123,12 @@ export default {
     methods:{
         async tracking(){
             if(this.code === null || this.code === ''){
-                this.track = {
-                    invalid : 'kode service tidak boleh kosong'
-                }
+                this.invalid = 'kode service tidak boleh kosong'
             } else {
                 this.$router.push({path:`/lacak?kode=${this.code}`})
                 const data = await this.$repositories.service.track(this.code)
-                this.track = data.data
-                if(data.data.kode){
+                this.message = data.message
+                if(data.message === 'sukses'){
                     this.infoItems = [{
                         kode:data.data.kode,
                         nama:data.data.produk.nama,
@@ -142,9 +141,6 @@ export default {
                     this.historyItems = data.data.riwayat
                 }
             }
-        },
-        home(){
-            this.$router.push({path:'/'})
         }
     }
 }
