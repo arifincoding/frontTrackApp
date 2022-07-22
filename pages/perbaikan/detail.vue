@@ -63,39 +63,24 @@
 export default {
     layout:'detail',
     async asyncData({app, query, store}){
-        const service = await app.$repositories.service.show(query.id,{include:'klien,produk,kerusakan'})
-        const broken = service.data.kerusakan
-
-        let setBrokenAgree = null
-        let isBrokenConfirmed = null
-        if((broken).length > 0){
-            // cek apakah semuah kerusakan sudah disetujui
-            isBrokenConfirmed = (broken).every((item)=>{
-                if(item.disetujui === null){
-                    return false
-                }
-                return true
-            })
-
-            if(isBrokenConfirmed === true){
-                setBrokenAgree = false
-                broken.some((item)=>{
-                    if(item.disetujui === true){
-                        setBrokenAgree = true
-                        return true
-                    }
-                    return false
-                })
+        const data = await app.$repositories.service.show(query.id,{include:'klien,produk,kerusakan'})
+        const broken = data.data.kerusakan;
+        let brokenAgree = true;
+        for(let i=0; i < broken.length; i++){
+            if(broken[i].disetujui === true){
+                brokenAgree = true
+                break
+            }else if(broken[i].disetujui === false){
+                brokenAgree = false
             }
         }
-
         return {
-            customer : service.data.klien,
-            product : service.data.produk,
-            service : service.data,
-            brokens : broken,
+            customer :data.data.klien,
+            product :data.data.produk,
+            service :data.data,
+            brokens :data.data.kerusakan,
             role : store.state.role,
-            isBrokenAgree : setBrokenAgree
+            isBrokenAgree: brokenAgree
         }
     },
     data(){
@@ -104,7 +89,7 @@ export default {
             product:{},
             service:{},
             brokens:[],
-            isBrokenAgree:null,
+            isBrokenAgree:true,
             fields:[
                 'no',
                 'judul',
@@ -223,6 +208,7 @@ export default {
         },
         async confirmService(item){
             if(item.isConfirm === true){
+                try{
                 await this.$repositories.service.updateConfirmation(this.service.id,{
                     disetujui:item.data.disetujui
                 })
@@ -233,6 +219,9 @@ export default {
                 await this.$repositories.history.create(historyPayload,this.service.id)
                 await this.refreshData()
                 await this.refreshBroken()
+                }catch({response}){
+                    alert(response.data.errors)
+                }
             }
         },
         async setBrokenConfirmation(item,id){
@@ -244,22 +233,14 @@ export default {
         },
         async refreshBroken(){
             const data = await this.$repositories.broken.all(this.$route.query.id)
-            const isBrokenConfirmed = data.data.every((item)=>{
-                if(item.disetujui === null){
-                    return false
+            const broken = data.data;
+            for(let i=0; i < broken.length; i++){
+                if(broken[i].disetujui === true){
+                    this.isBrokenAgree = true
+                    break
+                }else if(broken[i].disetujui === false){
+                    this.isBrokenAgree = false
                 }
-                return true
-            })
-
-            if(isBrokenConfirmed === true){
-                this.isBrokenAgree = false
-                data.data.some((item)=>{
-                    if(item.disetujui === true){
-                        this.isBrokenAgree = true
-                        return true
-                    }
-                    return false
-                })
             }
             this.brokens = await data.data
         },
