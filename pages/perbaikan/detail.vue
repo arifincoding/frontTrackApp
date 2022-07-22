@@ -46,14 +46,14 @@
                 
                 <span v-if="role === 'pemilik'">
                     <!-- konfirmasi biaya -->
-                    <ModalConfirm v-if="showBtnConfirmCost === true" :with-invalid="true" :confirm-invalid="isAllBrokenPrice" label="Konfirmasi Biaya" :message="confirmCostMessage" btn-class="mt-2" @clicked-value="confirmCost($event,service.id)"/>
+                    <ModalConfirm v-if="showBtnConfirmCost === true" label="Konfirmasi Biaya" :message="confirmCostMessage" btn-class="mt-2" @clicked-value="confirmCost($event,service.id)"/>
                     <!-- konfirmasi persetujuan -->
                     <BtnConfirmAgreement v-if="showBtnConfirmAgreement === true" :is-broken-agree="isBrokenAgree" @submit="confirmService"/>
                     <!-- update garansi -->
                     <UpdateGaransi v-if="showBtnUpdateWarranty === true" :value="service.garansi" :error="invalid" @submit="setWarranty" @hidden="resetInvalid"/>
                 </span>
                 <!-- ambil barang -->
-                <ModalConfirm v-if="showBtnTakeService === true" :with-invalid="true" :confirm-invalid="service.garansi !== null" btn-class="mt-2" :message="takeMessage" label="Ambil Produk" @clicked-value="take($event,service.id)"/>
+                <ModalConfirm v-if="showBtnTakeService === true" btn-class="mt-2" :message="takeMessage" label="Ambil Produk" @clicked-value="take($event,service.id)"/>
             </div>
         </div>
     </div>
@@ -67,19 +67,11 @@ export default {
         const broken = service.data.kerusakan
 
         let setBrokenAgree = null
-        let isBrokenPrice = false
         let isBrokenConfirmed = null
         if((broken).length > 0){
             // cek apakah semuah kerusakan sudah disetujui
             isBrokenConfirmed = (broken).every((item)=>{
                 if(item.disetujui === null){
-                    return false
-                }
-                return true
-            })
-            
-            isBrokenPrice = broken.every((item)=>{
-                if(item.biaya === null){
                     return false
                 }
                 return true
@@ -103,9 +95,7 @@ export default {
             service : service.data,
             brokens : broken,
             role : store.state.role,
-            isAllBrokenConfirmed:isBrokenConfirmed,
-            isBrokenAgree : setBrokenAgree,
-            isAllBrokenPrice : isBrokenPrice
+            isBrokenAgree : setBrokenAgree
         }
     },
     data(){
@@ -122,17 +112,9 @@ export default {
                 'disetujui',
                 'aksi'
             ],
-            isAllBrokenPrice:false,
-            isAllBrokenConfirmed:false,
             invalid:{},
-            confirmCostMessage:{
-                invalid:'data kerusakan masih ada yang belum diberi biaya',
-                valid:'yakin ingin melakukan konfirmasi biaya kepada customer?'
-            },
-            takeMessage:{
-                invalid:'garansi perbaikan belum di tentukan',
-                valid:'yakin ingin mengambil produk?'
-            }
+            confirmCostMessage:'yakin ingin melakukan konfirmasi biaya kepada customer?',
+            takeMessage:'yakin ingin mengambil produk?'
         }
     },
     computed:{
@@ -200,21 +182,24 @@ export default {
     methods:{
         async confirmCost(isConfirm,id){
             if(isConfirm === true){
-                
-                await this.$repositories.service.setConfirmCost(id)
-                
-                await this.refreshData()
-                // send chat
-                let chatMessage = '*PEMBERITAHUAN*%0aBerikut rincian biaya perbaikan:'
-                const arrBroken = this.brokens
-                arrBroken.forEach((item)=>{
-                    chatMessage += `%0a -${item.judul} : ${item.biaya}`
-                })
-                chatMessage += `%0a%0a*Total Biaya : ${this.service.totalBiayaString}*`
-                if(this.service.butuhPersetujuan === true){
-                    chatMessage += '%0a%0aApakah anda setuju untuk melakukan perbaikan?'
+                try{
+                    await this.$repositories.service.setConfirmCost(id)
+                    
+                    await this.refreshData()
+                    // send chat
+                    let chatMessage = '*PEMBERITAHUAN*%0aBerikut rincian biaya perbaikan:'
+                    const arrBroken = this.brokens
+                    arrBroken.forEach((item)=>{
+                        chatMessage += `%0a -${item.judul} : ${item.biaya}`
+                    })
+                    chatMessage += `%0a%0a*Total Biaya : ${this.service.totalBiayaString}*`
+                    if(this.service.butuhPersetujuan === true){
+                        chatMessage += '%0a%0aApakah anda setuju untuk melakukan perbaikan?'
+                    }
+                    await this.$repositories.chat.sendMessage(id,chatMessage)
+                }catch({response}){
+                    alert(response.data.errors)
                 }
-                await this.$repositories.chat.sendMessage(id,chatMessage)
             }
         },
         async refreshData(){
@@ -223,13 +208,17 @@ export default {
         },
         async take(isConfirm,id){
             if(isConfirm === true){
-                const historyPayload = {
-                    status:'diambil',
-                    pesan:`${this.product.kategori} anda telah diambil`
+                try{
+                    const historyPayload = {
+                        status:'diambil',
+                        pesan:`${this.product.kategori} anda telah diambil`
+                    }
+                    await this.$repositories.service.setTake(id)
+                    await this.$repositories.history.create(historyPayload,id)
+                    await this.$router.push({path:`/perbaikan/nota-ambil?id=${id}`})
+                }catch({response}){
+                    alert(response.data.errors)
                 }
-                await this.$repositories.service.setTake(id)
-                await this.$repositories.history.create(historyPayload,id)
-                await this.$router.push({path:`/perbaikan/nota-ambil?id=${id}`})
         }
         },
         async confirmService(item){
@@ -261,13 +250,6 @@ export default {
                 }
                 return true
             })
-            
-            this.isAllBrokenPrice = data.data.every((item)=>{
-                if(item.biaya === null){
-                    return false
-                }
-                return true
-            })
 
             if(isBrokenConfirmed === true){
                 this.isBrokenAgree = false
@@ -279,7 +261,6 @@ export default {
                     return false
                 })
             }
-            this.isAllBrokenConfirmed = isBrokenConfirmed
             this.brokens = await data.data
         },
         async updateBrokenCost(item,id){
