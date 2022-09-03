@@ -38,10 +38,13 @@
                 <ModalDelete @clicked-value="deleteData($event,data.item.id)"/>
             </template>
         </DataTable>
+        <div @click="allService">coba</div>
+        <div>{{ services }}</div>
     </div>
 </template>
 
 <script>
+import axios from 'axios';
 export default {
     layout:'admin',
     data(){
@@ -81,6 +84,14 @@ export default {
         }
     },
     methods:{
+        async allService(){
+            const data = await axios.get(`http://localhost:8000/services`,{
+            headers:{
+                'Authorization':`bearer ${this.$store.state.token}`
+            }
+        })
+        this.services = data.data.data
+        },
         async deleteData(isConfirm, id){
             if(isConfirm === true){
                 await this.$repositories.service.delete(id)
